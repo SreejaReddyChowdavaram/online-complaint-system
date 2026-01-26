@@ -136,7 +136,6 @@ complaintSchema.index({ category: 1 });
 complaintSchema.index({ department: 1 });
 complaintSchema.index({ submittedBy: 1 });
 complaintSchema.index({ assignedTo: 1 });
-complaintSchema.index({ complaintId: 1 });
 complaintSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Complaint', complaintSchema);

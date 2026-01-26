@@ -1,0 +1,51 @@
+.tracking-page {
+  padding: 2rem 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tracking-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tracking-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+/* Reuse styles from ComplaintDetail */
+.status-timeline,
+.timeline-item,
+.timeline-marker,
+.timeline-content,
+.timeline-header,
+.timeline-date,
+.timeline-notes,
+.comments-list,
+.comment-item,
+.comment-header,
+.comment-date,
+.comment-text {
+  /* Styles defined in ComplaintDetail.css */
+}

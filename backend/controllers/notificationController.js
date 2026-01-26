@@ -116,7 +116,6 @@ exports.deleteNotification = async (req, res, next) => {
     next(error);
   }
 };
-
 // @desc    Register device for push notifications
 // @route   POST /api/notifications/register-device
 // @access  Private
@@ -146,3 +145,4 @@ exports.registerDevice = async (req, res, next) => {
     next(error);
   }
 };
+
