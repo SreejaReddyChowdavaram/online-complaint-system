@@ -13,6 +13,7 @@
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import { useComplaint } from '../../context/ComplaintContext'
 import Loading from '../../components/Loading'
@@ -146,55 +147,73 @@ const ComplaintList = () => {
               </div>
             ) : (
               <div className="complaints-grid">
-                {complaints.map(complaint => (
-                  <Link
+                {complaints.map((complaint, index) => (
+                  <motion.div
                     key={complaint._id}
-                    to={`/complaints/${complaint._id}`}
-                    className="complaint-card"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
                   >
-                    <div className="complaint-card-header">
-                      <h3>{complaint.title}</h3>
-                      <span className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}>
-                        {complaint.status}
-                      </span>
-                    </div>
-                    
-                    <p className="complaint-card-desc">
-                      {complaint.description.substring(0, 150)}
-                      {complaint.description.length > 150 ? '...' : ''}
-                    </p>
+                    <motion.div
+                      whileHover={{ scale: 1.03, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link
+                        to={`/complaints/${complaint._id}`}
+                        className="complaint-card"
+                      >
+                        <div className="complaint-card-header">
+                          <h3>{complaint.title}</h3>
+                          <motion.span
+                            className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}
+                            whileHover={{ scale: 1.1 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {complaint.status}
+                          </motion.span>
+                        </div>
+                        
+                        <p className="complaint-card-desc">
+                          {complaint.description.substring(0, 150)}
+                          {complaint.description.length > 150 ? '...' : ''}
+                        </p>
 
-                    <div className="complaint-card-meta">
-                      <div className="meta-item">
-                        <strong>Category:</strong> {complaint.category}
-                      </div>
-                      <div className="meta-item">
-                        <strong>Priority:</strong>{' '}
-                        <span className={`badge badge-${complaint.priority.toLowerCase()}`}>
-                          {complaint.priority}
-                        </span>
-                      </div>
-                      <div className="meta-item">
-                        <strong>Complaint ID:</strong> {complaint.complaintId}
-                      </div>
-                      <div className="meta-item">
-                        <strong>Created:</strong>{' '}
-                        {new Date(complaint.createdAt).toLocaleDateString()}
-                      </div>
-                      {/* Show submitted by for Officers/Admins */}
-                      {!isCitizen && complaint.submittedBy && (
-                        <div className="meta-item">
-                          <strong>Submitted By:</strong> {complaint.submittedBy.name}
+                        <div className="complaint-card-meta">
+                          <div className="meta-item">
+                            <strong>Category:</strong> {complaint.category}
+                          </div>
+                          <div className="meta-item">
+                            <strong>Priority:</strong>{' '}
+                            <motion.span
+                              className={`badge badge-${complaint.priority.toLowerCase()}`}
+                              whileHover={{ scale: 1.1 }}
+                            >
+                              {complaint.priority}
+                            </motion.span>
+                          </div>
+                          <div className="meta-item">
+                            <strong>Complaint ID:</strong> {complaint.complaintId}
+                          </div>
+                          <div className="meta-item">
+                            <strong>Created:</strong>{' '}
+                            {new Date(complaint.createdAt).toLocaleDateString()}
+                          </div>
+                          {/* Show submitted by for Officers/Admins */}
+                          {!isCitizen && complaint.submittedBy && (
+                            <div className="meta-item">
+                              <strong>Submitted By:</strong> {complaint.submittedBy.name}
+                            </div>
+                          )}
+                          {/* Show assigned officer if exists */}
+                          {complaint.assignedTo && (
+                            <div className="meta-item">
+                              <strong>Assigned To:</strong> {complaint.assignedTo.name}
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {/* Show assigned officer if exists */}
-                      {complaint.assignedTo && (
-                        <div className="meta-item">
-                          <strong>Assigned To:</strong> {complaint.assignedTo.name}
-                        </div>
-                      )}
-                    </div>
-                  </Link>
+                      </Link>
+                    </motion.div>
+                  </motion.div>
                 ))}
               </div>
             )}

@@ -2,32 +2,48 @@
  * index.css - Global Styles
  * 
  * This file contains:
+ * - Tailwind CSS directives
  * - CSS reset/normalization
- * - Global variables (colors, fonts)
+ * - Global variables (colors, fonts) - Using logo colors
  * - Base styles for common elements
  * - Utility classes
  */
 
-/* CSS Variables for Theme */
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Theme - Using Logo Colors */
 :root {
-  --primary-color: #2563eb;
-  --primary-dark: #1e40af;
-  --secondary-color: #10b981;
+  /* Logo Colors */
+  --primary-color: #0056B3;      /* Blue from logo */
+  --primary-dark: #004494;       /* Darker blue */
+  --secondary-color: #4CAF50;     /* Green from logo */
+  --secondary-dark: #45a049;     /* Darker green */
+  
+  /* Semantic Colors */
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
-  --success-color: #10b981;
+  --success-color: #4CAF50;       /* Using logo green */
   
+  /* Text Colors */
+  --text-color: #1f2937;
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --text-light: #9ca3af;
   
+  /* Background Colors */
+  --background-color: #f9fafb;
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
   --bg-dark: #111827;
   
+  /* UI Elements */
   --border-color: #e5e7eb;
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   
   --border-radius: 8px;
   --transition: all 0.3s ease;

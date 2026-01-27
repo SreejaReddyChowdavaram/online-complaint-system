@@ -12,6 +12,7 @@
 
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useComplaint } from '../context/ComplaintContext'
 import Loading from '../components/Loading'
@@ -61,42 +62,87 @@ const Dashboard = () => {
 
         {/* Statistics Cards */}
         <div className="stats-grid">
-          <div className="stat-card">
+          <motion.div
+            className="stat-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ scale: 1.05, y: -5 }}
+          >
             <h3>{stats.total}</h3>
             <p>Total Complaints</p>
-          </div>
-          <div className="stat-card stat-pending">
+          </motion.div>
+          <motion.div
+            className="stat-card stat-pending"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.05, y: -5 }}
+          >
             <h3>{stats.pending}</h3>
             <p>Pending</p>
-          </div>
-          <div className="stat-card stat-progress">
+          </motion.div>
+          <motion.div
+            className="stat-card stat-progress"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            whileHover={{ scale: 1.05, y: -5 }}
+          >
             <h3>{stats.inProgress}</h3>
             <p>In Progress</p>
-          </div>
-          <div className="stat-card stat-resolved">
+          </motion.div>
+          <motion.div
+            className="stat-card stat-resolved"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            whileHover={{ scale: 1.05, y: -5 }}
+          >
             <h3>{stats.resolved}</h3>
             <p>Resolved</p>
-          </div>
+          </motion.div>
           {/* Show rejected count for Officers/Admins */}
           {(isOfficer || isAdmin) && (
-            <div className="stat-card stat-rejected">
+            <motion.div
+              className="stat-card stat-rejected"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+            >
               <h3>{stats.rejected}</h3>
               <p>Rejected</p>
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Quick Actions - Role-based */}
-        <div className="quick-actions">
+        <motion.div
+          className="quick-actions"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
           {isCitizen && (
-            <Link to="/complaints/create" className="btn btn-primary">
-              Create New Complaint
-            </Link>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to="/complaints/create" className="btn btn-primary">
+                Create New Complaint
+              </Link>
+            </motion.div>
           )}
-          <Link to="/complaints" className="btn btn-outline">
-            View All Complaints
-          </Link>
-        </div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/complaints" className="btn btn-outline">
+              View All Complaints
+            </Link>
+          </motion.div>
+        </motion.div>
 
         {/* Recent Complaints */}
         <div className="card">
@@ -113,32 +159,46 @@ const Dashboard = () => {
             </p>
           ) : (
             <div className="complaints-list">
-              {recentComplaints.map(complaint => (
-                <Link
+              {recentComplaints.map((complaint, index) => (
+                <motion.div
                   key={complaint._id}
-                  to={`/complaints/${complaint._id}`}
-                  className="complaint-item"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
                 >
-                  <div className="complaint-item-header">
-                    <h4>{complaint.title}</h4>
-                    <span className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}>
-                      {complaint.status}
-                    </span>
-                  </div>
-                  <p className="complaint-item-desc">{complaint.description.substring(0, 100)}...</p>
-                  <div className="complaint-item-footer">
-                    <span className="complaint-category">{complaint.category}</span>
-                    {/* Show submitted by for Officers/Admins */}
-                    {!isCitizen && complaint.submittedBy && (
-                      <span className="complaint-submitter">
-                        By: {complaint.submittedBy.name}
-                      </span>
-                    )}
-                    <span className="complaint-date">
-                      {new Date(complaint.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </Link>
+                  <motion.div
+                    whileHover={{ scale: 1.02, x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Link
+                      to={`/complaints/${complaint._id}`}
+                      className="complaint-item"
+                    >
+                      <div className="complaint-item-header">
+                        <h4>{complaint.title}</h4>
+                        <motion.span
+                          className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          {complaint.status}
+                        </motion.span>
+                      </div>
+                      <p className="complaint-item-desc">{complaint.description.substring(0, 100)}...</p>
+                      <div className="complaint-item-footer">
+                        <span className="complaint-category">{complaint.category}</span>
+                        {/* Show submitted by for Officers/Admins */}
+                        {!isCitizen && complaint.submittedBy && (
+                          <span className="complaint-submitter">
+                            By: {complaint.submittedBy.name}
+                          </span>
+                        )}
+                        <span className="complaint-date">
+                          {new Date(complaint.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.div>
+                </motion.div>
               ))}
             </div>
           )}

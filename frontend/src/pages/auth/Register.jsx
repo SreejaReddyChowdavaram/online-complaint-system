@@ -13,8 +13,10 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import ErrorMessage from '../../components/ErrorMessage'
+import Logo from '../../components/Logo'
 import './Auth.css'
 
 const Register = () => {
@@ -79,16 +81,39 @@ const Register = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
-        <h1>Register</h1>
-        <p className="auth-subtitle">Create a new account</p>
+      <motion.div
+        className="auth-card"
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.div
+          className="auth-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Logo size="lg" showText={true} className="justify-center mb-4" />
+          <h1>Register</h1>
+          <p className="auth-subtitle">Create a new account</p>
+        </motion.div>
 
         <ErrorMessage message={error} />
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <motion.div
+            className="form-group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
             <label className="form-label">Full Name</label>
-            <input
+            <motion.input
               type="text"
               name="name"
               className="form-input"
@@ -96,12 +121,19 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your full name"
               required
+              whileFocus={{ scale: 1.02, borderColor: 'var(--primary-color)' }}
+              transition={{ duration: 0.2 }}
             />
-          </div>
+          </motion.div>
 
-          <div className="form-group">
+          <motion.div
+            className="form-group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.35 }}
+          >
             <label className="form-label">Email</label>
-            <input
+            <motion.input
               type="email"
               name="email"
               className="form-input"
@@ -109,12 +141,19 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
+              whileFocus={{ scale: 1.02, borderColor: 'var(--primary-color)' }}
+              transition={{ duration: 0.2 }}
             />
-          </div>
+          </motion.div>
 
-          <div className="form-group">
+          <motion.div
+            className="form-group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+          >
             <label className="form-label">Phone</label>
-            <input
+            <motion.input
               type="tel"
               name="phone"
               className="form-input"
@@ -122,12 +161,19 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your phone number"
               required
+              whileFocus={{ scale: 1.02, borderColor: 'var(--primary-color)' }}
+              transition={{ duration: 0.2 }}
             />
-          </div>
+          </motion.div>
 
-          <div className="form-group">
+          <motion.div
+            className="form-group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.45 }}
+          >
             <label className="form-label">Password</label>
-            <input
+            <motion.input
               type="password"
               name="password"
               className="form-input"
@@ -135,22 +181,32 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your password (min 6 characters)"
               required
+              whileFocus={{ scale: 1.02, borderColor: 'var(--primary-color)' }}
+              transition={{ duration: 0.2 }}
             />
-          </div>
+          </motion.div>
 
-          <button
+          <motion.button
             type="submit"
             className="btn btn-primary btn-block"
             disabled={loading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
           >
             {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
+          </motion.button>
+        </motion.form>
 
-        <p className="auth-footer">
+        <motion.p
+          className="auth-footer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           Already have an account? <Link to="/login">Login here</Link>
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </div>
   )
 }
