@@ -15,7 +15,7 @@ The system provides structured workflows and role-based dashboards for Citizens,
 ## 🏗️ System Architecture
 
 - **Frontend**: React.js + Tailwind CSS  
-- **Backend**: API-based architecture  
+- **Backend**: Node.js (API-based architecture)  
 - **Database**: MongoDB Atlas  
 - **Authentication**: Role-Based Access Control  
 - **API Communication**: Axios  
@@ -92,6 +92,7 @@ ONLINE-COMPLAINT-SYSTEM/
 |-------|------------|
 | Frontend | React.js |
 | Styling | Tailwind CSS |
+| Backend | Node.js |
 | Database | MongoDB Atlas |
 | State Management | Context API |
 | API Handling | Axios |
@@ -177,3 +178,6 @@ Computer Science & Engineering Student
 Full Stack Developer  
 
 ---
+
+Built with ❤️ for better civic engagement
+
