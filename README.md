@@ -1,10 +1,10 @@
-# JAN SUVIDHA - Civic Complaint Registering System
+# Online Complaint Registering System
 
 A full-stack civic grievance redressal system built with Flutter (Frontend) and Node.js + Express (Backend).
 
 ## 🎯 Project Overview
 
-**Jan Suvidha** enables citizens to register and track civic complaints (roads, water, electricity, sanitation) with real-time status updates, location mapping, and photo attachments.
+**Online Complaint Registering System** enables citizens to register and track civic complaints (roads, water, electricity, sanitation) with real-time status updates, location mapping, and photo attachments.
 
 ## 🏗️ Architecture
 
@@ -168,3 +168,4 @@ Final Year Engineering Student
 ---
 
 **Built with ❤️ for better civic engagement**
+
