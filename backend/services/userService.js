@@ -1,60 +1,48 @@
-const User = require('../models/User');
+/**
+ * userService.js
+ * Handles all DB operations related to User
+ */
+
+const User = require('../models/User')
 
 class UserService {
-  async getAllUsers(query = {}) {
-    const { role, page = 1, limit = 10 } = query;
-    
-    const filter = {};
-    if (role) filter.role = role;
+  /**
+   * Create a new user
+   * IMPORTANT: role must come from userData (Citizen / Officer)
+   */
+  async createUser(userData) {
+    const user = await User.create({
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      password: userData.password,
+      role: userData.role || 'Citizen' // default only if not sent
+    })
 
-    const skip = (page - 1) * limit;
-
-    const users = await User.find(filter)
-      .select('-password')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(parseInt(limit));
-
-    return users;
+    return user
   }
 
-  async getUserById(id) {
-    const user = await User.findById(id).select('-password');
-    return user;
-  }
-
+  /**
+   * Get user by email (used for login)
+   * Includes password for comparison
+   */
   async getUserByEmail(email) {
-    const user = await User.findOne({ email }).select('+password');
-    return user;
+    return await User.findOne({ email }).select('+password')
   }
 
-  async createUser(data) {
-    const user = await User.create(data);
-    return await this.getUserById(user._id);
+  /**
+   * Get user by ID (safe – no password)
+   */
+  async getUserById(id) {
+    return await User.findById(id)
   }
 
-  async updateUser(id, data) {
-    // Don't allow password update through this method
-    if (data.password) {
-      delete data.password;
-    }
-
-    const user = await User.findByIdAndUpdate(
-      id,
-      data,
-      {
-        new: true,
-        runValidators: true
-      }
-    ).select('-password');
-    
-    return user;
-  }
-
-  async deleteUser(id) {
-    const user = await User.findByIdAndDelete(id);
-    return user;
+  /**
+   * Get users by role (used for Officer list)
+   */
+  async getUsersByRole(role) {
+    return await User.find({ role }).select('-password')
   }
 }
 
-module.exports = new UserService();
+module.exports = new UserService()

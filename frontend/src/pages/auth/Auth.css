@@ -55,3 +55,14 @@
 .auth-footer a:hover {
   text-decoration: underline;
 }
+
+/* Login buttons: side-by-side role selectors */
+.login-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.login-buttons .btn {
+  flex: 1;
+}

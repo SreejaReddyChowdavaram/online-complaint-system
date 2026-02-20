@@ -24,17 +24,18 @@ import api from './api'
  */
 export const getComplaints = async (filters = {}) => {
   const params = new URLSearchParams()
-  
+
   // Add filters as query parameters
   if (filters.status) params.append('status', filters.status)
   if (filters.category) params.append('category', filters.category)
   if (filters.priority) params.append('priority', filters.priority)
-  
+
   const queryString = params.toString()
   const url = queryString ? `/complaints?${queryString}` : '/complaints'
-  
+
+  // Return the full axios response (so callers can access response.data.data)
   const response = await api.get(url)
-  return response.data
+  return response
 }
 
 /**
@@ -109,4 +110,9 @@ export const addComment = async (id, text) => {
 export const updateStatus = async (id, status, notes = '') => {
   const response = await api.put(`/complaints/${id}/status`, { status, notes })
   return response.data
+}
+
+
+export const assignComplaint = (id, officerId) => {
+  return api.put(`/complaints/${id}/assign`, { officerId })
 }

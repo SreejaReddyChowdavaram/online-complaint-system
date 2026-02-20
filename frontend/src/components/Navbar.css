@@ -1,112 +1,95 @@
+/* ===============================
+   NAVBAR
+================================ */
 .navbar {
-  background-color: var(--bg-primary);
-  box-shadow: var(--shadow);
-  padding: 1rem 0;
-  position: sticky;
+  height: 70px;               /* Increased slightly */
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;        /* 🔥 Vertical center */
 }
 
+/* ===============================
+   CONTENT WRAPPER
+================================ */
 .navbar-content {
+  width: 100%;
+  max-width: 1200px;          /* 👈 keeps content centered */
+  margin: 0 auto;
+  padding: 0 24px;            /* 👈 side spacing */
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* ===============================
+   BRAND
+================================ */
 .navbar-brand {
-  text-decoration: none;
-  color: var(--primary-color);
-}
-
-.navbar-brand h2 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.navbar-links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-}
-
-.nav-link-wrapper {
-  position: relative;
+  gap: 12px;
   text-decoration: none;
 }
 
-.nav-link {
-  text-decoration: none;
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: var(--transition);
-  padding: 0.5rem 0.75rem;
-  display: inline-block;
-  position: relative;
+
+/* TITLE */
+.navbar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3a8a;   /* Same as logout button */
 }
 
-.nav-link:hover {
-  color: var(--primary-color);
+
+           /* More official blue */
+
+
+/* LOGO */
+.navbar-brand img {
+  height: 48px;               /* 🔥 FIXED — smaller than navbar */
+  width: auto;
 }
 
-.nav-link-active {
-  color: var(--primary-color);
-  font-weight: 600;
-}
-
-.nav-link-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  border-radius: 2px 2px 0 0;
-}
-
+/* ===============================
+   USER SECTION
+================================ */
 .navbar-user {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-left: 1rem;
-  padding-left: 1rem;
-  border-left: 1px solid var(--border-color);
+  gap: 14px;
 }
 
 .user-name {
-  font-weight: 500;
-  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .user-role {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  text-transform: capitalize;
+  font-size: 13px;
+  color: #6b7280;
 }
 
+/* ===============================
+   BUTTON
+================================ */
 .btn-sm {
-  padding: 6px 12px;
-  font-size: 0.875rem;
+  padding: 7px 16px;
+  border: 2px solid #1e3a8a;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1e3a8a;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .navbar-content {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .navbar-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .navbar-user {
-    border-left: none;
-    border-top: 1px solid var(--border-color);
-    padding-top: 0.5rem;
-    margin-top: 0.5rem;
-    margin-left: 0;
-    padding-left: 0;
-    width: 100%;
-    justify-content: center;
-  }
+.btn-sm:hover {
+  background: #1e3a8a;
+  color: white;
 }

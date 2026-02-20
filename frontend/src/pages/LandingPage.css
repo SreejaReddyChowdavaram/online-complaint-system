@@ -1,0 +1,101 @@
+/* ===============================
+   LANDING PAGE FULL SCREEN
+================================ */
+
+.landing-container {
+  flex: 1;                 /* 🔥 Important */
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #eef2ff, #e0e7ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+/* ===============================
+   CARD
+================================ */
+
+.landing-card {
+  background: #ffffff;
+  padding: 50px 60px;
+  border-radius: 18px;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   LOGO
+================================ */
+
+.landing-logo {
+  height: 180px;
+  width: auto;
+  margin-bottom: 15px;
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.landing-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* ===============================
+   TITLE
+================================ */
+
+.landing-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ===============================
+   SUBTITLE
+================================ */
+
+.landing-subtitle {
+  font-size: 15px;
+  color: #374151;
+  margin-bottom: 25px;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+
+.landing-buttons {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.role-btn {
+  padding: 12px 30px;
+  border: 2px solid #1e3a8a;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e3a8a;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+  background: #1e3a8a;
+  color: white;
+  transform: translateY(-2px);
+}

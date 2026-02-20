@@ -1,56 +1,37 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-require('dotenv').config();
+import express from "express";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Import routes
-const complaintRoutes = require('./routes/complaintRoutes');
-const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/authRoutes');
-const notificationRoutes = require('./routes/notificationRoutes');
-
-// Import middleware
-const errorHandler = require('./middleware/errorHandler');
-const notFound = require('./middleware/notFound');
-
+import authRoutes from "./routes/authRoutes.js";
+import complaintRoutes from "./routes/complaintRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import officerRoutes from "./routes/officerRoutes.js";
 const app = express();
 
-// Security middleware
-app.use(helmet());
+/* ------------------- PATH FIX FOR ES MODULE ------------------- */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+/* ------------------- CORS ------------------- */
+app.use(cors());
 
-// Body parsing middleware
+/* ------------------- BODY PARSER ------------------- */
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Logging middleware
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev'));
-}
+/* ------------------- SERVE UPLOADS CORRECTLY ------------------- */
+app.use("/uploads", express.static("uploads"));
 
-// Health check route
-app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'JAN SUVIDHA API is running',
-    timestamp: new Date().toISOString()
-  });
+/* ------------------- ROUTES ------------------- */
+app.use("/api/auth", authRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/officer", officerRoutes);
+/* ------------------- TEST ROUTE ------------------- */
+app.get("/health", (req, res) => {
+  res.json({ status: "OK" });
 });
 
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/complaints', complaintRoutes);
-app.use('/api/notifications', notificationRoutes);
-
-// Error handling middleware (must be last)
-app.use(notFound);
-app.use(errorHandler);
-
-module.exports = app;
+export default app;

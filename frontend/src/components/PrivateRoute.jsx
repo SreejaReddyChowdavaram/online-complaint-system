@@ -1,32 +1,44 @@
 /**
- * PrivateRoute.jsx - Protected Route Component
- * 
+ * PrivateRoute.jsx - Protected & Role-Based Route Component
+ *
  * This component:
  * 1. Checks if user is authenticated
- * 2. Redirects to login if not authenticated
- * 3. Renders the protected component if authenticated
- * 
- * Usage: Wrap protected routes with <PrivateRoute>
- * Example: <PrivateRoute><Dashboard /></PrivateRoute>
+ * 2. Waits for auth loading to finish
+ * 3. Optionally checks user role
+ * 4. Redirects to login if not authenticated
+ * 5. Redirects to dashboard if role mismatch
+ *
+ * Usage:
+ * <PrivateRoute><Dashboard /></PrivateRoute>
+ * <PrivateRoute role="Officer"><OfficerDashboard /></PrivateRoute>
  */
 
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth()
+const PrivateRoute = ({ children, role }) => {
+  const { isAuthenticated, user, loading } = useAuth()
 
-  // Show loading while checking auth
+  // ⏳ Wait until auth check completes
   if (loading) {
     return <div className="loading">Loading...</div>
   }
 
-  // Redirect to login if not authenticated
+  // 🔒 Not logged in
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
-  // Render protected component
+  // 🔐 Role-based protection
+  if (role && user?.role !== role) {
+    // Redirect based on role
+    if (user?.role === 'Officer') {
+      return <Navigate to="/officer-dashboard" replace />
+    }
+    return <Navigate to="/dashboard" replace />
+  }
+
+  // ✅ Allowed
   return children
 }
 

@@ -1,0 +1,73 @@
+.gov-profile-page {
+  padding: 30px;
+  background-color: #f4f6f9;
+}
+
+.gov-profile-card {
+  max-width: 700px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 25px;
+}
+
+.gov-profile-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #1d4ed8;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.gov-profile-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.gov-edit-btn {
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.gov-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.gov-row label {
+  font-weight: 600;
+}
+
+.gov-row input {
+  padding: 6px;
+  border: 1px solid #9ca3af;
+}
+
+.gov-row input:disabled {
+  background: #f1f5f9;
+}
+
+.gov-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.gov-save {
+  background: #15803d;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+}
+
+.gov-cancel {
+  background: #b91c1c;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+}

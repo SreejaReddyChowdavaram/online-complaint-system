@@ -1,0 +1,65 @@
+/* ROOT WRAPPER */
+.user-dashboard {
+  display: flex;
+  position: fixed;
+
+  top: 64px;       /* below navbar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  overflow: hidden;
+}
+
+/* SIDEBAR */
+.user-sidebar {
+  width: 240px;
+  background-color: #1f2937;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+/* TITLE */
+.user-sidebar-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* MENU */
+.user-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;   /* 🔥 LINE-BY-LINE SPACE */
+}
+
+/* LINKS */
+.user-sidebar-link {
+  color: white;
+  text-decoration: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: background 0.3s ease;
+}
+
+/* HOVER */
+.user-sidebar-link:hover {
+  background-color: #374151;
+}
+
+/* ACTIVE */
+.user-sidebar-link.active {
+  background-color: #2563eb;
+  font-weight: 600;
+}
+
+/* CONTENT */
+.dashboard-content {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+  background: #ffffff;
+}

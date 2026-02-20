@@ -1,78 +1,94 @@
-const authService = require('../services/authService');
+import User from "../models/User.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import Admin from "../models/Admin.js";
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
-exports.register = async (req, res, next) => {
+/* ===============================
+   REGISTER USER / OFFICER / ADMIN
+================================ */
+export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
-    
-    const { user, token } = await authService.register({
+    const { name, email, password, role } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
       name,
       email,
-      password,
-      phone
+      password: hashedPassword,
+      role,
     });
 
     res.status(201).json({
-      success: true,
-      token,
-      data: user
+      message: "User registered successfully",
+      user,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
-exports.login = async (req, res, next) => {
+/* ===============================
+   LOGIN (USER / OFFICER / ADMIN)
+================================ */
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    const { user, token } = await authService.login(email, password);
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     res.status(200).json({
-      success: true,
       token,
-      data: user
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc    Get current logged in user
-// @route   GET /api/auth/me
-// @access  Private
-exports.getMe = async (req, res, next) => {
-  try {
-    const user = await authService.getCurrentUser(req.user.id);
-    
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+export const adminLogin = async (req, res) => {
+  const { email, password } = req.body;
 
-// @desc    Update password
-// @route   PUT /api/auth/updatepassword
-// @access  Private
-exports.updatePassword = async (req, res, next) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    
-    await authService.updatePassword(req.user.id, currentPassword, newPassword);
-    
-    res.status(200).json({
-      success: true,
-      message: 'Password updated successfully'
-    });
-  } catch (error) {
-    next(error);
+  const admin = await Admin.findOne({ email });
+  if (!admin) {
+    return res.status(401).json({ message: "Invalid credentials" });
   }
+
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  res.status(200).json({
+    token: "dummy-token-for-now",
+    user: {
+      id: admin._id,
+      name: admin.name,
+      role: "Admin",
+    },
+  });
 };

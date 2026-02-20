@@ -1,0 +1,59 @@
+/* ===============================
+   OFFICER DASHBOARD LAYOUT
+================================ */
+.officer-dashboard {
+  display: flex;
+  height: 100vh;          /* 🔥 FULL HEIGHT */
+  overflow: hidden;       /* 🔥 STOP PAGE SCROLL */
+}
+
+/* ===============================
+   SIDEBAR (FIXED, NO SCROLL)
+================================ */
+.officer-sidebar {
+  width: 240px;
+  background-color: #1f2937;
+  color: white;
+
+  padding: 24px 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  flex-shrink: 0;         /* 🔥 NEVER SHRINK */
+}
+
+/* TITLE */
+.officer-sidebar h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* LINKS */
+.officer-sidebar a {
+  color: #e5e7eb;
+  text-decoration: none;
+
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+
+  transition: background 0.2s ease;
+}
+
+.officer-sidebar a:hover {
+  background: #374151;
+}
+
+/* ===============================
+   CONTENT (ONLY THIS SCROLLS)
+================================ */
+.officer-content {
+   flex: 1;
+  padding: 28px;
+
+  overflow-y: auto;       /* 🔥 SCROLL HERE */
+  background: #ffffff;
+}

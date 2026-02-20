@@ -1,0 +1,63 @@
+/* COMMON INPUT */
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* PASSWORD WRAPPER */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* REMOVE DOUBLE MARGIN FOR PASSWORD */
+.password-wrapper .auth-input {
+  margin-bottom: 16px;        /* SAME as other inputs */
+  padding-right: 46px;        /* space for eye icon */
+}
+
+/* EYE ICON – PERFECT CENTER RIGHT */
+.eye-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #64748b;
+}
+
+.eye-icon:hover {
+  color: #93c5fd;
+}
+
+/* ROLE SELECT – MATCH INPUT STYLE */
+/* COMMON INPUT STYLE (already used by inputs) */
+.auth-input,
+.register-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  appearance: none;        /* remove default browser styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f3f6ff;
+}
+
+/* ADD CUSTOM DROPDOWN ARROW */
+.register-select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+  cursor: pointer;
+}

@@ -1,76 +1,141 @@
 /**
- * App.jsx - Main Application Component
- * 
- * This component:
- * 1. Sets up React Router for navigation
- * 2. Provides AuthContext to all child components
- * 3. Defines all routes (pages) in the application
- * 4. Handles protected routes (requires authentication)
- * 5. Implements lazy loading for performance
- * 6. Wraps routes with page transition animations
- * 
- * Architecture: App → Router → AnimatedRoutes → Pages → Components
+ * App.jsx - Main Application Component (FINAL FIXED VERSION)
  */
 
-import { Suspense, lazy } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
-import { ComplaintProvider } from './context/ComplaintContext'
+import "./App.css";
+import { Routes, Route, useLocation } from "react-router-dom";
 
-// Components
-import PrivateRoute from './components/PrivateRoute'
-import RoleBasedRoute from './components/RoleBasedRoute'
-import Navbar from './components/Navbar'
-import AnimatedRoutes from './components/AnimatedRoutes'
-import LottieLoader from './components/LottieLoader'
+import { AuthProvider } from "./context/AuthContext";
+import { ComplaintProvider } from "./context/ComplaintContext";
 
-// Lazy load pages for code splitting and performance
-const Login = lazy(() => import('./pages/auth/Login'))
-const Register = lazy(() => import('./pages/auth/Register'))
-const Dashboard = lazy(() => import('./pages/Dashboard'))
-const ComplaintList = lazy(() => import('./pages/complaints/ComplaintList'))
-const ComplaintDetail = lazy(() => import('./pages/complaints/ComplaintDetail'))
-const CreateComplaint = lazy(() => import('./pages/complaints/CreateComplaint'))
-const ComplaintTracking = lazy(() => import('./pages/complaints/ComplaintTracking'))
-const Profile = lazy(() => import('./pages/Profile'))
-const ComplaintForm = lazy(() => import('./pages/ComplaintForm'))
+import Navbar from "./components/Navbar";
+
+import LandingPage from "./pages/LandingPage";
+
+/* AUTH */
+import Login from "./pages/auth/Login";
+import UserLogin from "./pages/auth/UserLogin";
+import OfficerLogin from "./pages/auth/OfficerLogin";
+import AdminLogin from "./pages/auth/AdminLogin";   // ✅ FIXED HERE
+import Register from "./pages/auth/Register";
+
+/* ROUTE GUARD */
+import ProtectedRoute from "./routes/ProtectedRoute";
+
+/* USER */
+import UserDashboard from "./pages/user/UserDashboard";
+import ViewComplaints from "./pages/user/ViewComplaints";
+import PostComplaint from "./pages/user/PostComplaint";
+import MyProfile from "./pages/user/MyProfile";
+
+/* OFFICER */
+import OfficerLayout from "./pages/officer/OfficerLayout";
+import AssignedComplaints from "./pages/officer/AssignedComplaints";
+import OfficerProfile from "./pages/officer/OfficerProfile";
+
+/* ADMIN */
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ViewaComplaints from "./pages/admin/ViewaComplaints";
+import AdminProfile from "./pages/admin/AdminProfile";  // ✅ FIXED PATH
+
+/* ===============================
+   LAYOUT COMPONENT
+================================ */
+const Layout = ({ children }) => {
+  const location = useLocation();
+
+  const hideNavbar =
+    location.pathname === "/" ||
+    location.pathname.startsWith("/login") ||
+    location.pathname === "/register";
+
+  const isAdmin = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!hideNavbar && <Navbar />}
+
+      <div
+        style={
+          isAdmin
+            ? {} // 🔥 NO spacing for admin pages
+            : {
+                marginTop: hideNavbar ? 0 : "70px",
+                padding: "20px",
+              }
+        }
+      >
+        {children}
+      </div>
+    </>
+  );
+};
+
 
 function App() {
   return (
     <AuthProvider>
       <ComplaintProvider>
-        <Router>
-          <div className="app">
-            <Navbar />
-            <Suspense fallback={<LottieLoader size={120} message="Loading page..." />}>
-              <AnimatedRoutes>
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/tracking/:complaintId" element={<ComplaintTracking />} />
-                  
-                  {/* Protected Routes */}
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                  <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                  <Route path="/complaints" element={<PrivateRoute><ComplaintList /></PrivateRoute>} />
-                  {/* Complaint Form (Citizen-only) */}
-                  <Route path="/complaints/new" element={<RoleBasedRoute allowedRoles={['Citizen']}><ComplaintForm /></RoleBasedRoute>} />
-                  {/* Backwards-compatible route */}
-                  <Route path="/complaints/create" element={<RoleBasedRoute allowedRoles={['Citizen']}><CreateComplaint /></RoleBasedRoute>} />
-                  <Route path="/complaints/:id" element={<PrivateRoute><ComplaintDetail /></PrivateRoute>} />
-                  <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                  
-                  {/* Default redirect */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </AnimatedRoutes>
-            </Suspense>
-          </div>
-        </Router>
+        <Layout>
+          <Routes>
+
+            {/* PUBLIC */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/login/user" element={<UserLogin />} />
+            <Route path="/login/officer" element={<OfficerLogin />} />
+            <Route path="/login/admin" element={<AdminLogin />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* USER */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute role="Citizen">
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<ViewComplaints />} />
+              <Route path="post-complaint" element={<PostComplaint />} />
+              <Route path="profile" element={<MyProfile />} />
+            </Route>
+
+            {/* OFFICER */}
+           
+<Route
+  path="/officer"
+  element={
+    <ProtectedRoute role="Officer">
+      <OfficerLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route path="dashboard" element={<AssignedComplaints />} />
+  <Route path="complaints" element={<AssignedComplaints />} />
+  <Route path="profile" element={<OfficerProfile />} />
+</Route>
+
+            {/* ADMIN */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="Admin">
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="complaints" element={<ViewaComplaints />} />
+              <Route path="profile" element={<AdminProfile />} />
+            </Route>
+
+          </Routes>
+        </Layout>
       </ComplaintProvider>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

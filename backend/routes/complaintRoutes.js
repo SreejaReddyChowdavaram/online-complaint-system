@@ -1,43 +1,103 @@
-const express = require('express');
+import express from "express";
+import protect from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
+import Complaint from "../models/Complaint.js";
+
 const router = express.Router();
-const {
-  getAllComplaints,
-  getComplaint,
-  getComplaintByComplaintId,
-  createComplaint,
-  updateComplaint,
-  deleteComplaint,
-  addComment,
-  updateStatus,
-  assignOfficer
-} = require('../controllers/complaintController');
-const { protect, authorize } = require('../middleware/auth');
-const { validateComplaint, validateComment, validateStatusUpdate } = require('../validators/complaintValidator');
 
-// Get complaint by complaint ID (public route for tracking)
-router.get('/complaint-id/:complaintId', getComplaintByComplaintId);
+/* ===============================
+   POST COMPLAINT
+================================ */
+router.post(
+  "/post",
+  protect,
+  upload.array("files", 5),
+  async (req, res) => {
+    try {
+      const {
+        title,
+        category,
+        description,
+        latitude,
+        longitude,
+      } = req.body;
 
-router
-  .route('/')
-  .get(getAllComplaints)
-  .post(protect, authorize('Citizen'), validateComplaint, createComplaint);
+      if (
+        !title ||
+        !category ||
+        !description ||
+        !latitude ||
+        !longitude
+      ) {
+        return res.status(400).json({
+          message: "Missing required fields",
+        });
+      }
 
-router
-  .route('/:id')
-  .get(getComplaint)
-  .put(protect, updateComplaint)
-  .delete(protect, authorize('Admin'), deleteComplaint);
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({
+          message: "No files uploaded",
+        });
+      }
 
-router
-  .route('/:id/comments')
-  .post(protect, validateComment, addComment);
+      const images = req.files.map(
+        (file) => `/uploads/${file.filename}`
+      );
 
-router
-  .route('/:id/status')
-  .put(protect, authorize('Officer', 'Admin'), validateStatusUpdate, updateStatus);
+      const complaint = await Complaint.create({
+        title,
+        category,
+        description,
+        location: {
+          lat: Number(latitude),
+          lng: Number(longitude),
+        },
+        images,
+        userId: req.user.id,
+      });
 
-router
-  .route('/:id/assign')
-  .put(protect, authorize('Admin'), assignOfficer);
+      res.status(201).json({
+        message: "Complaint submitted successfully",
+        complaint,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+);
 
-module.exports = router;
+
+/* ===============================
+   GET USER COMPLAINTS
+================================ */
+router.get("/user", protect, async (req, res) => {
+  try {
+    const complaints = await Complaint.find({
+      userId: req.user.id,
+    }).sort({ createdAt: -1 });
+
+    res.json(complaints);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+/* ===============================
+   GET ALL COMPLAINTS
+================================ */
+router.get("/", protect, async (req, res) => {
+  try {
+    const complaints = await Complaint.find()
+      .sort({ createdAt: -1 });
+
+    res.json(complaints);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+export default router;

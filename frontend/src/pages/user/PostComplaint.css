@@ -1,0 +1,84 @@
+.post-complaint {
+  background: #fff;
+  padding: 22px;
+  border-radius: 10px;
+}
+
+.post-complaint h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.complaint-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+}
+
+/* LABEL + INLINE ERROR */
+.label-row {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 12px 0 6px;
+}
+
+.required {
+  color: #d32f2f;
+  margin-left: 3px;
+}
+
+.inline-error {
+  color: #d32f2f;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* INPUTS */
+.form-section input,
+.form-section select,
+.form-section textarea {
+  width: 100%;
+  padding: 9px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.form-section textarea {
+  min-height: 110px;
+}
+
+.error {
+  border-color: #e57373 !important;
+  background: #fff5f5;
+}
+
+/* MAP */
+.map-box {
+  height: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+}
+
+/* BUTTON */
+.submit-btn {
+  margin-top: 22px;
+  padding: 12px 28px;
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #0d47a1;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .complaint-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,135 +1,88 @@
-/**
- * AuthContext.jsx - Authentication State Management
- * 
- * This Context provides:
- * 1. User authentication state (logged in/out, user data)
- * 2. Auth functions (login, register, logout)
- * 3. Token management (store/retrieve from localStorage)
- * 
- * Architecture:
- * - Context API for state management (simpler than Redux)
- * - Stores user data and token in localStorage
- * - Provides auth state to all components
- * 
- * Usage: Wrap App with AuthProvider, use useAuth() hook in components
- */
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
-import { createContext, useState, useEffect, useContext } from 'react'
-import { login as loginApi, register as registerApi, getCurrentUser } from '../services/authService'
+const AuthContext = createContext();
 
-// Create Context
-const AuthContext = createContext()
-
-// Custom hook to use auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
-  return context
-}
-
-// AuthProvider Component
 export const AuthProvider = ({ children }) => {
-  // State: user data and loading status
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // On component mount, check if user is already logged in
+  /* 🔄 LOAD AUTH ON APP START */
   useEffect(() => {
-    checkAuth()
-  }, [])
+    const initAuth = async () => {
+      try {
+        const storedToken = localStorage.getItem("token");
 
-  /**
-   * Check if user is authenticated
-   * Reads token from localStorage and fetches user data
-   */
-  const checkAuth = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (token) {
-        // Token exists, fetch user data
-        const response = await getCurrentUser()
-        setUser(response.data)
+        if (!storedToken) {
+          setLoading(false);
+          return;
+        }
+
+        setToken(storedToken);
+
+        // ✅ FETCH USER FROM BACKEND (via Vite proxy)
+        const res = await axios.get("/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
+
+        setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("role", res.data.role);
+      } catch (error) {
+        console.error("Auth init failed:", error);
+        localStorage.clear();
+        setToken(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      // Token invalid or expired, clear it
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      setUser(null)
-    } finally {
-      setLoading(false)
-    }
-  }
+    };
 
-  /**
-   * Register new user
-   * @param {Object} userData - { name, email, password, phone }
-   */
-  const register = async (userData) => {
-    try {
-      const response = await registerApi(userData)
-      
-      // Store token and user data
-      localStorage.setItem('token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.data))
-      setUser(response.data)
-      
-      return { success: true, data: response.data }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Registration failed'
-      }
-    }
-  }
+    initAuth();
+  }, []);
 
-  /**
-   * Login user
-   * @param {Object} credentials - { email, password }
-   */
-  const login = async (credentials) => {
-    try {
-      const response = await loginApi(credentials)
-      
-      // Store token and user data
-      localStorage.setItem('token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.data))
-      setUser(response.data)
-      
-      return { success: true, data: response.data }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Login failed'
-      }
-    }
-  }
+  /* 🔐 LOGIN */
+  const login = (token, user) => {
+    setToken(token);
+    setUser(user);
 
-  /**
-   * Logout user
-   * Clears token and user data
-   */
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("role", user.role);
+  };
+
+  /* ✏️ UPDATE USER (SYNC CONTEXT + STORAGE) */
+  const updateUser = (updatedData) => {
+    setUser((prevUser) => {
+      const newUser = { ...prevUser, ...updatedData };
+      localStorage.setItem("user", JSON.stringify(newUser));
+      return newUser;
+    });
+  };
+
+  /* 🚪 LOGOUT */
   const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setUser(null)
-  }
-
-  // Value to provide to context consumers
-  const value = {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    register,
-    logout,
-    checkAuth
-  }
+    setToken(null);
+    setUser(null);
+    localStorage.clear();
+  };
 
   return (
-    <AuthContext.Provider value={value}>
-      {children}
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
+      {!loading && children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);

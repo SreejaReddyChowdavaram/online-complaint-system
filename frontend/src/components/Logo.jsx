@@ -3,8 +3,8 @@ import logo from "../assets/logo.png"; // ✅ update path if needed
 
 const sizes = {
   sm: "h-8",   // 32px
-  md: "h-11",  // 44px (DEFAULT – best for navbar)
-  lg: "h-14",  // 56px
+  md: "h-16",  // 44px (DEFAULT – best for navbar)
+  lg: "h-20",  // 56px
 };
 
 const Logo = ({ size = "md", showText = true }) => {

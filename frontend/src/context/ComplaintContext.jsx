@@ -1,17 +1,10 @@
 /**
  * ComplaintContext.jsx - Complaint State Management
- * 
+ *
  * This Context provides:
- * 1. List of complaints (with filters)
- * 2. Current complaint (for detail view)
- * 3. Functions to fetch, create, update complaints
- * 
- * Architecture:
- * - Centralized complaint state
- * - All complaint operations go through this context
- * - Components can access complaints without prop drilling
- * 
- * Usage: Wrap App with ComplaintProvider, use useComplaint() hook
+ * 1. List of complaints (role-based)
+ * 2. Current complaint (detail view)
+ * 3. Functions to fetch, create, update, assign complaints
  */
 
 import { createContext, useState, useContext } from 'react'
@@ -22,7 +15,8 @@ import {
   updateComplaint as updateComplaintApi,
   deleteComplaint as deleteComplaintApi,
   addComment as addCommentApi,
-  updateStatus as updateStatusApi
+  updateStatus as updateStatusApi,
+  assignComplaint
 } from '../services/complaintService'
 
 const ComplaintContext = createContext()
@@ -41,19 +35,17 @@ export const ComplaintProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  /**
-   * Fetch all complaints with optional filters
-   * @param {Object} filters - { status, category, priority }
-   */
-  const fetchComplaints = async (filters = {}) => {
+  // 🔹 Fetch complaints (Citizen → own | Officer → assigned)
+  const fetchComplaints = async () => {
     setLoading(true)
     setError(null)
     try {
-      const response = await getComplaintsApi(filters)
-      setComplaints(response.data || [])
-      return { success: true, data: response.data }
+      const response = await getComplaintsApi()
+      setComplaints(response.data.data)
+      return { success: true, data: response.data.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to fetch complaints'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to fetch complaints'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -61,10 +53,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Fetch single complaint by ID
-   * @param {String} id - Complaint ID
-   */
+  // 🔹 Fetch single complaint
   const fetchComplaint = async (id) => {
     setLoading(true)
     setError(null)
@@ -73,7 +62,8 @@ export const ComplaintProvider = ({ children }) => {
       setCurrentComplaint(response.data)
       return { success: true, data: response.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to fetch complaint'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to fetch complaint'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -81,20 +71,17 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Create new complaint
-   * @param {Object} complaintData - Complaint data
-   */
+  // 🔹 Create complaint (Citizen)
   const createComplaint = async (complaintData) => {
     setLoading(true)
     setError(null)
     try {
       const response = await createComplaintApi(complaintData)
-      // Add new complaint to list
       setComplaints(prev => [response.data, ...prev])
       return { success: true, data: response.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to create complaint'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to create complaint'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -102,27 +89,22 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Update complaint
-   * @param {String} id - Complaint ID
-   * @param {Object} updateData - Data to update
-   */
+  // 🔹 Update complaint
   const updateComplaint = async (id, updateData) => {
     setLoading(true)
     setError(null)
     try {
       const response = await updateComplaintApi(id, updateData)
-      // Update in list
       setComplaints(prev =>
-        prev.map(comp => comp._id === id ? response.data : comp)
+        prev.map(c => (c._id === id ? response.data : c))
       )
-      // Update current complaint if it's the one being updated
       if (currentComplaint?._id === id) {
         setCurrentComplaint(response.data)
       }
       return { success: true, data: response.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to update complaint'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to update complaint'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -130,23 +112,20 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Delete complaint
-   * @param {String} id - Complaint ID
-   */
+  // 🔹 Delete complaint
   const deleteComplaint = async (id) => {
     setLoading(true)
     setError(null)
     try {
       await deleteComplaintApi(id)
-      // Remove from list
-      setComplaints(prev => prev.filter(comp => comp._id !== id))
+      setComplaints(prev => prev.filter(c => c._id !== id))
       if (currentComplaint?._id === id) {
         setCurrentComplaint(null)
       }
       return { success: true }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to delete complaint'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to delete complaint'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -154,23 +133,19 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Add comment to complaint
-   * @param {String} id - Complaint ID
-   * @param {String} text - Comment text
-   */
+  // 🔹 Add comment
   const addComment = async (id, text) => {
     setLoading(true)
     setError(null)
     try {
       const response = await addCommentApi(id, text)
-      // Update current complaint
       if (currentComplaint?._id === id) {
         setCurrentComplaint(response.data)
       }
       return { success: true, data: response.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to add comment'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to add comment'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -178,28 +153,22 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  /**
-   * Update complaint status
-   * @param {String} id - Complaint ID
-   * @param {String} status - New status
-   * @param {String} notes - Optional notes
-   */
-  const updateStatus = async (id, status, notes = '') => {
+  // 🔹 Update status (Officer)
+  const updateStatus = async (id, status) => {
     setLoading(true)
     setError(null)
     try {
-      const response = await updateStatusApi(id, status, notes)
-      // Update in list
+      const response = await updateStatusApi(id, status)
       setComplaints(prev =>
-        prev.map(comp => comp._id === id ? response.data : comp)
+        prev.map(c => (c._id === id ? response.data : c))
       )
-      // Update current complaint
       if (currentComplaint?._id === id) {
         setCurrentComplaint(response.data)
       }
       return { success: true, data: response.data }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to update status'
+      const errorMsg =
+        err.response?.data?.message || 'Failed to update status'
       setError(errorMsg)
       return { success: false, error: errorMsg }
     } finally {
@@ -207,23 +176,42 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  const value = {
-    complaints,
-    currentComplaint,
-    loading,
-    error,
-    fetchComplaints,
-    fetchComplaint,
-    createComplaint,
-    updateComplaint,
-    deleteComplaint,
-    addComment,
-    updateStatus,
-    setCurrentComplaint
+  // 🔹 STEP 6: Assign complaint to officer
+  const assignToOfficer = async (complaintId, officerId) => {
+    setLoading(true)
+    setError(null)
+    try {
+      await assignComplaint(complaintId, officerId)
+      await fetchComplaints()
+      return { success: true }
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.message || 'Failed to assign complaint'
+      setError(errorMsg)
+      return { success: false, error: errorMsg }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <ComplaintContext.Provider value={value}>
+    <ComplaintContext.Provider
+      value={{
+        complaints,
+        currentComplaint,
+        loading,
+        error,
+        fetchComplaints,
+        fetchComplaint,
+        createComplaint,
+        updateComplaint,
+        deleteComplaint,
+        addComment,
+        updateStatus,
+        assignToOfficer,
+        setCurrentComplaint
+      }}
+    >
       {children}
     </ComplaintContext.Provider>
   )
