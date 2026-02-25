@@ -1,38 +1,27 @@
+// backend/models/User.js
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { 
-      type: String, 
-      required: true 
-    },
-
-    email: { 
-      type: String, 
-      required: true, 
-      unique: true 
-    },
-
-    password: { 
-      type: String, 
-      required: true 
-    },
-
-    role: {
+    name: {
       type: String,
-      enum: ["Citizen", "Officer", "Admin"],
       required: true,
     },
-
-    mobile: {
+    email: {
       type: String,
-      default: ""
+      required: true,
+      unique: true,
     },
-
-    address: {
+    password: {
       type: String,
-      default: ""
-    }
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "officer", "admin"],
+      default: "user",
+    },
   },
   { timestamps: true }
 );

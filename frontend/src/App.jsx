@@ -1,7 +1,3 @@
-/**
- * App.jsx - Main Application Component (FINAL FIXED VERSION)
- */
-
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -10,13 +6,15 @@ import { ComplaintProvider } from "./context/ComplaintContext";
 
 import Navbar from "./components/Navbar";
 
+/* 🔥 NEW HOME */
 import LandingPage from "./pages/LandingPage";
+import Home from "./pages/Home";
 
 /* AUTH */
 import Login from "./pages/auth/Login";
 import UserLogin from "./pages/auth/UserLogin";
 import OfficerLogin from "./pages/auth/OfficerLogin";
-import AdminLogin from "./pages/auth/AdminLogin";   // ✅ FIXED HERE
+import AdminLogin from "./pages/auth/AdminLogin";
 import Register from "./pages/auth/Register";
 
 /* ROUTE GUARD */
@@ -37,7 +35,7 @@ import OfficerProfile from "./pages/officer/OfficerProfile";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ViewaComplaints from "./pages/admin/ViewaComplaints";
-import AdminProfile from "./pages/admin/AdminProfile";  // ✅ FIXED PATH
+import AdminProfile from "./pages/admin/AdminProfile";
 
 /* ===============================
    LAYOUT COMPONENT
@@ -59,10 +57,10 @@ const Layout = ({ children }) => {
       <div
         style={
           isAdmin
-            ? {} // 🔥 NO spacing for admin pages
+            ? {}
             : {
                 marginTop: hideNavbar ? 0 : "70px",
-                padding: "20px",
+                padding: "0px",
               }
         }
       >
@@ -72,7 +70,6 @@ const Layout = ({ children }) => {
   );
 };
 
-
 function App() {
   return (
     <AuthProvider>
@@ -80,8 +77,10 @@ function App() {
         <Layout>
           <Routes>
 
+            {/* 🔥 HOME */}
+            <Route path="/" element={<Home />} />
+            <Route path="/landing" element={<LandingPage />} />
             {/* PUBLIC */}
-            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login/user" element={<UserLogin />} />
             <Route path="/login/officer" element={<OfficerLogin />} />
@@ -103,19 +102,18 @@ function App() {
             </Route>
 
             {/* OFFICER */}
-           
-<Route
-  path="/officer"
-  element={
-    <ProtectedRoute role="Officer">
-      <OfficerLayout />
-    </ProtectedRoute>
-  }
->
-  <Route path="dashboard" element={<AssignedComplaints />} />
-  <Route path="complaints" element={<AssignedComplaints />} />
-  <Route path="profile" element={<OfficerProfile />} />
-</Route>
+            <Route
+              path="/officer"
+              element={
+                <ProtectedRoute role="Officer">
+                  <OfficerLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="dashboard" element={<AssignedComplaints />} />
+              <Route path="complaints" element={<AssignedComplaints />} />
+              <Route path="profile" element={<OfficerProfile />} />
+            </Route>
 
             {/* ADMIN */}
             <Route

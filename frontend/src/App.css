@@ -1,13 +1,21 @@
 /* ===============================
-   GLOBAL APP CONTENT
+   GLOBAL RESET
 ================================ */
-.app-content {
-  min-height: 100vh;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ===============================
-   OFFSET WHEN NAVBAR IS VISIBLE
-================================ */
-.with-navbar {
-  padding-top: 100px; /* MUST MATCH NAVBAR HEIGHT */
+/* Remove default white border */
+html, body {
+
+  margin: 0;
+  padding: 0;
+  background: #0f4c81; /* Match your hero color */
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
