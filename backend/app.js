@@ -16,7 +16,6 @@ const __dirname = path.dirname(__filename);
 
 /* ------------------- CORS ------------------- */
 app.use(cors());
-
 /* ------------------- BODY PARSER ------------------- */
 app.use(express.json());
 
