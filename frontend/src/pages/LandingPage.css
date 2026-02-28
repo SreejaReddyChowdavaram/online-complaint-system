@@ -3,14 +3,16 @@
 ================================ */
 
 .landing-container {
-  flex: 1;                 /* 🔥 Important */
+  height: 100vh;
   width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #eef2ff, #e0e7ff);
+  background: linear-gradient(-45deg, #0f4c81, #00b4db, #0077b6, #023e8a);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Georgia", "Times New Roman", serif;
+  text-align: center;
+  color: white;
 }
 
 /* ===============================
@@ -18,7 +20,11 @@
 ================================ */
 
 .landing-card {
-  background: #ffffff;
+
+  background: linear-gradient(-45deg, #0f4c81, #00b4db, #0077b6, #023e8a);
+  animation: gradientMove 10s ease infinite;
+
+
   padding: 50px 60px;
   border-radius: 18px;
   text-align: center;
@@ -55,7 +61,7 @@
 .landing-title {
   font-size: 30px;
   font-weight: 700;
-  color: #1e3a8a;
+  color: #ffffff;
   margin-bottom: 8px;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -67,7 +73,7 @@
 
 .landing-subtitle {
   font-size: 15px;
-  color: #374151;
+  color: #ffffff;
   margin-bottom: 25px;
 }
 
@@ -83,19 +89,23 @@
 }
 
 .role-btn {
-  padding: 12px 30px;
-  border: 2px solid #1e3a8a;
-  border-radius: 8px;
-  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 50px;
+  border: 2px solid white;
+  font-size: 16px;
   font-weight: 600;
-  font-size: 15px;
-  color: #1e3a8a;
+  cursor: pointer;
   background: transparent;
+  color: white;
+  backdrop-filter: blur(6px);
   transition: all 0.3s ease;
+   text-decoration: none;
 }
 
 .role-btn:hover {
-  background: #1e3a8a;
-  color: white;
-  transform: translateY(-2px);
+  background: white;
+  color: #0f4c81;
+  transform: translateY(-3px);
 }
+
+

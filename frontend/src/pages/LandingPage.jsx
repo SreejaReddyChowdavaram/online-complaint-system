@@ -52,11 +52,10 @@ const LandingPage = () => {
 
 {/* ✅ REGISTER LINK */}
 <div style={{ marginTop: "20px", textAlign: "center" }}>
-  <Link to="/register" style={{ color: "#2563eb", fontWeight: "500" }}>
+  <Link to="/register" style={{ color: "#ffffffff", fontWeight: "500" }}>
     New user? Register here
   </Link>
 </div>
-
       </motion.div>
     </div>
   );

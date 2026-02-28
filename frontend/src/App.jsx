@@ -44,7 +44,8 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   const hideNavbar =
-    location.pathname === "/" ||
+  location.pathname === "/" ||
+    location.pathname === "/landing" ||
     location.pathname.startsWith("/login") ||
     location.pathname === "/register";
 
