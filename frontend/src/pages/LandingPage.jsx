@@ -9,53 +9,74 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
 
-  // 🔁 Redirect logged-in users based on role
   useEffect(() => {
     if (isAuthenticated) {
-      if (user?.role === "Admin") {
-        navigate("/admin/dashboard");
-      } else if (user?.role === "Officer") {
-        navigate("/officer/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      if (user?.role === "Admin") navigate("/admin/dashboard");
+      else if (user?.role === "Officer") navigate("/officer/dashboard");
+      else navigate("/dashboard");
     }
   }, [isAuthenticated, user, navigate]);
 
   return (
     <div className="landing-container">
+
+      {/* Animated Background Circles */}
+      <div className="circle circle1"></div>
+      <div className="circle circle2"></div>
+
       <motion.div
         className="landing-card"
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.7 }}
       >
-       
- 
+
         {/* Logo */}
-        <img
+        <motion.img
           src={logo}
-          alt="Jan Suvidha Logo"
+          alt="Logo"
           className="landing-logo"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 3 }}
         />
 
         {/* Title */}
-        <h1 className="landing-title">Civic Complaint Registring System</h1>
-       
+        <motion.h1
+          className="landing-title"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          Civic Complaint Registering System
+        </motion.h1>
 
-        {/* 🔐 ROLE-BASED LOGIN BUTTONS */}
+        {/* Buttons */}
         <div className="landing-buttons">
-  <Link to="/login/user" className="role-btn">Citizen</Link>
-  <Link to="/login/officer" className="role-btn">Officer</Link>
-  <Link to="/login/admin" className="role-btn">Admin</Link>
-</div>
 
-{/* ✅ REGISTER LINK */}
-<div style={{ marginTop: "20px", textAlign: "center" }}>
-  <Link to="/register" style={{ color: "#ffffffff", fontWeight: "500" }}>
-    New user? Register here
-  </Link>
-</div>
+          <motion.div whileHover={{ scale: 1.1 }}>
+            <Link to="/login/user" className="role-btn citizen">
+              Citizen
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.1 }}>
+            <Link to="/login/officer" className="role-btn officer">
+              Officer
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.1 }}>
+            <Link to="/login/admin" className="role-btn admin">
+              Admin
+            </Link>
+          </motion.div>
+
+        </div>
+
+        <p className="register-link">
+          <Link to="/register">New user? Register here</Link>
+        </p>
+
       </motion.div>
     </div>
   );

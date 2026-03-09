@@ -6,7 +6,7 @@ import { ComplaintProvider } from "./context/ComplaintContext";
 
 import Navbar from "./components/Navbar";
 
-/* 🔥 NEW HOME */
+/* HOME */
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 
@@ -16,6 +16,7 @@ import UserLogin from "./pages/auth/UserLogin";
 import OfficerLogin from "./pages/auth/OfficerLogin";
 import AdminLogin from "./pages/auth/AdminLogin";
 import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/ForgotPassword";
 
 /* ROUTE GUARD */
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -44,10 +45,11 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   const hideNavbar =
-  location.pathname === "/" ||
+    location.pathname === "/" ||
     location.pathname === "/landing" ||
     location.pathname.startsWith("/login") ||
-    location.pathname === "/register";
+    location.pathname === "/register" ||
+    location.pathname === "/forgot-password";
 
   const isAdmin = location.pathname.startsWith("/admin");
 
@@ -78,17 +80,21 @@ function App() {
         <Layout>
           <Routes>
 
-            {/* 🔥 HOME */}
+            {/* HOME */}
             <Route path="/" element={<Home />} />
             <Route path="/landing" element={<LandingPage />} />
-            {/* PUBLIC */}
+
+            {/* PUBLIC AUTH */}
             <Route path="/login" element={<Login />} />
             <Route path="/login/user" element={<UserLogin />} />
             <Route path="/login/officer" element={<OfficerLogin />} />
             <Route path="/login/admin" element={<AdminLogin />} />
             <Route path="/register" element={<Register />} />
 
-            {/* USER */}
+            {/* ✅ FORGOT PASSWORD ROUTE */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            {/* USER DASHBOARD */}
             <Route
               path="/dashboard"
               element={

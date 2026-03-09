@@ -1,111 +1,121 @@
-/* ===============================
-   LANDING PAGE FULL SCREEN
-================================ */
+/* Full page background */
 
-.landing-container {
-  height: 100vh;
-  width: 100%;
-  background: linear-gradient(-45deg, #0f4c81, #00b4db, #0077b6, #023e8a);
-  background-size: 400% 400%;
-  animation: gradientMove 10s ease infinite;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
+.landing-container{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0f172a;
+overflow:hidden;
+position:relative;
 }
 
-/* ===============================
-   CARD
-================================ */
+/* glowing background circles */
 
-.landing-card {
-
-  background: linear-gradient(-45deg, #0f4c81, #00b4db, #0077b6, #023e8a);
-  animation: gradientMove 10s ease infinite;
-
-
-  padding: 50px 60px;
-  border-radius: 18px;
-  text-align: center;
-  width: 100%;
-  max-width: 600px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+.circle{
+position:absolute;
+border-radius:50%;
+filter:blur(100px);
+opacity:0.6;
+animation: float 10s infinite ease-in-out;
 }
 
-/* ===============================
-   LOGO
-================================ */
-
-.landing-logo {
-  height: 180px;
-  width: auto;
-  margin-bottom: 15px;
+.circle1{
+width:400px;
+height:400px;
+background:#6366f1;
+top:-100px;
+left:-100px;
 }
 
-/* ===============================
-   HEADER
-================================ */
-
-.landing-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
+.circle2{
+width:400px;
+height:400px;
+background:#06b6d4;
+bottom:-120px;
+right:-120px;
 }
 
-/* ===============================
-   TITLE
-================================ */
-
-.landing-title {
-  font-size: 30px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0)}
 }
 
-/* ===============================
-   SUBTITLE
-================================ */
+/* glass card */
 
-.landing-subtitle {
-  font-size: 15px;
-  color: #ffffff;
-  margin-bottom: 25px;
+.landing-card{
+width:420px;
+padding:50px;
+border-radius:18px;
+text-align:center;
+
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,0.15);
+
+box-shadow:0 10px 40px rgba(0,0,0,0.4);
+
+color:white;
 }
 
-/* ===============================
-   BUTTONS
-================================ */
+/* logo */
 
-.landing-buttons {
-  display: flex;
-  gap: 25px;
-  justify-content: center;
-  margin-top: 30px;
+.landing-logo{
+width:90px;
+margin-bottom:20px;
 }
 
+/* title */
+
+.landing-title{
+font-size:28px;
+margin-bottom:30px;
+}
+
+/* buttons */
+
+.landing-buttons{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
 .role-btn {
-  padding: 14px 32px;
-  border-radius: 50px;
-  border: 2px solid white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  background: transparent;
+  padding: 14px;
+  border-radius: 12px;
+
+  border: 1.5px solid rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.05);
+
   color: white;
+  font-size: 16px;
+  font-weight: 500;
+
+  text-align: center;
+  text-decoration: none;
+  display: block;
+
   backdrop-filter: blur(6px);
+
   transition: all 0.3s ease;
-   text-decoration: none;
 }
 
 .role-btn:hover {
-  background: white;
-  color: #0f4c81;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid white;
   transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
 }
 
+/* register link */
 
+.register-link{
+margin-top:20px;
+}
+
+.register-link a{
+color:#e2e8f0;
+text-decoration:none;
+}

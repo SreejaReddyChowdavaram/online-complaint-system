@@ -8,27 +8,33 @@ import complaintRoutes from "./routes/complaintRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import officerRoutes from "./routes/officerRoutes.js";
+
 const app = express();
 
-/* ------------------- PATH FIX FOR ES MODULE ------------------- */
+/* ---------------- PATH FIX FOR ES MODULE ---------------- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* ------------------- CORS ------------------- */
-app.use(cors());
-/* ------------------- BODY PARSER ------------------- */
+/* ---------------- CORS ---------------- */
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
+/* ---------------- BODY PARSER ---------------- */
 app.use(express.json());
 
-/* ------------------- SERVE UPLOADS CORRECTLY ------------------- */
-app.use("/uploads", express.static("uploads"));
+/* ---------------- SERVE UPLOADS ---------------- */
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* ------------------- ROUTES ------------------- */
+/* ---------------- ROUTES ---------------- */
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/officer", officerRoutes);
-/* ------------------- TEST ROUTE ------------------- */
+
+/* ---------------- HEALTH CHECK ---------------- */
 app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });

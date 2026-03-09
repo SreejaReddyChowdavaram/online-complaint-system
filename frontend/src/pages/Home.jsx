@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Typewriter } from "react-simple-typewriter";
+
 import {
   Zap,
   Droplet,
@@ -8,91 +10,142 @@ import {
   Trash2,
   Volume2,
 } from "lucide-react";
+
 import "./Home.css";
 
 function Home() {
+
   const navigate = useNavigate();
 
   return (
+
     <div className="home-wrapper">
 
-      {/* ================= HERO SECTION ================= */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1>
-            Online Civic Complaint <span>Registering System</span>
-          </h1>
+      {/* PARTICLES */}
+      <div className="particles"></div>
 
-          <p>
-            Empowering citizens to report public issues efficiently and
-            ensuring transparent governance through digital tracking.
-          </p>
+      {/* ================= MAIN SECTION ================= */}
 
-          <div className="hero-buttons">
-            <button
-              className="btn-secondary"
-              onClick={() => navigate("/landing")}
-            >
-              Get Started
-            </button>
+      <div className="home-main">
 
-            <button
-              className="btn-secondary"
-              onClick={() => navigate("/register")}
-            >
-              Create Account
-            </button>
-          </div>
-        </div>
-      </section>
+        {/* Floating Lights */}
 
-      {/* ================= SERVICES SECTION ================= */}
-      <section className="features-section">
-        <h2>Public Services Covered</h2>
+        <div className="light light1"></div>
+        <div className="light light2"></div>
+        <div className="light light3"></div>
+        <div className="light light4"></div>
 
-        <div className="features-grid">
+        {/* HERO SECTION */}
 
-          <div className="feature-card">
-            <Zap size={40} />
-            <h3>Electricity Issues</h3>
-            <p>Power outages, transformer faults, street light problems.</p>
-          </div>
+        <section className="hero-section">
 
-          <div className="feature-card">
-            <Droplet size={40} />
-            <h3>Water Supply</h3>
-            <p>Water leakage, supply interruption, low pressure.</p>
-          </div>
+          <div className="hero-content">
 
-          <div className="feature-card">
-            <Map size={40} />
-            <h3>Road Maintenance</h3>
-            <p>Potholes, damaged roads, unsafe pathways.</p>
-          </div>
+            <h1 className="hero-title">
 
-          <div className="feature-card">
-            <Waves size={40} />
-            <h3>Drainage</h3>
-            <p>Blocked drains, overflow, sewage complaints.</p>
-          </div>
+              Online Civic Complaint <br />
 
-          <div className="feature-card">
-            <Trash2 size={40} />
-            <h3>Garbage Management</h3>
-            <p>Uncollected waste, sanitation issues.</p>
-          </div>
+              <span className="typing">
 
-          <div className="feature-card">
-            <Volume2 size={40} />
-            <h3>Noise Pollution</h3>
-            <p>Excessive sound disturbances and public nuisance.</p>
+                <Typewriter
+                  words={[
+                    "Registering System",
+                    "Management Portal",
+                   
+                  ]}
+                  loop={true}
+                  cursor
+                  cursorStyle="|"
+                  typeSpeed={100}
+                  deleteSpeed={50}
+                  delaySpeed={1500}
+                />
+
+              </span>
+
+            </h1>
+
+            <p>
+              Empowering citizens to report public issues efficiently and
+              ensuring transparent governance through digital tracking.
+            </p>
+
+            <div className="hero-buttons">
+
+              <button
+                className="btn-secondary"
+                onClick={() => navigate("/landing")}
+              >
+                Get Started
+              </button>
+
+              <button
+                className="btn-secondary"
+                onClick={() => navigate("/register")}
+              >
+                Create Account
+              </button>
+
+            </div>
+
           </div>
 
-        </div>
-      </section>
+        </section>
 
-      {/* ================= FOOTER SECTION ================= */}
+        {/* ================= SERVICES ================= */}
+
+        <section className="features-section">
+
+          <h2>Public Services Covered</h2>
+
+          <div className="features-grid">
+
+            <div className="feature-card">
+              <Zap size={40}/>
+              <h3>Electricity Issues</h3>
+              <p>Power outages, transformer faults, street light problems.</p>
+            </div>
+
+            <div className="feature-card">
+              <Droplet size={40}/>
+              <h3>Water Supply</h3>
+              <p>Water leakage, supply interruption, low pressure.</p>
+            </div>
+
+            <div className="feature-card">
+              <Map size={40}/>
+              <h3>Road Maintenance</h3>
+              <p>Potholes, damaged roads, unsafe pathways.</p>
+            </div>
+
+            <div className="feature-card">
+              <Waves size={40}/>
+              <h3>Drainage</h3>
+              <p>Blocked drains, overflow, sewage complaints.</p>
+            </div>
+
+            <div className="feature-card">
+              <Trash2 size={40}/>
+              <h3>Garbage Management</h3>
+              <p>Uncollected waste, sanitation issues.</p>
+            </div>
+
+            <div className="feature-card">
+              <Volume2 size={40}/>
+              <h3>Noise Pollution</h3>
+              <p>Excessive sound disturbances and public nuisance.</p>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+      {/* ================= FOOTER ================= */}
+
       <footer className="footer">
+
         <div className="footer-container">
 
           <div className="footer-column">
@@ -126,6 +179,7 @@ function Home() {
           © {new Date().getFullYear()} Civic Complaint Registering System.
           All Rights Reserved.
         </div>
+
       </footer>
 
     </div>

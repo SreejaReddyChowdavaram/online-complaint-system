@@ -1,18 +1,52 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-control-geocoder";
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "./PostComplaint.css";
 import axios from "axios";
 
 /* ===============================
-   Map click handler
+   Click to Select Location
 ================================ */
 const LocationMarker = ({ setPosition }) => {
   useMapEvents({
     click(e) {
-      setPosition(e.latlng); // { lat, lng }
+      setPosition(e.latlng);
     },
   });
+  return null;
+};
+
+/* ===============================
+   Search Control
+================================ */
+const SearchControl = ({ setPosition }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: false,
+    })
+      .on("markgeocode", function (e) {
+        const latlng = e.geocode.center;
+        map.setView(latlng, 16);
+        setPosition(latlng);
+      })
+      .addTo(map);
+
+    return () => {
+      map.removeControl(geocoder);
+    };
+  }, [map, setPosition]);
+
   return null;
 };
 
@@ -71,14 +105,14 @@ const PostComplaint = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ DO NOT SET Content-Type
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       alert("Complaint submitted successfully ✅");
 
-      // Reset form
+      // Reset
       setTitle("");
       setCategory("");
       setDescription("");
@@ -99,108 +133,43 @@ const PostComplaint = () => {
       <div className="complaint-grid">
         {/* ================= LEFT FORM ================= */}
         <div className="form-section">
-          {/* TITLE */}
-          <label className="label-row">
-            <span>
-              Complaint Title <span className="required">*</span>
-              {submitted && errors.title && (
-                <span className="inline-error"> {errors.title}</span>
-              )}
-            </span>
-          </label>
+          <label>Complaint Title *</label>
           <input
             type="text"
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setErrors({ ...errors, title: "" });
-            }}
-            className={submitted && errors.title ? "error" : ""}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter title"
           />
 
-          {/* CATEGORY */}
-          <label className="label-row">
-            <span>
-              Category <span className="required">*</span>
-              {submitted && errors.category && (
-                <span className="inline-error"> {errors.category}</span>
-              )}
-            </span>
-          </label>
+          <label>Category *</label>
           <select
             value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-              setErrors({ ...errors, category: "" });
-            }}
-            className={submitted && errors.category ? "error" : ""}
+            onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="" disabled>
-              Select Category
-            </option>
+            <option value="">Select Category</option>
             <option value="Roads">Roads</option>
             <option value="Water">Water</option>
             <option value="Electricity">Electricity</option>
           </select>
 
-          {/* DESCRIPTION */}
-          <label className="label-row">
-            <span>
-              Description <span className="required">*</span>
-              {submitted && errors.description && (
-                <span className="inline-error">
-                  {" "}
-                  {errors.description}
-                </span>
-              )}
-            </span>
-          </label>
+          <label>Description *</label>
           <textarea
             value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              setErrors({ ...errors, description: "" });
-            }}
-            className={submitted && errors.description ? "error" : ""}
-            placeholder="Describe the issue..."
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe issue..."
           />
 
-          {/* IMAGES */}
-          <label className="label-row">
-            <span>
-              Upload Photos <span className="required">*</span>
-              {submitted && errors.images && (
-                <span className="inline-error">
-                  {" "}
-                  {errors.images}
-                </span>
-              )}
-            </span>
-          </label>
+          <label>Upload Photos *</label>
           <input
             type="file"
             multiple
-            onChange={(e) => {
-              setFiles(e.target.files);
-              setErrors({ ...errors, images: "" });
-            }}
+            onChange={(e) => setFiles(e.target.files)}
           />
         </div>
 
         {/* ================= RIGHT MAP ================= */}
         <div className="map-section">
-          <label className="label-row">
-            <span>
-              📍 Select Location <span className="required">*</span>
-              {submitted && errors.position && (
-                <span className="inline-error">
-                  {" "}
-                  {errors.position}
-                </span>
-              )}
-            </span>
-          </label>
+          <label>📍 Select Location *</label>
 
           <div className="map-box">
             <MapContainer
@@ -209,7 +178,14 @@ const PostComplaint = () => {
               style={{ height: "100%", width: "100%" }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+              {/* 🔥 Search Bar */}
+              <SearchControl setPosition={setPosition} />
+
+              {/* Click Select */}
               <LocationMarker setPosition={setPosition} />
+
+              {/* Marker */}
               {position && <Marker position={position} />}
             </MapContainer>
           </div>
@@ -218,11 +194,11 @@ const PostComplaint = () => {
             <div className="latlng-box">
               <div>
                 <label>Latitude</label>
-                <input type="text" value={position.lat} readOnly />
+                <input value={position.lat} readOnly />
               </div>
               <div>
                 <label>Longitude</label>
-                <input type="text" value={position.lng} readOnly />
+                <input value={position.lng} readOnly />
               </div>
             </div>
           )}

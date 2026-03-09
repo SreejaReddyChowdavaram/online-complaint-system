@@ -1,40 +1,80 @@
-.complaints-page {
-  padding: 20px;
+/* ================= PAGE ================= */
+body {
+  margin: 0;
 }
 
-.page-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  font-weight: 600;
+.dashboard-content {
+  min-height: 100vh;
+  padding: 25px;
+
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #4e54c8);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
 }
 
-.loading-text,
-.empty-text {
-  font-size: 16px;
-  color: #666;
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+/* ================= TITLES ================= */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffffff;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 6px;
 }
 
-/* GRID */
+/* ================= GRID ================= */
 .complaints-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* 🔥 smaller */
+  gap: 16px;
+  margin-bottom: 30px;
 }
 
-/* CARD */
+/* ================= BASE CARD ================= */
 .complaint-card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  color: white;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+  transition: transform 0.3s ease;
 }
 
 .complaint-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+}
+/* ================= STATUS CARD COLORS ================= */
+
+.card-pending {
+  border-left: 5px solid #f59e0b;
+  background: #fffbeb;
 }
 
-/* HEADER */
+.card-progress {
+  border-left: 5px solid #2563eb;
+  background: #eff6ff;
+}
+
+.card-resolved {
+  border-left: 5px solid #16a34a;
+  background: #f0fdf4;
+}
+
+/* ================= CARD CONTENT ================= */
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -42,28 +82,40 @@
 }
 
 .complaint-title {
-  font-size: 18px;
+  font-size: 15px; /* 🔥 smaller */
   font-weight: 600;
-  margin: 0;
+  color: #1e293b;
 }
 
-/* STATUS BADGES */
-.status {
-  padding: 6px 12px;
-  border-radius: 20px;
+.complaint-category {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0;
+}
+
+.complaint-date {
   font-size: 12px;
-  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* ================= STATUS BADGE ================= */
+
+.status {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
 .status.pending {
-  background: #fff3cd;
-  color: #b45309;
+  background: #fef3c7;
+  color: #92400e;
 }
 
-.status.in\ progress {
-  background: #e0f2fe;
-  color: #0369a1;
+.status.in-progress {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .status.resolved {
@@ -71,31 +123,82 @@
   color: #166534;
 }
 
-/* DESCRIPTION */
-.complaint-desc {
-  margin: 10px 0;
-  color: #444;
-  font-size: 14px;
+/* ================= MODAL ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* META */
-.meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #666;
+.modal {
+  background: #ffffff;
+  width: 550px; /* 🔥 smaller */
+  max-height: 75vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  padding: 20px; /* 🔥 smaller */
+}
+
+.modal h2 {
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
-.complaint-img {
-  display: block;
-  width: 100%;
-  max-height: 150px;   /* 🔥 smaller */
-  object-fit: contain; /* 🔥 clear full image */
-  border-radius: 12px;
-  margin-top: 10px;
-  background: #f3f4f6;
+.modal p {
+  font-size: 13px;
+  margin-bottom: 8px;
 }
 
+/* 🔥 Smaller images */
+.modal-images img {
+  width: 100%;
+  max-height: 140px;   /* Short height */
+  object-fit: contain; /* 🔥 shows full image clearly */
+  border-radius: 8px;
+  margin-top: 8px;
+  background: #f3f4f6; /* light background for empty space */
+  padding: 6px;
+}
+
+/* Close Button */
+.close-btn {
+  margin-top: 15px;
+  padding: 8px 16px;
+  font-size: 13px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #dc2626;
+} 
 
 
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,29 +1,35 @@
-// backend/models/User.js
-
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ["user", "officer", "admin"],
-      default: "user",
-    },
-  },
-  { timestamps: true }
-);
+const userSchema = new mongoose.Schema({
 
-export default mongoose.model("User", userSchema);
+  name: {
+    type: String,
+    required: true
+  },
+
+  email: {
+    type: String,
+    unique: true,
+    index: true,
+    required: true
+  },
+
+  phone: String,
+
+  password: {
+    type: String,
+    required: true
+  },
+
+  role: {
+    type: String,
+    enum: ["Citizen","Officer","Admin"],
+    default: "Citizen"
+  },
+
+  otp: String,
+  otpExpiry: Date
+
+});
+
+export default mongoose.models.User || mongoose.model("User", userSchema);

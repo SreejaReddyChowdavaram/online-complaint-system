@@ -1,46 +1,42 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import mongoose from "mongoose";
+import connectDB from "./config/database.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import app from "./app.js";
+
+import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";   // ⭐ ADD THIS
 
 /* ---------------- GET __dirname (ESM FIX) ---------------- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* ---------------- MONGO URI CHECK ---------------- */
-const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error("❌ MONGODB_URI is not set in .env");
-  process.exit(1);
-}
-
 /* ---------------- START SERVER ---------------- */
 const startServer = async () => {
   try {
-    // ✅ Removed deprecated options (MongoDB v4+ doesn't need them)
-    await mongoose.connect(MONGO_URI);
-    console.log("✅ MongoDB Connected");
+
+    await connectDB();
+
+    /* ROUTES */
+    app.use("/api/user", userRoutes);
+    app.use("/api/auth", authRoutes);   // ⭐ ADD THIS
+
+    const PORT = process.env.PORT || 5000;
+
+    const server = app.listen(PORT, () =>
+      console.log(`🚀 Server running on port ${PORT}`)
+    );
+
+    process.on("unhandledRejection", (err) => {
+      console.error("❌ Unhandled Rejection:", err);
+      server.close(() => process.exit(1));
+    });
+
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-    process.exit(1);
+    console.error("❌ Failed to start server due to MongoDB error:", err);
   }
-
-  /* 🔥 VERY IMPORTANT: SERVE UPLOADS */
-
-  const PORT = process.env.PORT || 5000;
-
-  const server = app.listen(PORT, () =>
-    console.log(`🚀 Server running on port ${PORT}`)
-  );
-
-  process.on("unhandledRejection", (err) => {
-    console.error("❌ Unhandled Rejection:", err);
-    server.close(() => process.exit(1));
-  });
 };
 
 startServer();

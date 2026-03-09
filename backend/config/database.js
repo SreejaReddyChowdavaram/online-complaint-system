@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Default local fallback (used when SRV/DNS resolution fails)
 const LOCAL_FALLBACK = 'mongodb://localhost:27017/jan-suvidha';
@@ -74,4 +74,4 @@ const connectDB = async () => {
   }, RETRY_INTERVAL_MS);
 };
 
-module.exports = connectDB;
+export default connectDB;

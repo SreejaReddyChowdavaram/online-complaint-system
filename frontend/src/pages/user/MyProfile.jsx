@@ -5,6 +5,7 @@ import "./MyProfile.css";
 
 const MyProfile = () => {
   const { user, updateUser, token } = useAuth();
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +16,7 @@ const MyProfile = () => {
     address: "",
   });
 
-  /* 🔄 LOAD USER DATA INTO FORM */
+  /* 🔄 Load logged-in user data */
   useEffect(() => {
     if (user) {
       setProfile({
@@ -27,17 +28,21 @@ const MyProfile = () => {
     }
   }, [user]);
 
+  /* ✅ Handle Input Change */
   const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
+    setProfile({
+      ...profile,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  /* ✅ SAVE PROFILE (BACKEND + CONTEXT) */
+  /* ✅ Save Updated Profile */
   const handleSave = async () => {
     try {
       setLoading(true);
 
       const res = await axios.put(
-        "http://localhost:3000/api/users/update-profile",
+        `http://localhost:5000/api/user/update/${user._id}`,
         {
           name: profile.name,
           mobile: profile.mobile,
@@ -50,19 +55,20 @@ const MyProfile = () => {
         }
       );
 
-      // ✅ Update AuthContext + localStorage with DB data
+      // Update AuthContext + localStorage
       updateUser(res.data.user);
 
       setIsEditing(false);
       alert("✅ Profile updated successfully");
-    } catch (err) {
-      console.error("Profile update error:", err);
+    } catch (error) {
+      console.error("Profile update error:", error);
       alert("❌ Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
+  /* ❌ Cancel Editing */
   const handleCancel = () => {
     setProfile({
       name: user.name || "",
@@ -81,6 +87,7 @@ const MyProfile = () => {
         <h3 className="card-title">Personal Details</h3>
 
         <div className="profile-grid">
+          {/* Name */}
           <div className="field">
             <label>Name</label>
             <input
@@ -92,11 +99,17 @@ const MyProfile = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="field">
             <label>Email</label>
-            <input type="email" value={profile.email} disabled />
+            <input
+              type="email"
+              value={profile.email}
+              disabled
+            />
           </div>
 
+          {/* Mobile */}
           <div className="field">
             <label>Mobile</label>
             <input
@@ -108,6 +121,7 @@ const MyProfile = () => {
             />
           </div>
 
+          {/* Address */}
           <div className="field full">
             <label>Address</label>
             <textarea
@@ -135,7 +149,11 @@ const MyProfile = () => {
             >
               {loading ? "Saving..." : "💾 Save Changes"}
             </button>
-            <button className="secondary-btn" onClick={handleCancel}>
+
+            <button
+              className="secondary-btn"
+              onClick={handleCancel}
+            >
               Cancel
             </button>
           </div>

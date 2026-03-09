@@ -7,6 +7,7 @@ import "./Register.css";
 const API_URL = "http://localhost:5000/api";
 
 const Register = () => {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,6 +39,7 @@ const Register = () => {
     }
 
     try {
+
       setLoading(true);
 
       await axios.post(`${API_URL}/auth/register`, {
@@ -48,24 +50,35 @@ const Register = () => {
         role,
       });
 
-      // ROLE BASED REDIRECT
       if (role === "Citizen") window.location.href = "/login/user";
       else if (role === "Officer") window.location.href = "/login/officer";
       else if (role === "Admin") window.location.href = "/login/admin";
+
     } catch (err) {
+
       setError(
         err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Registration failed"
+        err.response?.data?.error ||
+        "Registration failed"
       );
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page">
+
+    <div className="auth-wrapper">
+
+      {/* Floating background lights */}
+      <div className="light light1"></div>
+      <div className="light light2"></div>
+      <div className="light light3"></div>
+      <div className="light light4"></div>
+
       <form className="auth-card" onSubmit={handleSubmit} autoComplete="off">
+
         {/* Autofill trap */}
         <input type="text" style={{ display: "none" }} />
         <input type="password" style={{ display: "none" }} />
@@ -104,50 +117,58 @@ const Register = () => {
           required
         />
 
-        {/* PASSWORD WITH EYE ICON */}
-     <div className="password-wrapper">
-  <input
-    type={showPassword ? "text" : "password"}
-    name="password"
-    placeholder="Password"
-    className="auth-input"
-    value={password}
-    onChange={handleChange}
-    required
-  />
+        {/* PASSWORD FIELD */}
+        <div className="password-wrapper">
 
-  <span
-    className="eye-icon"
-    onClick={() => setShowPassword(!showPassword)}
-  >
-    {showPassword ? <FiEye /> : <FiEyeOff />}
-  </span>
-</div>
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="auth-input"
+            value={password}
+            onChange={handleChange}
+            required
+          />
 
-       <select
-  name="role"
-  className="auth-input register-select"
-  value={role}
-  onChange={handleChange}
-  required
->
-  <option value="" disabled>
-    Select Role
-  </option>
-  <option value="Citizen">Citizen</option>
-  <option value="Officer">Officer</option>
-  
-</select>
+          <span
+            className="eye-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FiEye /> : <FiEyeOff />}
+          </span>
 
+        </div>
+
+        {/* ROLE SELECT */}
+
+        <select
+          name="role"
+          className="auth-input register-select"
+          value={role}
+          onChange={handleChange}
+          required
+        >
+
+          <option value="" disabled>
+            Select Role
+          </option>
+
+          <option value="Citizen">Citizen</option>
+          <option value="Officer">Officer</option>
+
+        </select>
 
         <button className="auth-btn" type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
 
         <p className="auth-footer">
-          Already have an account? <Link to="/">Login</Link>
+          Already have an account?{" "}
+          <Link to="/landing">Login</Link>
         </p>
+
       </form>
+
     </div>
   );
 };
