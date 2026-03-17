@@ -8,6 +8,9 @@ import complaintRoutes from "./routes/complaintRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import officerRoutes from "./routes/officerRoutes.js";
+import aiRoutes from "./routes/ai.js";
+
+
 
 const app = express();
 
@@ -33,7 +36,7 @@ app.use("/api/complaints", complaintRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/officer", officerRoutes);
-
+app.use("/api/ai", aiRoutes);
 /* ---------------- HEALTH CHECK ---------------- */
 app.get("/health", (req, res) => {
   res.json({ status: "OK" });

@@ -1,27 +1,34 @@
-import dotenv from "dotenv";
-dotenv.config();
+// Load environment variables and normalize names before importing other modules
+import "./config/loadEnv.js";
 
-import connectDB from "./config/database.js";
+import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import app from "./app.js";
+
+import connectDB from "./config/database.js";
+import app from "./app.js";   // use app from app.js
 
 import userRoutes from "./routes/userRoutes.js";
-import authRoutes from "./routes/authRoutes.js";   // ⭐ ADD THIS
+import authRoutes from "./routes/authRoutes.js";
+import aiRoutes from "./routes/ai.js";   // ⭐ AI route
 
 /* ---------------- GET __dirname (ESM FIX) ---------------- */
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /* ---------------- START SERVER ---------------- */
+
 const startServer = async () => {
   try {
 
     await connectDB();
 
     /* ROUTES */
+
     app.use("/api/user", userRoutes);
-    app.use("/api/auth", authRoutes);   // ⭐ ADD THIS
+    app.use("/api/auth", authRoutes);
+    app.use("/api/ai", aiRoutes);   // ⭐ Gemini AI route
 
     const PORT = process.env.PORT || 5000;
 

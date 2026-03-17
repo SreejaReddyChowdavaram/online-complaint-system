@@ -1,79 +1,102 @@
-/* Layout */
-.user-dashboard {
-  display: flex;
+/* ================= DASHBOARD LAYOUT ================= */
+
+.user-dashboard{
+display:flex;
 }
 
-/* Sidebar */
-.user-sidebar {
-  width: 230px;
-  background: #0f172a;
-  color: white;
-  min-height: 100vh;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+/* ================= SIDEBAR ================= */
+
+.user-sidebar{
+position:fixed;
+left:0;
+top:60px;                /* BELOW NAVBAR */
+height:calc(100vh - 60px);
+
+width:220px;
+background:#1e293b;
+color:white;
+
+padding:20px;
+transition:width 0.3s ease;
 }
 
-/* Collapsed */
-.user-sidebar.closed {
-  width: 60px;
+/* ================= COLLAPSED SIDEBAR ================= */
+
+.user-sidebar.closed{
+width:70px;
 }
 
-/* Top area for toggle */
-.sidebar-top {
-  padding: 15px;
-  display: flex;
-  justify-content: flex-end;
+/* ================= SIDEBAR TOP ================= */
+
+.sidebar-top{
+display:flex;
+justify-content:flex-end;
+margin-bottom:20px;
 }
 
-/* Toggle Button */
-.sidebar-toggle {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
+/* ================= TOGGLE BUTTON ================= */
+
+.sidebar-toggle{
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
 }
 
-/* Sidebar content */
-.sidebar-content {
-  padding: 0 20px 20px 20px;
+/* ================= SIDEBAR TITLE ================= */
+
+.user-sidebar-title{
+font-size:18px;
+margin-bottom:20px;
+font-weight:600;
 }
 
-/* Hide only content */
-.sidebar-content.hidden {
-  display: none;
+/* ================= SIDEBAR MENU ================= */
+
+.user-sidebar-menu{
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
-/* Title */
-.user-sidebar-title {
-  margin-bottom: 20px;
+/* ================= SIDEBAR LINKS ================= */
+
+.user-sidebar-link{
+text-decoration:none;
+color:white;
+padding:10px;
+border-radius:6px;
+transition:background 0.2s;
 }
 
-/* Links */
-.user-sidebar-link {
-  display: block;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  text-decoration: none;
-  color: #cbd5e1;
-  border-radius: 6px;
-  transition: 0.2s;
+.user-sidebar-link:hover{
+background:#334155;
 }
 
-.user-sidebar-link:hover {
-  background: #1e293b;
-  color: white;
+/* ACTIVE LINK */
+
+.user-sidebar-link.active{
+background:#2563eb;
 }
 
-.user-sidebar-link.active {
-  background: #2563eb;
-  color: white;
+/* ================= HIDE TEXT WHEN COLLAPSED ================= */
+
+.sidebar-content.hidden{
+display:none;
 }
 
-/* Content */
-.dashboard-content {
-  flex: 1;
-  padding: 25px;
+/* ================= DASHBOARD CONTENT ================= */
+
+.dashboard-content{
+margin-left:220px;
+padding:30px;
+width:100%;
+min-height:calc(100vh - 60px);
+}
+
+/* ================= WHEN SIDEBAR COLLAPSED ================= */
+
+.user-sidebar.closed ~ .dashboard-content{
+margin-left:70px;
 }

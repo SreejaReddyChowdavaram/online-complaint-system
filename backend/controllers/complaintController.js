@@ -3,7 +3,7 @@ import Complaint from "../models/Complaint.js";
 export const getUserComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find({
-      user: req.user._id,
+      userId: req.user._id, // ✅ FIXED HERE
     }).sort({ createdAt: -1 });
 
     res.status(200).json(complaints);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
+import ChatBot from "../../components/ChatBot";
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
@@ -62,7 +63,7 @@ const UserDashboard = () => {
       <main className="dashboard-content">
         <Outlet />
       </main>
-
+              <ChatBot />
     </div>
   );
 };
