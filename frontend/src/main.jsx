@@ -20,9 +20,7 @@ const AppProviders = ({ children }) => {
     return (
       <GoogleOAuthProvider clientId={clientId}>
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          {children}
         </ThemeProvider>
       </GoogleOAuthProvider>
     );
@@ -30,9 +28,7 @@ const AppProviders = ({ children }) => {
 
   return (
     <ThemeProvider>
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      {children}
     </ThemeProvider>
   );
 };
