@@ -4,6 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./i18n";
 import "./styles/index.css";
+import axios from "axios";
+
+// ✅ Enable credentials globally for the entire MERN stack
+axios.defaults.withCredentials = true;
 import ErrorBoundary from "./components/ErrorBoundary";
 
 import { ThemeProvider } from "./context/ThemeContext";
