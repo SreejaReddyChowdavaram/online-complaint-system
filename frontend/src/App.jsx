@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { AuthProvider } from "./context/AuthContext";
 import { ComplaintProvider } from "./context/ComplaintContext";
 
+import { GoogleOAuthProvider } from "@react-oauth/google"; // ✅ IMPORTANT
+
 import Navbar from "./components/Navbar";
 
 /* HOME */
@@ -52,8 +54,12 @@ const Layout = ({ children }) => {
   const { t } = useTranslation();
   const location = useLocation();
 
-  // CHECK 5: PREVENT CRASH
-  if (!t) return <div style={{ padding: "20px", textAlign: "center" }}>Initializing translations...</div>;
+  if (!t)
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        Initializing translations...
+      </div>
+    );
 
   const hideNavbar =
     location.pathname === "/" ||
@@ -83,77 +89,85 @@ const Layout = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ComplaintProvider>
-        <Layout>
-          <Routes>
+    // ✅ THIS FIXES YOUR GOOGLE LOGIN
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <ComplaintProvider>
+          <Layout>
+            <Routes>
+              {/* HOME */}
+              <Route path="/" element={<Home />} />
+              <Route path="/landing" element={<LandingPage />} />
 
-            {/* HOME */}
-            <Route path="/" element={<Home />} />
-            <Route path="/landing" element={<LandingPage />} />
+              {/* AUTH */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/login/user" element={<UserLogin />} />
+              <Route path="/login/officer" element={<OfficerLogin />} />
+              <Route path="/login/admin" element={<AdminLogin />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            {/* PUBLIC AUTH */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/login/user" element={<UserLogin />} />
-            <Route path="/login/officer" element={<OfficerLogin />} />
-            <Route path="/login/admin" element={<AdminLogin />} />
-            <Route path="/register" element={<Register />} />
+              {/* USER */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute role="Citizen">
+                    <UserDashboard />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<ViewComplaints />} />
+                <Route
+                  path="complaint/:id"
+                  element={<ComplaintDetailView />}
+                />
+                <Route path="post-complaint" element={<PostComplaint />} />
+                <Route path="profile" element={<MyProfile />} />
+              </Route>
 
-            {/* ✅ FORGOT PASSWORD ROUTE */}
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+              {/* OFFICER */}
+              <Route
+                path="/officer"
+                element={
+                  <ProtectedRoute role="Officer">
+                    <OfficerLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="dashboard" element={<AssignedComplaints />} />
+                <Route path="complaints" element={<AssignedComplaints />} />
+                <Route
+                  path="complaints/:id"
+                  element={<ComplaintDetailView />}
+                />
+                <Route path="profile" element={<OfficerProfile />} />
+                <Route path="feedback" element={<OfficerFeedback />} />
+              </Route>
 
-            {/* USER DASHBOARD */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute role="Citizen">
-                  <UserDashboard />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<ViewComplaints />} />
-              <Route path="complaint/:id" element={<ComplaintDetailView />} />
-              <Route path="post-complaint" element={<PostComplaint />} />
-              <Route path="profile" element={<MyProfile />} />
-            </Route>
-
-            {/* OFFICER */}
-            <Route
-              path="/officer"
-              element={
-                <ProtectedRoute role="Officer">
-                  <OfficerLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="dashboard" element={<AssignedComplaints />} />
-              <Route path="complaints" element={<AssignedComplaints />} />
-              <Route path="complaints/:id" element={<ComplaintDetailView />} />
-              <Route path="profile" element={<OfficerProfile />} />
-              <Route path="feedback" element={<OfficerFeedback />} />
-            </Route>
-
-            {/* ADMIN */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute role="Admin">
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="complaints" element={<ViewaComplaints />} />
-              <Route path="complaints/:id" element={<ComplaintDetailView />} />
-              <Route path="profile" element={<AdminProfile />} />
-              <Route path="feedback" element={<AdminFeedback />} />
-              <Route path="manage-users" element={<ManageUsers />} />
-            </Route>
-
-          </Routes>
-        </Layout>
-      </ComplaintProvider>
-    </AuthProvider>
+              {/* ADMIN */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute role="Admin">
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="complaints" element={<ViewaComplaints />} />
+                <Route
+                  path="complaints/:id"
+                  element={<ComplaintDetailView />}
+                />
+                <Route path="profile" element={<AdminProfile />} />
+                <Route path="feedback" element={<AdminFeedback />} />
+                <Route path="manage-users" element={<ManageUsers />} />
+              </Route>
+            </Routes>
+          </Layout>
+        </ComplaintProvider>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 
