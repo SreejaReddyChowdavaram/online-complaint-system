@@ -21,6 +21,7 @@
     { "src": "/api/feedback/(.*)", "dest": "/api/feedback.js" },
     { "src": "/api/dashboard-stats", "dest": "/api/dashboard-stats.js" },
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
