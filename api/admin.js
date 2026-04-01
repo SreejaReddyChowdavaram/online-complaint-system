@@ -1,5 +1,5 @@
-import dashboardHandler from "./_admin/dashboard.js";
-import usersHandler from "./_admin/users.js";
+import dashboardHandler from "../api-handlers/_admin/dashboard.js";
+import usersHandler from "../api-handlers/_admin/users.js";
 
 export default async function handler(req, res) {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;

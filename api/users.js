@@ -1,6 +1,6 @@
-import meHandler from "./_users/me.js";
-import profileHandler from "./_users/profile.js";
-import changePasswordHandler from "./_users/change-password.js";
+import meHandler from "../api-handlers/_users/me.js";
+import profileHandler from "../api-handlers/_users/profile.js";
+import changePasswordHandler from "../api-handlers/_users/change-password.js";
 
 export default async function handler(req, res) {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;

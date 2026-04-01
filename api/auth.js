@@ -1,10 +1,10 @@
-import loginHandler from "./_auth/login.js";
-import registerHandler from "./_auth/register.js";
-import adminLoginHandler from "./_auth/admin-login.js";
-import googleHandler from "./_auth/google.js";
-import resetPasswordHandler from "./_auth/reset-password.js";
-import sendOtpHandler from "./_auth/send-otp.js";
-import verifyOtpHandler from "./_auth/verify-otp.js";
+import loginHandler from "../api-handlers/_auth/login.js";
+import registerHandler from "../api-handlers/_auth/register.js";
+import adminLoginHandler from "../api-handlers/_auth/admin-login.js";
+import googleHandler from "../api-handlers/_auth/google.js";
+import resetPasswordHandler from "../api-handlers/_auth/reset-password.js";
+import sendOtpHandler from "../api-handlers/_auth/send-otp.js";
+import verifyOtpHandler from "../api-handlers/_auth/verify-otp.js";
 
 export default async function handler(req, res) {
   // Extract path from URL (e.g., /api/auth/login -> login)

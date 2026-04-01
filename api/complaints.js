@@ -1,10 +1,10 @@
-import indexHandler from "./_complaints/index.js";
-import userHandler from "./_complaints/user.js";
-import idHandler from "./_complaints/[id].js";
-import commentHandler from "./_complaints/comment.js";
-import commentsHandler from "./_complaints/comments.js";
-import upvoteHandler from "./_complaints/upvote.js";
-import downvoteHandler from "./_complaints/downvote.js";
+import indexHandler from "../api-handlers/_complaints/index.js";
+import userHandler from "../api-handlers/_complaints/user.js";
+import idHandler from "../api-handlers/_complaints/[id].js";
+import commentHandler from "../api-handlers/_complaints/comment.js";
+import commentsHandler from "../api-handlers/_complaints/comments.js";
+import upvoteHandler from "../api-handlers/_complaints/upvote.js";
+import downvoteHandler from "../api-handlers/_complaints/downvote.js";
 
 export default async function handler(req, res) {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;

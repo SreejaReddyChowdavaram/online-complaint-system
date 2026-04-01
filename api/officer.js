@@ -1,5 +1,5 @@
-import complaintsHandler from "./_officer/complaints.js";
-import updateHandler from "./_officer/update-complaint.js";
+import complaintsHandler from "../api-handlers/_officer/complaints.js";
+import updateHandler from "../api-handlers/_officer/update-complaint.js";
 
 export default async function handler(req, res) {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;

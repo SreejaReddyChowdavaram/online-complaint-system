@@ -1,5 +1,5 @@
-import indexHandler from "./_notifications/index.js";
-import markReadHandler from "./_notifications/mark-read.js";
+import indexHandler from "../api-handlers/_notifications/index.js";
+import markReadHandler from "../api-handlers/_notifications/mark-read.js";
 
 export default async function handler(req, res) {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;
