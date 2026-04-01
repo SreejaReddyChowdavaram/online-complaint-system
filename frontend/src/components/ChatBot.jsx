@@ -103,6 +103,7 @@ const ChatBot = () => {
       });
 
       const data = await res.json();
+      console.log("🤖 [AI Response]:", data);
       let botText = data.reply || "AI did not respond.";
 
       // 🔍 DETECT STRUCTURED DATA (FOR FEEDBACK SUBMISSION)

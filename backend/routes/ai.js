@@ -103,6 +103,12 @@ Response: "This feature is not available in the system ⚠️"
     });
 
     const data = await response.json();
+    
+    if (data.error) {
+      console.error("❌ [OPENROUTER ERROR]:", data.error);
+      return res.status(502).json({ reply: "AI failed to respond due to API error." });
+    }
+
     let reply = data.choices?.[0]?.message?.content || "AI failed to respond.";
 
     // Backup scope check if AI hallucinations occur
@@ -114,8 +120,8 @@ Response: "This feature is not available in the system ⚠️"
     res.json({ reply });
 
   } catch (error) {
-    console.error("AI ERROR:", error);
-    res.status(500).json({ reply: "AI failed to respond" });
+    console.error("🔥 [SERVER AI ERROR]:", error);
+    res.status(500).json({ reply: "AI failed to respond. Please check backend logs." });
   }
 });
 
