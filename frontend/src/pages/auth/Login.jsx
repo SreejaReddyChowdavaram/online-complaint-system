@@ -8,6 +8,25 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { GoogleLogin } from "@react-oauth/google";
 
 const API_URL = "/api";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+/**
+ * 🔹 HELPER: Safe Error Extraction
+ * Ensures we never try to render a raw object in JSX.
+ */
+const getErrorMessage = (err, fallback = "An unexpected error occurred") => {
+  if (typeof err === "string") return err;
+  if (!err) return fallback;
+  
+  // Axios response structure
+  if (err.response?.data) {
+    const data = err.response.data;
+    return data.message || data.error || (typeof data === "string" ? data : JSON.stringify(data));
+  }
+  
+  // Standard Error object or custom object
+  return err.message || JSON.stringify(err);
+};
 
 function Login({ title, role = "Citizen" }) {
   const { t } = useTranslation();
@@ -46,11 +65,7 @@ function Login({ title, role = "Citizen" }) {
       else navigate("/dashboard");
 
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        t("auth.login_failed")
-      );
+      setError(getErrorMessage(err, t("auth.login_failed")));
     } finally {
       setLoading(false);
     }
@@ -72,7 +87,7 @@ function Login({ title, role = "Citizen" }) {
       else navigate("/dashboard");
 
     } catch (err) {
-      setError(err.response?.data?.message || "Google Login Failed");
+      setError(getErrorMessage(err, "Google Login Failed"));
     } finally {
       setLoading(false);
     }
@@ -141,15 +156,21 @@ function Login({ title, role = "Citizen" }) {
             </div>
 
             <div className="google-login-container">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                theme="filled_blue"
-                size="large"
-                text="signin_with"
-                shape="pill"
-                width="100%"
-              />
+              {GOOGLE_CLIENT_ID ? (
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme="filled_blue"
+                  size="large"
+                  text="signin_with"
+                  shape="pill"
+                  width="100%"
+                />
+              ) : (
+                <div className="google-not-config bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 text-amber-500 text-xs text-center">
+                  Google Login Not Configured (Missing ID)
+                </div>
+              )}
             </div>
 
             <p className="auth-info-text" style={{ marginTop: "20px", opacity: 0.7, fontSize: "0.9rem" }}>

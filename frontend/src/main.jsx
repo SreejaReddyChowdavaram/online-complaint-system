@@ -11,6 +11,10 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+if (!clientId) {
+  console.warn("⚠️ [Auth] VITE_GOOGLE_CLIENT_ID is missing. Google Login will be disabled.");
+}
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ErrorBoundary>
