@@ -18,24 +18,11 @@ const NotificationBell = () => {
   useEffect(() => {
     fetchNotifications();
     
-    // Initialize Socket.io
-    const socket = io("http://localhost:5000");
-    socketRef.current = socket;
-
-    if (user?._id) {
-      socket.emit("register", user._id);
-    }
-
-    socket.on("notification", (newNotif) => {
-      console.log("New real-time notification:", newNotif);
-      setNotifications(prev => [newNotif, ...prev]);
-      setUnreadCount(prev => prev + 1);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
+    // Note: Socket.io is disabled for Vercel serverless compatibility.
+    // For real-time functionality, consider using a specialized service (Pusher, Ably) 
+    // or set up a polling interval here.
   }, [user?._id]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {

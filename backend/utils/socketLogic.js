@@ -40,12 +40,16 @@ export const initSocket = (server) => {
 
 export const getIO = () => {
   if (!io) {
-    throw new Error("Socket.io not initialized!");
+    console.warn("⚠️ Socket.io not initialized (Expected in serverless environment)");
+    return null;
   }
   return io;
 };
 
 export const sendSocketNotification = (userId, data) => {
+  if (!io) {
+    return false;
+  }
   const socketId = userSocketMap.get(userId.toString());
   if (socketId) {
     io.to(socketId).emit("notification", data);
@@ -53,3 +57,4 @@ export const sendSocketNotification = (userId, data) => {
   }
   return false;
 };
+

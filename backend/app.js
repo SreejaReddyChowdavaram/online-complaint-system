@@ -26,7 +26,8 @@ app.use(cors({
 }));
 
 /* ---------------- BODY PARSER ---------------- */
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 /* ---------------- SERVE UPLOADS ---------------- */
 app.use("/uploads", express.static("uploads"));
@@ -41,9 +42,34 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.get("/api/dashboard-stats", getDashboardStats);
+
 /* ---------------- HEALTH CHECK ---------------- */
-app.get("/health", (req, res) => {
-  res.json({ status: "OK" });
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV
+  });
 });
 
-export default app;
+/* ---------------- 404 HANDLER ---------------- */
+app.use((req, res, next) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`
+  });
+});
+
+/* ---------------- GLOBAL ERROR HANDLER ---------------- */
+app.use((err, req, res, next) => {
+  console.error("🔥 [SERVER ERROR]:", err.stack);
+  
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined
+  });
+});
+
+export default app;

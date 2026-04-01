@@ -41,20 +41,8 @@ const NotificationDropdown = () => {
   useEffect(() => {
     fetchNotifications();
 
-    const SOCKET_URL = window.location.hostname === "localhost" ? "http://localhost:5000" : "";
-    const socket = io(SOCKET_URL, {
-      withCredentials: true,
-      transports: ["websocket"]
-    });
-
-    if (user?._id || user?.id) {
-      socket.emit("register", user._id || user.id);
-    }
-
-    socket.on("notification", (newNotif) => {
-      setNotifications(prev => [newNotif, ...prev]);
-    });
-
+    // Note: Socket.io is disabled for Vercel serverless compatibility.
+    // Real-time updates are handled via the 30s polling interval below.
     const interval = setInterval(fetchNotifications, 30000);
     
     const handleClickOutside = (event) => {
@@ -65,11 +53,11 @@ const NotificationDropdown = () => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      socket.disconnect();
       clearInterval(interval);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [user]);
+
 
   const fetchNotifications = async () => {
     try {
