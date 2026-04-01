@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import { MessageSquare, X, Bot } from "lucide-react";
 import "./ChatBot.css";
 
@@ -53,7 +53,7 @@ const ChatBot = () => {
       setMessages(prev => [...prev, { text: initialMsg, sender: "user" }]);
 
       try {
-        const res = await fetch("/api/ai/chat", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/ai/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const ChatBot = () => {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const res = await fetch("/api/ai/chat", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/ai/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const ChatBot = () => {
             const structuredData = JSON.parse(jsonMatch[0]);
             
             // Auto-submit feedback to backend
-            await axios.post("/api/feedback", {
+            await api.post("/feedback", {
               officerName: structuredData.officer,
               department: structuredData.department,
               complaintId: structuredData.complaintId,
@@ -122,8 +122,6 @@ const ChatBot = () => {
               message: structuredData.message,
               sentiment: structuredData.sentiment || "Neutral",
               escalated: !!structuredData.escalated
-            }, {
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
 
             // Remove the JSON block from the bot's reply for a clean UI

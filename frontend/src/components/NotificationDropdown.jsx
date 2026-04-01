@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import { 
   Bell, 
   CheckCheck, 
@@ -62,10 +62,7 @@ const NotificationDropdown = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const { data } = await axios.get("/api/notifications", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const { data } = await api.get("/notifications");
       setNotifications(data);
     } catch (err) {
       console.error("Error fetching notifications:", err);
@@ -77,10 +74,7 @@ const NotificationDropdown = () => {
   const handleNotificationClick = async (notification) => {
     if (!notification.isRead) {
       try {
-        const token = localStorage.getItem("token");
-        await axios.put(`/api/notifications/mark-as-read/${notification._id}`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.put(`/notifications/mark-as-read/${notification._id}`);
         setNotifications(prev => 
           prev.map(n => n._id === notification._id ? { ...n, isRead: true } : n)
         );
@@ -106,10 +100,7 @@ const NotificationDropdown = () => {
 
   const markAllRead = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put("/api/notifications/mark-all-read", {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put("/notifications/mark-all-read");
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     } catch (err) {
       console.error("Error clearing notifications:", err);

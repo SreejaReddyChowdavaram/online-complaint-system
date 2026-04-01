@@ -6,11 +6,11 @@ import axios from "axios";
  * Ensures all API calls are directed to the Vercel serverless /api prefix.
  */
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: (import.meta.env.VITE_API_URL || "") + "/api",
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Required for cross-site cookie based auth if needed
+  withCredentials: true,
 });
 
 // Request Interceptor: Optional (e.g. for dynamic token injection)

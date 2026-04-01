@@ -41,10 +41,7 @@ const OfficerFeedback = () => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/api/feedback/my-feedback", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get("/feedback/my-feedback");
       
       if (res.data) {
         console.log("Fetched Feedback Data:", res.data);

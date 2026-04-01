@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useTranslation } from "react-i18next";
 
 const CommentSection = ({ complaintId, isReadOnly = false }) => {
@@ -7,14 +7,11 @@ const CommentSection = ({ complaintId, isReadOnly = false }) => {
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("token");
 
   const fetchComments = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/api/complaints/comments/${complaintId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/complaints/comments/${complaintId}`);
       setComments(res.data);
     } catch (err) {
       console.error(err);
@@ -31,13 +28,7 @@ const CommentSection = ({ complaintId, isReadOnly = false }) => {
     if (!text.trim() || isReadOnly) return;
 
     try {
-      await axios.post(
-        `/api/complaints/comment/${complaintId}`,
-        { text },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await api.post(`/complaints/comment/${complaintId}`, { text });
       setText("");
       fetchComments(); // Refresh list immediately
     } catch (err) {
