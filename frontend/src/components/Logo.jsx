@@ -18,11 +18,7 @@ const Logo = ({ size = "md", showText = false }) => {
         decoding="async"
       />
 
-      {showText && (
-        <span style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1e40af" }}>
-          JAN SUVIDHA
-        </span>
-      )}
+
     </div>
   );
 };

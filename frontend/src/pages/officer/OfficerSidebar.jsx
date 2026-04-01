@@ -32,7 +32,7 @@ const OfficerSidebar = ({ onClose }) => {
             }
           >
             {item.icon}
-            <span>{item.label}</span>
+            <span>{String(item.label)}</span>
           </NavLink>
         ))}
       </nav>
@@ -44,7 +44,7 @@ const OfficerSidebar = ({ onClose }) => {
           className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors"
         >
           <LogOut size={20} />
-          <span>{t("navbar.logout")}</span>
+          <span>{String(t("navbar.logout"))}</span>
         </button>
       </div>
     </div>

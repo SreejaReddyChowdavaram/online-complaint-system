@@ -92,9 +92,9 @@ function Login({ title, role = "Citizen" }) {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
       <div className="auth-card">
-        <h2 className="auth-title">{title || t("auth.login")}</h2>
+        <h2 className="auth-title">{String(title || t("auth.login"))}</h2>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && <p className="error-text">{String(error)}</p>}
 
         {/* --- 📧 EMAIL/PASSWORD FORM (TOP) --- */}
         <form onSubmit={handleSubmit} style={{ display: "contents" }}>

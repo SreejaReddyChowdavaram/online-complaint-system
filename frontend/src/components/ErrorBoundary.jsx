@@ -7,7 +7,7 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, error };
+    return { hasError: true, error: error || "Unknown Error" };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -54,7 +54,9 @@ class ErrorBoundary extends React.Component {
             maxWidth: "80%",
             overflow: "auto"
           }}>
-            {this.state.error?.toString()}
+            {typeof this.state.error === 'object' 
+              ? `Object keys: ${Object.keys(this.state.error || {}).join(', ')} | ${String(this.state.error)}` 
+              : String(this.state.error)}
           </pre>
         </div>
       );

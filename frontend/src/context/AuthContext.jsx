@@ -56,9 +56,9 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error("Auth init failed:", error);
-        localStorage.clear();
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setUser(null);
-        setToken(null);
       } finally {
         setLoading(false);
       }
