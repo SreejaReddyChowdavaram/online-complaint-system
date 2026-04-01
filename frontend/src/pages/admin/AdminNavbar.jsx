@@ -5,7 +5,6 @@ import NotificationDropdown from "../../components/NotificationDropdown";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../../assets/logo.png";
 
 const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
   const { user } = useAuth();
@@ -58,7 +57,7 @@ const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
 
         {/* BRANDING */}
         <div className="flex items-center gap-3">
-          <img src={logo} alt="Logo" className="h-8 w-8 object-contain" />
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
           <div className="flex flex-col">
             <span className="text-gray-800 dark:text-white font-semibold whitespace-nowrap leading-none">
               Online Complaint System

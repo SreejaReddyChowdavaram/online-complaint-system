@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
-import logo from "../../assets/logo.png";
 
 export default function AdminHeader() {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ export default function AdminHeader() {
       {/* LEFT */}
       <div style={styles.left}>
         <img
-          src={logo}
+          src="/logo.png"
           alt="logo"
           style={{ height: 40 }}
         />

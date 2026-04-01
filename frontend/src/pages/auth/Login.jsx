@@ -6,7 +6,6 @@ import { useAuth } from "../../context/AuthContext";
 import "./Login.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { GoogleLogin } from "@react-oauth/google";
-import Logo from "../../components/Logo";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -119,9 +118,6 @@ function Login({ title, role = "Citizen" }) {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
       <div className="auth-card">
-        <div className="flex justify-center mb-6">
-          <Logo size="lg" />
-        </div>
         <h2 className="auth-title">{String(title || t("auth.login"))}</h2>
 
         {error && <p className="error-text">{String(error)}</p>}
