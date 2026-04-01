@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import "./Register.css";
+import Logo from "../../components/Logo";
 
 
 const Register = () => {
@@ -78,6 +79,9 @@ const Register = () => {
         <input type="text" style={{ display: "none" }} />
         <input type="password" style={{ display: "none" }} />
 
+        <div className="flex justify-center mb-6">
+          <Logo size="lg" />
+        </div>
         <h2 className="auth-title">{t("register.title")}</h2>
 
         {error && <p className="error-text">{String(error)}</p>}
