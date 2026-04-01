@@ -86,7 +86,7 @@ function Login({ title, role = "Citizen" }) {
   const handleGoogleSuccess = async (response) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/auth/google-login`, {
+      const res = await axios.post(`${API_URL}/auth/google`, {
         token: response.credential,
         role: role // Send the role we are logging in as
       });

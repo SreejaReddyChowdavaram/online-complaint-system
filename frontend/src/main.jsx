@@ -15,16 +15,36 @@ if (!clientId) {
   console.warn("⚠️ [Auth] VITE_GOOGLE_CLIENT_ID is missing. Google Login will be disabled.");
 }
 
+const AppProviders = ({ children }) => {
+  if (clientId) {
+    return (
+      <GoogleOAuthProvider clientId={clientId}>
+        <ThemeProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
+      </GoogleOAuthProvider>
+    );
+  }
+
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        {children}
+      </AuthProvider>
+    </ThemeProvider>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <GoogleOAuthProvider clientId={clientId}>
-        <ThemeProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ThemeProvider>
-      </GoogleOAuthProvider>
+      <AppProviders>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AppProviders>
     </ErrorBoundary>
   </React.StrictMode>
 );

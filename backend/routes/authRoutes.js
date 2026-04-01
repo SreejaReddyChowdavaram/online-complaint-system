@@ -14,7 +14,7 @@ const router = express.Router();
 /* -------- AUTH -------- */
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/google-login", googleLogin);
+router.post("/google", googleLogin);
 router.post("/admin-login", adminLogin);
 
 /* -------- FORGOT PASSWORD FLOW -------- */
