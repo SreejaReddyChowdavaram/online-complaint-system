@@ -4,7 +4,7 @@ import { withAuth } from "../../lib/authMiddleware.js";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed. Use GET." });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   try {
@@ -18,8 +18,8 @@ const handler = async (req, res) => {
     return res.status(200).json(complaints);
 
   } catch (error) {
-    console.error("GET ASSIGNED ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

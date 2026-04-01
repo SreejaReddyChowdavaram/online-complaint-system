@@ -7,7 +7,7 @@ import { sendNotification } from "../../utils/notificationHelper.js";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed. Use POST." });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   try {
@@ -77,8 +77,8 @@ const handler = async (req, res) => {
     return res.status(201).json({ success: true, feedback });
 
   } catch (error) {
-    console.error("FEEDBACK CREATE ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

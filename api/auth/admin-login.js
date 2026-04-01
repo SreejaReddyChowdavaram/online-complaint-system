@@ -38,7 +38,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Admin login successful",
       token,
       user: {
         _id: user._id,
@@ -48,7 +47,7 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error("ADMIN LOGIN ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 }

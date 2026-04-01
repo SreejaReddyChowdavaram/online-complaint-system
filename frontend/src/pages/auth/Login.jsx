@@ -86,7 +86,7 @@ function Login({ title, role = "Citizen" }) {
     try {
       setLoading(true);
       const res = await api.post(`/auth/google`, {
-        token: response.credential,
+        credential: response.credential,
         role: role // Send the role we are logging in as
       });
 

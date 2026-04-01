@@ -91,8 +91,8 @@ const handler = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed" });
 
   } catch (error) {
-    console.error("COMPLAINTS HANDLER ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

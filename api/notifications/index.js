@@ -19,8 +19,8 @@ const handler = async (req, res) => {
     return res.status(200).json(notifications);
 
   } catch (error) {
-    console.error("NOTIFICATIONS ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

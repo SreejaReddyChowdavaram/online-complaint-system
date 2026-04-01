@@ -4,7 +4,7 @@ import { withAuth } from "../../lib/authMiddleware.js";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed. Use POST." });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   const { id } = req.query;
@@ -47,8 +47,8 @@ const handler = async (req, res) => {
     await complaint.save();
     return res.status(200).json(complaint);
   } catch (error) {
-    console.error("UPVOTE ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

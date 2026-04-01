@@ -102,8 +102,8 @@ ROLE SPECIFIC DATA:
     return res.status(200).json({ reply });
 
   } catch (error) {
-    console.error("AI HANDLER ERROR:", error);
-    return res.status(500).json({ reply: "AI assistant is currently offline." });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

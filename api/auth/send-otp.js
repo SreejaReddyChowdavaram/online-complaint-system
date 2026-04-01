@@ -4,7 +4,7 @@ import sendEmail from "../../utils/sendEmail.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed. Use POST." });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   try {
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, message: "OTP sent" });
 
   } catch (error) {
-    console.error("SEND OTP ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 }

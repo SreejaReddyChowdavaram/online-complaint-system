@@ -1,43 +1,17 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/auth/login", "destination": "/api/auth/login.js" },
-    { "source": "/api/auth/register", "destination": "/api/auth/register.js" },
-    { "source": "/api/auth/google", "destination": "/api/auth/google.js" },
-    { "source": "/api/auth/admin-login", "destination": "/api/auth/admin-login.js" },
-    { "source": "/api/auth/send-otp", "destination": "/api/auth/send-otp.js" },
-    { "source": "/api/auth/verify-otp", "destination": "/api/auth/verify-otp.js" },
-    { "source": "/api/auth/reset-password", "destination": "/api/auth/reset-password.js" },
-
-    { "source": "/api/complaints/user", "destination": "/api/complaints/user.js" },
-    { "source": "/api/complaints/upvote/:id", "destination": "/api/complaints/upvote.js?id=:id" },
-    { "source": "/api/complaints/downvote/:id", "destination": "/api/complaints/downvote.js?id=:id" },
-    { "source": "/api/complaints/comment/:id", "destination": "/api/complaints/comment.js?id=:id" },
-    { "source": "/api/complaints/comments/:id", "destination": "/api/complaints/comments.js?id=:id" },
-    { "source": "/api/complaints/:id", "destination": "/api/complaints/[id].js" },
-    { "source": "/api/complaints", "destination": "/api/complaints/index.js" },
-
-    { "source": "/api/admin/dashboard", "destination": "/api/admin/dashboard.js" },
-    { "source": "/api/admin/users", "destination": "/api/admin/users.js" },
-    { "source": "/api/admin/complaints", "destination": "/api/admin/complaints.js" },
-
-    { "source": "/api/notifications/mark-read/:id", "destination": "/api/notifications/mark-read.js?id=:id" },
-    { "source": "/api/notifications", "destination": "/api/notifications/index.js" },
-
-    { "source": "/api/users/me", "destination": "/api/users/me.js" },
-    { "source": "/api/users/profile", "destination": "/api/users/profile.js" },
-    { "source": "/api/users/change-password", "destination": "/api/users/change-password.js" },
-
-    { "source": "/api/officer/complaints", "destination": "/api/officer/complaints.js" },
-    { "source": "/api/officer/update-complaint/:id", "destination": "/api/officer/update-complaint.js?id=:id" },
-
-    { "source": "/api/ai/chat", "destination": "/api/ai/chat.js" },
-
-    { "source": "/api/feedback/my-feedback", "destination": "/api/feedback/my-feedback.js" },
-    { "source": "/api/feedback/all", "destination": "/api/feedback/all.js" },
-    { "source": "/api/feedback/check/:id", "destination": "/api/feedback/check/[id].js" },
-    { "source": "/api/feedback", "destination": "/api/feedback/index.js" },
-
-    { "source": "/api/dashboard-stats", "destination": "/api/dashboard-stats.js" }
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
   ]
 }

@@ -7,19 +7,19 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed. Use POST." });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   try {
     await dbConnect();
-    const { token, role } = req.body;
+    const { credential, role } = req.body;
 
-    if (!token) {
-      return res.status(400).json({ message: "Google token is required." });
+    if (!credential) {
+      return res.status(400).json({ message: "Credential token is required" });
     }
 
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
@@ -34,11 +34,11 @@ export default async function handler(req, res) {
         email,
         googleId,
         profilePic: picture,
-        role: role || "Citizen"
+        role: role || "Citizen",
       });
     }
 
-    const jwtToken = jwt.sign(
+    const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
@@ -46,8 +46,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Google login success",
-      token: jwtToken,
+      token,
       user: {
         _id: user._id,
         name: user.name,
@@ -55,9 +54,8 @@ export default async function handler(req, res) {
         role: user.role,
       },
     });
-
   } catch (error) {
-    console.error("GOOGLE LOGIN ERROR:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 }
