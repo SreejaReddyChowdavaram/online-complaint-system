@@ -15,10 +15,26 @@ const userSchema = new mongoose.Schema({
   },
 
   phone: String,
+  mobile: String,
+  department: String,
+  avatar: String,
+  profilePic: String,
+  assignedArea: { type: String, default: "" },
+  currentActiveComplaints: { type: Number, default: 0 },
+  completedCases: { type: Number, default: 0 },
+  totalRatings: { type: Number, default: 0 },
+  cumulativeRating: { type: Number, default: 0 },
+  googleId: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
 
   password: {
     type: String,
-    required: true
+    required: function() {
+      return !this.googleId;
+    }
   },
 
   role: {

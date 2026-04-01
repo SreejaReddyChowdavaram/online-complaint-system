@@ -1,69 +1,36 @@
-import { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
-import ChatBot from "../../components/ChatBot";
-import "./UserDashboard.css";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import UserSidebar from "./UserSidebar";
+import UserNavbar from "./UserNavbar";
 
 const UserDashboard = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="user-dashboard">
+    <div className="flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300">
 
-      {/* SIDEBAR */}
-      <aside className={`user-sidebar ${isOpen ? "open" : "closed"}`}>
+      {/* 🚀 TOP NAVBAR (Full Width) */}
+      <div className="relative z-40 bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
+        <UserNavbar onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      </div>
 
-        {/* Toggle Button (ALWAYS visible) */}
-        <div className="sidebar-top">
-          <button
-            className="sidebar-toggle"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? "⮜" : "⮞"}
-          </button>
-        </div>
+      {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
+      <div className="flex flex-1 overflow-hidden">
 
-        {/* Hide content only when collapsed */}
-        <div className={`sidebar-content ${isOpen ? "" : "hidden"}`}>
-          <h3 className="user-sidebar-title">User Dashboard</h3>
+        {/* SIDEBAR (Below Nav) */}
+        <aside className="w-64 h-full bg-slate-900 border-r border-light-border dark:border-dark-border z-30 transition-all duration-300 overflow-y-auto">
+          <UserSidebar onClose={() => setIsSidebarOpen(false)} />
+        </aside>
 
-          <nav className="user-sidebar-menu">
-            <NavLink
-              to="/dashboard"
-              end
-              className={({ isActive }) =>
-                isActive ? "user-sidebar-link active" : "user-sidebar-link"
-              }
-            >
-              📄 View Complaints
-            </NavLink>
+        {/* MAIN CONTENT Area */}
+        <main className="flex-1 p-6 bg-gray-50 dark:bg-[#0B1120] overflow-auto">
+          <Outlet />
+        </main>
 
-            <NavLink
-              to="/dashboard/post-complaint"
-              className={({ isActive }) =>
-                isActive ? "user-sidebar-link active" : "user-sidebar-link"
-              }
-            >
-              📝 Post Complaint
-            </NavLink>
+      </div>
 
-            <NavLink
-              to="/dashboard/profile"
-              className={({ isActive }) =>
-                isActive ? "user-sidebar-link active" : "user-sidebar-link"
-              }
-            >
-              👤 Profile
-            </NavLink>
-          </nav>
-        </div>
-
-      </aside>
-
-      {/* CONTENT */}
-      <main className="dashboard-content">
-        <Outlet />
-      </main>
-              <ChatBot />
     </div>
   );
 };

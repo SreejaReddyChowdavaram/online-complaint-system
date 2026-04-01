@@ -1,6 +1,7 @@
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 
+import { useTranslation } from "react-i18next";
 import { AuthProvider } from "./context/AuthContext";
 import { ComplaintProvider } from "./context/ComplaintContext";
 
@@ -31,45 +32,52 @@ import MyProfile from "./pages/user/MyProfile";
 import OfficerLayout from "./pages/officer/OfficerLayout";
 import AssignedComplaints from "./pages/officer/AssignedComplaints";
 import OfficerProfile from "./pages/officer/OfficerProfile";
+import OfficerFeedback from "./pages/officer/OfficerFeedback";
 
 /* ADMIN */
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ViewaComplaints from "./pages/admin/ViewaComplaints";
 import AdminProfile from "./pages/admin/AdminProfile";
+import AdminFeedback from "./pages/admin/AdminFeedback";
+import ManageUsers from "./pages/admin/ManageUsers";
+import ComplaintDetailView from "./pages/shared/ComplaintDetailView";
+
+import ChatBot from "./components/ChatBot";
 
 /* ===============================
    LAYOUT COMPONENT
 ================================ */
 const Layout = ({ children }) => {
+  const { t } = useTranslation();
   const location = useLocation();
+
+  // CHECK 5: PREVENT CRASH
+  if (!t) return <div style={{ padding: "20px", textAlign: "center" }}>Initializing translations...</div>;
 
   const hideNavbar =
     location.pathname === "/" ||
     location.pathname === "/landing" ||
     location.pathname.startsWith("/login") ||
     location.pathname === "/register" ||
+    location.pathname === "/forgot-password" ||
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/officer") ||
+    location.pathname.startsWith("/admin");
+
+  const hideChatBot =
+    location.pathname === "/" ||
+    location.pathname === "/landing" ||
+    location.pathname.startsWith("/login") ||
+    location.pathname === "/register" ||
     location.pathname === "/forgot-password";
 
-  const isAdmin = location.pathname.startsWith("/admin");
-
   return (
-    <>
+    <div className="layout">
       {!hideNavbar && <Navbar />}
-
-      <div
-        style={
-          isAdmin
-            ? {}
-            : {
-                marginTop: hideNavbar ? 0 : "70px",
-                padding: "0px",
-              }
-        }
-      >
-        {children}
-      </div>
-    </>
+      {children}
+      {!hideChatBot && <ChatBot />}
+    </div>
   );
 };
 
@@ -104,6 +112,7 @@ function App() {
               }
             >
               <Route index element={<ViewComplaints />} />
+              <Route path="complaint/:id" element={<ComplaintDetailView />} />
               <Route path="post-complaint" element={<PostComplaint />} />
               <Route path="profile" element={<MyProfile />} />
             </Route>
@@ -119,7 +128,9 @@ function App() {
             >
               <Route path="dashboard" element={<AssignedComplaints />} />
               <Route path="complaints" element={<AssignedComplaints />} />
+              <Route path="complaints/:id" element={<ComplaintDetailView />} />
               <Route path="profile" element={<OfficerProfile />} />
+              <Route path="feedback" element={<OfficerFeedback />} />
             </Route>
 
             {/* ADMIN */}
@@ -133,7 +144,10 @@ function App() {
             >
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="complaints" element={<ViewaComplaints />} />
+              <Route path="complaints/:id" element={<ComplaintDetailView />} />
               <Route path="profile" element={<AdminProfile />} />
+              <Route path="feedback" element={<AdminFeedback />} />
+              <Route path="manage-users" element={<ManageUsers />} />
             </Route>
 
           </Routes>

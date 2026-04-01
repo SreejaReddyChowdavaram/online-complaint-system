@@ -1,0 +1,91 @@
+.admin-profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.admin-profile-card {
+  width: 700px;
+  background: var(--bg-card);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.admin-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #1e40af;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.admin-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Common Inline Editing Styles */
+.inline-edit-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inline-edit-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inline-edit-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inline-edit-content input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-content);
+}
+
+.inline-edit-content input:disabled {
+  background: var(--bg-body);
+  border-color: transparent;
+  color: var(--text-primary);
+}
+
+.inline-edit-actions {
+  display: flex;
+  gap: 5px;
+  min-width: 80px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+  background: var(--bg-body);
+}
+
+.save-btn:hover { background: #dcfce7; }
+.cancel-btn:hover { background: #fee2e2; }
+.edit-btn:hover { background: #e0e7ff; }

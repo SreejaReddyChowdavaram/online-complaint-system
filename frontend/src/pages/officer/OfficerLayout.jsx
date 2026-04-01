@@ -1,59 +1,38 @@
-import { Link, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import OfficerSidebar from "./OfficerSidebar";
+import OfficerNavbar from "./OfficerNavbar";
 
-export default function OfficerLayout() {
+const OfficerLayout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
-    <>
-      {/* FIXED SIDEBAR */}
-      <aside style={styles.sidebar}>
-        <h2 style={styles.title}>Officer Dashboard</h2>
+    <div className="flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300">
 
-        <Link to="/officer/complaints" style={styles.link}>
-          📋 Assigned Complaints
-        </Link>
+      {/* 🚀 TOP NAVBAR (Full Width) */}
+      <div className="relative z-40 bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
+        <OfficerNavbar onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      </div>
 
-        <Link to="/officer/profile" style={styles.link}>
-          👤 Profile
-        </Link>
-      </aside>
+      {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
+      <div className="flex flex-1 overflow-hidden">
 
-      {/* MAIN CONTENT */}
-      <main style={styles.content}>
-        <Outlet />
-      </main>
-    </>
+        {/* SIDEBAR (Below Nav) */}
+        <aside className="w-64 h-full bg-slate-900 border-r border-light-border dark:border-dark-border z-30 transition-all duration-300 overflow-y-auto">
+          <OfficerSidebar onClose={() => setIsSidebarOpen(false)} />
+        </aside>
+
+        {/* MAIN CONTENT Area */}
+        <main className="flex-1 p-6 bg-gray-50 dark:bg-[#0B1120] overflow-auto">
+          <Outlet />
+        </main>
+
+      </div>
+
+    </div>
   );
-}
-
-const styles = {
-  sidebar: {
-    position: "fixed",
-    top: "60px", // adjust if navbar height different
-    left: 0,
-    width: "260px",
-    height: "calc(100vh - 60px)",
-    backgroundColor: "#1f2937",
-    color: "white",
-    padding: "30px 20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-
-  title: {
-    marginBottom: "20px",
-  },
-
-  link: {
-    color: "white",
-    textDecoration: "none",
-    fontSize: "16px",
-  },
-
-  content: {
-    marginLeft: "260px", // push content right
-    padding: "40px",
-    marginTop: "60px", // below navbar
-    minHeight: "calc(100vh - 60px)",
-    backgroundColor: "#ffffff",
-  },
 };
+
+export default OfficerLayout;

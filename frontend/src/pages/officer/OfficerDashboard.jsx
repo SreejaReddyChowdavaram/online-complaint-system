@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
+import { ClipboardList, UserCircle } from "lucide-react";
 import "./OfficerLayout.css";
 
 const OfficerLayout = () => {
@@ -8,8 +9,12 @@ const OfficerLayout = () => {
       <aside className="officer-sidebar">
         <h3>Officer Dashboard</h3>
 
-        <Link to="/officer/complaints">📂 Assigned Complaints</Link>
-        <Link to="/officer/profile">👤 Profile</Link>
+        <Link to="/officer/complaints">
+          <ClipboardList size={20} /> Assigned Complaints
+        </Link>
+        <Link to="/officer/profile">
+          <UserCircle size={20} /> Profile
+        </Link>
       </aside>
 
       {/* CONTENT */}

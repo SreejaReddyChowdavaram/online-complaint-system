@@ -1,66 +1,36 @@
-import { Link, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import AdminSidebar from "./AdminSidebar";
+import AdminNavbar from "./AdminNavbar";
 
 export default function AdminLayout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
-    <>
-      {/* SIDEBAR */}
-      <aside style={styles.sidebar}>
-        <h2 style={styles.title}>Admin Dashboard</h2>
+    <div className="flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300">
 
-        <Link style={styles.link} to="/admin/dashboard">
-          📊 Dashboard
-        </Link>
+      {/* 🚀 TOP NAVBAR (Full Width) */}
+      <div className="relative z-40 bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
+        <AdminNavbar onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      </div>
 
-        <Link style={styles.link} to="/admin/complaints">
-          📄 View Complaints
-        </Link>
+      {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
+      <div className="flex flex-1 overflow-hidden">
 
-        <Link style={styles.link} to="/admin/profile">
-          👤 Profile
-        </Link>
-      </aside>
+        {/* SIDEBAR (Below Nav) */}
+        <aside className="w-64 h-full bg-slate-900 border-r border-light-border dark:border-dark-border z-30 transition-all duration-300 overflow-y-auto">
+          <AdminSidebar onClose={() => setIsSidebarOpen(false)} />
+        </aside>
 
-      {/* CONTENT */}
-      <main style={styles.content}>
-        <Outlet />
-      </main>
-    </>
+        {/* MAIN CONTENT Area */}
+        <main className="flex-1 p-6 bg-gray-50 dark:bg-[#0B1120] overflow-auto">
+          <Outlet />
+        </main>
+
+      </div>
+
+    </div>
   );
 }
-
-const styles = {
-  sidebar: {
-    position: "fixed",
-    top: "70px",               // 👈 below navbar
-    left: 0,
-    width: "260px",
-    height: "calc(100vh - 70px)",
-    backgroundColor: "#1f2937",
-    color: "white",
-    padding: "30px 20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: 18,
-  },
-
-  title: {
-    marginBottom: 20,
-  },
-
-  link: {
-    color: "white",
-    textDecoration: "none",
-    fontSize: 16,
-  },
-content: {
-  position: "fixed",
-  top: "70px",
-  left: "260px",
-  width: "calc(100% - 260px)",
-  height: "calc(100vh - 70px)",
-  padding: "25px",
-  overflowY: "auto",
-  backgroundColor: "#ffffff",
-},
-
-};

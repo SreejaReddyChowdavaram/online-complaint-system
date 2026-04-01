@@ -1,0 +1,410 @@
+/* ─── Page Shell ─────────────────────────────────────────────────── */
+.mu-page {
+  padding: 28px 32px;
+  min-height: 100vh;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+/* ─── Toast ──────────────────────────────────────────────────────── */
+.mu-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: mu-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mu-toast-success {
+  background: #10b981;
+  color: white;
+  border-left: 4px solid #059669;
+}
+
+.mu-toast-error {
+  background: #ef4444;
+  color: white;
+  border-left: 4px solid #b91c1c;
+}
+
+@keyframes mu-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ─── Header ─────────────────────────────────────────────────────── */
+.mu-header {
+  margin-bottom: 28px;
+}
+
+.mu-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.mu-subtitle {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* ─── Stats ──────────────────────────────────────────────────────── */
+.mu-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.mu-stat {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mu-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+.mu-stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.mu-stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Filters ────────────────────────────────────────────────────── */
+.mu-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.mu-search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.mu-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.mu-search {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px 0 42px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mu-search:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  outline: none;
+}
+
+.mu-role-filter {
+  display: flex;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  gap: 4px;
+}
+
+.mu-filter-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mu-filter-btn:hover {
+  background: var(--bg-body);
+  color: var(--text-primary);
+}
+
+.mu-filter-btn.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* ─── Table ──────────────────────────────────────────────────────── */
+.mu-table-wrap {
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.mu-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mu-table thead th {
+  background: var(--bg-body);
+  padding: 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.mu-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.mu-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.mu-table tbody tr:hover {
+  background: var(--bg-body);
+}
+
+.mu-row-self {
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.mu-table td {
+  padding: 16px;
+  vertical-align: middle;
+}
+
+.mu-td-num {
+  font-weight: 600;
+  color: var(--text-secondary);
+  width: 60px;
+}
+
+/* Name cell */
+.mu-td-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mu-user-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+/* Avatar removed as per user request */
+
+.mu-you-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mu-td-email {
+  color: var(--text-secondary);
+}
+
+/* Role badges */
+.mu-role-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.role-citizen {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.role-officer {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.role-admin {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+[data-theme='dark'] .role-citizen {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme='dark'] .role-officer {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+[data-theme='dark'] .role-admin {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* Role change */
+.mu-role-change {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mu-select {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mu-select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+/* Buttons */
+.mu-btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.mu-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mu-btn-save {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.mu-btn-save.mu-btn-active {
+  background: var(--success);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  animation: mu-pulse-save 2s infinite;
+}
+
+@keyframes mu-pulse-save {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.mu-btn-save:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.mu-btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.mu-btn-delete:hover:not(:disabled) {
+  background: var(--danger);
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* ─── States ─────────────────────────────────────────────────────── */
+.mu-state-center {
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.mu-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: mu-spin 1s linear infinite;
+}
+
+@keyframes mu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

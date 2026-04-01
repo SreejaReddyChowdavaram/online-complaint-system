@@ -2,6 +2,8 @@ import express from "express";
 import {
   registerUser,
   loginUser,
+  googleLogin,
+  adminLogin,
   forgotPassword,
   verifyOtp,
   resetPassword
@@ -12,6 +14,8 @@ const router = express.Router();
 /* -------- AUTH -------- */
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/google-login", googleLogin);
+router.post("/admin-login", adminLogin);
 
 /* -------- FORGOT PASSWORD FLOW -------- */
 router.post("/send-otp", forgotPassword);

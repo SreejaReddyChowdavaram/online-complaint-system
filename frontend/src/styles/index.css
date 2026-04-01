@@ -9,6 +9,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===============================
+   EXTERNAL LIBRARIES
+================================ */
+@import "leaflet/dist/leaflet.css";
+
+/* ===============================
+   MAP STYLES
+================================ */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  z-index: 10;
+}
+
 
 /* ===============================
    FULL SCREEN RESET (VERY IMPORTANT)
@@ -25,15 +40,22 @@ html, body, #root {
   width: 100%;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  color: #1f2937;
+@layer base {
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    background-color: theme('colors.light-bg');
+    color: theme('colors.light-text');
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+
+  .dark body {
+    background-color: theme('colors.dark-bg');
+    color: theme('colors.dark-text');
+  }
 }
 
 /* Make root full height */
@@ -43,27 +65,94 @@ body {
   flex-direction: column;
 }
 
+/* ===============================
+   GLOBAL INPUT STYLES (THEME AWARE)
+================================ */
+
+input, select, textarea {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--input-border);
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+input:disabled, select:disabled, textarea:disabled {
+  background: var(--bg-body);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
 
 /* ===============================
    THEME VARIABLES
 ================================ */
 
 :root {
-  --primary-color: #0056B3;
-  --primary-dark: #004494;
-  --secondary-color: #4CAF50;
-  --secondary-dark: #45a049;
+  /* Common */
+  --primary: #2563eb;
+  --primary-glow: rgba(37, 99, 235, 0.4);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --transition-speed: 0.3s;
 
-  --danger-color: #ef4444;
-  --warning-color: #f59e0b;
-  --success-color: #4CAF50;
+  /* Theme Specific (Light Default) */
+  --bg-body: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-content: #F8FAFC;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --border-color: #E2E8F0;
+  --primary-color: #2563eb;
+  --input-bg: #FFFFFF;
+  --input-border: #E2E8F0;
+}
 
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
+.dark {
+  /* Theme Specific (Dark) */
+  --bg-body: #0F172A;
+  --bg-card: #1E293B;
+  --bg-content: #040914; /* Slightly darker than sidebar */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --border-color: #1E293B;
+  --primary-color: #3b82f6; 
+  --input-bg: #1E293B;
+  --input-border: #334155;
+}
 
-  --border-color: #e5e7eb;
-  --border-radius: 8px;
-  --transition: all 0.3s ease;
+/* Global Transition for all theme-affected elements */
+*, *::before, *::after {
+  transition: background-color var(--transition-speed) ease-in-out, 
+              border-color var(--transition-speed) ease-in-out, 
+              color var(--transition-speed) ease-in-out, 
+              box-shadow var(--transition-speed) ease-in-out,
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass-morphism {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.saas-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.saas-shadow-hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -96,12 +185,25 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background-color: #2563eb;
   color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-dark);
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.dark .btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+}
+
+.dark .btn-primary:hover {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
 }
 
 .btn-outline {
@@ -142,4 +244,14 @@ body {
   .container {
     padding: 0 15px;
   }
+}
+
+/* ===============================
+   COMPLAINTS GRID (GLOBAL)
+================================ */
+.complaints-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
 }

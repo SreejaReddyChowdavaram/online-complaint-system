@@ -1,16 +1,13 @@
-/**
- * Loading.jsx - Loading Spinner Component
- * 
- * Simple loading indicator
- * Used when fetching data from API
- */
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-const Loading = ({ message = 'Loading...' }) => {
+const Loading = ({ message }) => {
+  const { t } = useTranslation();
   return (
     <div className="loading">
-      <p>{message}</p>
+      <p>{message || t("complaints.loading")}</p>
     </div>
   )
 }
 
-export default Loading
+export default Loading;

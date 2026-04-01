@@ -35,7 +35,7 @@ export const ComplaintProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // 🔹 Fetch complaints (Citizen → own | Officer → assigned)
+  // Fetch complaints (Citizen → own | Officer → assigned)
   const fetchComplaints = async () => {
     setLoading(true)
     setError(null)
@@ -53,7 +53,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Fetch single complaint
+  // Fetch single complaint
   const fetchComplaint = async (id) => {
     setLoading(true)
     setError(null)
@@ -71,7 +71,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Create complaint (Citizen)
+  // Create complaint (Citizen)
   const createComplaint = async (complaintData) => {
     setLoading(true)
     setError(null)
@@ -89,7 +89,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Update complaint
+  // Update complaint
   const updateComplaint = async (id, updateData) => {
     setLoading(true)
     setError(null)
@@ -112,7 +112,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Delete complaint
+  // Delete complaint
   const deleteComplaint = async (id) => {
     setLoading(true)
     setError(null)
@@ -133,7 +133,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Add comment
+  // Add comment
   const addComment = async (id, text) => {
     setLoading(true)
     setError(null)
@@ -153,7 +153,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 Update status (Officer)
+  // Update status (Officer)
   const updateStatus = async (id, status) => {
     setLoading(true)
     setError(null)
@@ -176,7 +176,7 @@ export const ComplaintProvider = ({ children }) => {
     }
   }
 
-  // 🔹 STEP 6: Assign complaint to officer
+  // STEP 6: Assign complaint to officer
   const assignToOfficer = async (complaintId, officerId) => {
     setLoading(true)
     setError(null)

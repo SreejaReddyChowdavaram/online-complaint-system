@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* 🔄 LOAD AUTH ON APP START */
+  /* LOAD AUTH ON APP START */
   useEffect(() => {
     const initAuth = async () => {
       try {
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
         setToken(storedToken);
 
-        // ✅ FETCH USER FROM BACKEND (via Vite proxy)
+        // FETCH USER FROM BACKEND (via Vite proxy)
         const res = await axios.get("/api/users/me", {
           headers: {
             Authorization: `Bearer ${storedToken}`,
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  /* 🔐 LOGIN */
+  /* LOGIN */
   const login = (token, user) => {
     setToken(token);
     setUser(user);
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("role", user.role);
   };
 
-  /* ✏️ UPDATE USER (SYNC CONTEXT + STORAGE) */
+  /* UPDATE USER (SYNC CONTEXT + STORAGE) */
   const updateUser = (updatedData) => {
     setUser((prevUser) => {
       const newUser = { ...prevUser, ...updatedData };
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  /* 🚪 LOGOUT */
+  /* LOGOUT */
   const logout = () => {
     setToken(null);
     setUser(null);

@@ -1,52 +1,38 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema({
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    index: true
+    ref: "User",
+    required: true
   },
-  type: {
+  role: {
     type: String,
-    enum: [
-      'complaint_submitted',
-      'complaint_assigned',
-      'status_update',
-      'complaint_resolved',
-      'officer_assigned',
-      'comment_added',
-      'general'
-    ],
-    default: 'general'
-  },
-  title: {
-    type: String,
-    required: true,
-    trim: true
+    enum: ["Admin", "Officer", "Citizen"],
+    required: true
   },
   message: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
-  complaintId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Complaint'
+  targetId: {
+    type: String,
+    required: false
   },
-  read: {
+  type: {
+    type: String,
+    enum: ["info", "success", "warning", "ESCALATION"],
+    default: "info"
+  },
+  isRead: {
     type: Boolean,
     default: false
   },
-  readAt: {
-    type: Date
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  timestamps: true
 });
 
-// Indexes
-notificationSchema.index({ user: 1, read: 1, createdAt: -1 });
-notificationSchema.index({ user: 1, createdAt: -1 });
-
-module.exports = mongoose.model('Notification', notificationSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
+export default Notification;

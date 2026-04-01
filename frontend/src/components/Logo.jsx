@@ -2,24 +2,24 @@ import React from "react";
 import logo from "../assets/logo.png"; // ✅ update path if needed
 
 const sizes = {
-  sm: "h-8",   // 32px
-  md: "h-16",  // 44px (DEFAULT – best for navbar)
-  lg: "h-20",  // 56px
+  sm: 32,
+  md: 44,
+  lg: 56,
 };
 
-const Logo = ({ size = "md", showText = true }) => {
+const Logo = ({ size = "md", showText = false }) => {
   return (
-    <div className="flex items-center gap-3 select-none">
+    <div className="logo-container" style={{ display: "flex", alignItems: "center", gap: "12px", userSelect: "none" }}>
       <img
         src={logo}
         alt="Jan Suvidha Logo"
-        className={`${sizes[size]} w-auto object-contain`}
+        style={{ height: `${sizes[size]}px`, width: "auto", objectFit: "contain" }}
         loading="eager"
         decoding="async"
       />
 
       {showText && (
-        <span className="text-xl font-bold tracking-wide text-blue-700">
+        <span style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1e40af" }}>
           JAN SUVIDHA
         </span>
       )}

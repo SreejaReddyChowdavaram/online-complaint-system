@@ -19,17 +19,17 @@ import { useAuth } from '../context/AuthContext'
 const PrivateRoute = ({ children, role }) => {
   const { isAuthenticated, user, loading } = useAuth()
 
-  // ⏳ Wait until auth check completes
+  // Wait until auth check completes
   if (loading) {
     return <div className="loading">Loading...</div>
   }
 
-  // 🔒 Not logged in
+  // Not logged in
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
-  // 🔐 Role-based protection
+  // Role-based protection
   if (role && user?.role !== role) {
     // Redirect based on role
     if (user?.role === 'Officer') {
@@ -38,7 +38,7 @@ const PrivateRoute = ({ children, role }) => {
     return <Navigate to="/dashboard" replace />
   }
 
-  // ✅ Allowed
+  // Allowed
   return children
 }
 

@@ -7,6 +7,7 @@ const complaintSchema = new mongoose.Schema(
     description: { type: String, required: true },
 
     location: {
+      address: { type: String, default: "" },
       lat: Number,
       lng: Number,
     },
@@ -25,9 +26,19 @@ const complaintSchema = new mongoose.Schema(
       default: null,
     },
 
+    assignedAt: {
+      type: Date,
+      default: null,
+    },
+
+    escalationSent: {
+      type: Boolean,
+      default: false,
+    },
+
     status: {
       type: String,
-      enum: ["Pending", "In Progress", "Resolved"],
+      enum: ["Pending", "Assigned", "In Progress", "Resolved"],
       default: "Pending",
     },
 
@@ -52,23 +63,35 @@ const complaintSchema = new mongoose.Schema(
         },
       },
     ],
-
-    // ✅ COMMENTS (THIS WAS MISSING ❗)
-    comments: [
-      {
-        text: String,
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
   },
   { timestamps: true }
 );
+
+// ✅ Pre-validate hook to normalize status and fallback missing required fields
+// This must be 'validate' (not 'save') because enum checks run during validation.
+complaintSchema.pre("validate", function (next) {
+  // Normalize Status
+  if (this.status) {
+    const statusMap = {
+      pending: "Pending",
+      assigned: "Assigned",
+      "in progress": "In Progress",
+      "in-progress": "In Progress",
+      in_progress: "In Progress",
+      resolved: "Resolved",
+    };
+    const lower = this.status.toLowerCase();
+    if (statusMap[lower]) {
+      this.status = statusMap[lower];
+    }
+  }
+
+  // Fallback for missing category (fixing legacy data issues)
+  if (!this.category) {
+    this.category = "other";
+  }
+
+  next();
+});
 
 export default mongoose.model("Complaint", complaintSchema);

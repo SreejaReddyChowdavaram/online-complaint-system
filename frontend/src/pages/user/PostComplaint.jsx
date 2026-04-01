@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -10,70 +10,145 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-control-geocoder";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import { 
+  ClipboardList, 
+  MapPin, 
+  Search,
+  CheckCircle,
+  AlertCircle
+} from "lucide-react";
 import "./PostComplaint.css";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 /* ===============================
    Click to Select Location
 ================================ */
-const LocationMarker = ({ setPosition }) => {
+const LocationMarker = ({ position, setPosition, setAddress }) => {
   useMapEvents({
-    click(e) {
-      setPosition(e.latlng);
+    async click(e) {
+      const { lat, lng } = e.latlng;
+      const newPos = [lat, lng];
+      setPosition(newPos);
+
+      // Reverse Geocoding with Nominatim
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+        );
+        const data = await response.json();
+        if (data && data.display_name) {
+          setAddress(data.display_name);
+        } else {
+          setAddress(`Manual selection at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+        }
+      } catch (error) {
+        console.error("Reverse geocoding error:", error);
+        setAddress(`Manual selection at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+      }
     },
   });
-  return null;
+
+  return position ? <Marker position={position} /> : null;
 };
 
-/* ===============================
-   Search Control
-================================ */
-const SearchControl = ({ setPosition }) => {
+const ChangeMapView = ({ position }) => {
   const map = useMap();
-
   useEffect(() => {
-    const geocoder = L.Control.geocoder({
-      defaultMarkGeocode: false,
-    })
-      .on("markgeocode", function (e) {
-        const latlng = e.geocode.center;
-        map.setView(latlng, 16);
-        setPosition(latlng);
-      })
-      .addTo(map);
-
-    return () => {
-      map.removeControl(geocoder);
-    };
-  }, [map, setPosition]);
-
+    if (position && position[0] && position[1]) {
+      map.setView(position, 16, { animate: true });
+    }
+  }, [position, map]);
   return null;
 };
 
 const PostComplaint = () => {
+  const { t } = useTranslation();
+  const searchContainerRef = useRef(null);
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState([]);
-  const [position, setPosition] = useState(null);
+
+  // Location State
+  const [position, setPosition] = useState([17.385, 78.486]); // Default center
+  const [address, setAddress] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [noResults, setNoResults] = useState(false);
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+
+  /* ===============================
+     Outside Click Handler
+  ================================ */
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  /* ===============================
+     Debounced Search Function
+  ================================ */
+  useEffect(() => {
+    if (searchQuery.length < 3) {
+      setSearchResults([]);
+      setShowDropdown(false);
+      setNoResults(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      setNoResults(false);
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=5&addressdetails=1`
+        );
+        const data = await response.json();
+        setSearchResults(data);
+        setNoResults(data.length === 0);
+        setShowDropdown(true);
+      } catch (err) {
+        console.error("Search error:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 400); // 400ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSelectResult = (place) => {
+    const lat = parseFloat(place.lat);
+    const lng = parseFloat(place.lon);
+
+    setPosition([lat, lng]);
+    setAddress(place.display_name);
+    setSearchQuery(place.display_name);
+    setSearchResults([]);
+    setShowDropdown(false);
+  };
 
   /* ===============================
      Validation
   ================================ */
   const validate = () => {
     const newErrors = {};
-
     if (!title.trim()) newErrors.title = "Please enter title";
     if (!category) newErrors.category = "Select category";
-    if (!description.trim())
-      newErrors.description = "Enter description";
-    if (!files || files.length === 0)
-      newErrors.images = "Upload at least one photo";
-    if (!position)
-      newErrors.position = "Select location on map";
+    if (!description.trim()) newErrors.description = "Enter description";
+    if (!files || files.length === 0) newErrors.images = "Upload at least one photo";
+    if (!address) newErrors.position = "Please select a location";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,127 +163,192 @@ const PostComplaint = () => {
 
     try {
       const token = localStorage.getItem("token");
-
       const formData = new FormData();
       formData.append("title", title);
       formData.append("category", category);
       formData.append("description", description);
-      formData.append("latitude", position.lat.toString());
-      formData.append("longitude", position.lng.toString());
+      formData.append("address", address);
+      formData.append("latitude", position[0].toString());
+      formData.append("longitude", position[1].toString());
 
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
 
-      await axios.post(
-        "http://localhost:5000/api/complaints/post",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post("/api/complaints/post", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      alert("Complaint submitted successfully ✅");
+      alert(t("complaints.submit_success") || "Complaint submitted successfully ✅");
 
       // Reset
       setTitle("");
       setCategory("");
       setDescription("");
       setFiles([]);
-      setPosition(null);
+      setAddress("");
+      setSearchQuery("");
+      setPosition([17.385, 78.486]);
       setErrors({});
       setSubmitted(false);
     } catch (err) {
-      console.error("Post complaint error:", err.response?.data || err.message);
+      console.error("Post error:", err);
       alert("Failed to submit complaint");
     }
   };
 
   return (
-    <div className="post-complaint">
-      <h2>📝 Post Complaint</h2>
+    <form className="post-complaint" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+      <h2 className="page-header">
+        <ClipboardList size={24} className="icon-blue" />
+        {t("complaints.post_complaint_title")}
+      </h2>
 
       <div className="complaint-grid">
         {/* ================= LEFT FORM ================= */}
         <div className="form-section">
-          <label>Complaint Title *</label>
+          <label className="label-row">{t("complaints.title_label")} <span className="req">*</span></label>
           <input
             type="text"
+            className={errors.title ? "error" : ""}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter title"
+            placeholder={t("complaints.placeholder_title")}
           />
+          {errors.title && <span className="inline-error">{errors.title}</span>}
 
-          <label>Category *</label>
-          <select
-            value={category}
+          <label className="label-row">{t("complaints.category_label")} <span className="req">*</span></label>
+          <select 
+            className={errors.category ? "error" : ""}
+            value={category} 
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">Select Category</option>
-            <option value="Roads">Roads</option>
-            <option value="Water">Water</option>
-            <option value="Electricity">Electricity</option>
+            <option value="">{t("complaints.placeholder_category")}</option>
+            <option value="Electricity">{t("complaints.categories.Electricity")}</option>
+            <option value="Water">{t("complaints.categories.Water")}</option>
+            <option value="Roads">{t("complaints.categories.Roads")}</option>
+            <option value="Drainage">{t("complaints.categories.Drainage")}</option>
+            <option value="Garbage">{t("complaints.categories.Garbage")}</option>
+            <option value="Noise">{t("complaints.categories.Noise")}</option>
           </select>
+          {errors.category && <span className="inline-error">{errors.category}</span>}
 
-          <label>Description *</label>
+          <label className="label-row">{t("complaints.description_label")} <span className="req">*</span></label>
           <textarea
+            className={errors.description ? "error" : ""}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe issue..."
+            placeholder={t("complaints.placeholder_description")}
           />
+          {errors.description && <span className="inline-error">{errors.description}</span>}
 
-          <label>Upload Photos *</label>
-          <input
-            type="file"
-            multiple
-            onChange={(e) => setFiles(e.target.files)}
+          <label className="label-row">{t("complaints.upload_photos")} <span className="req">*</span></label>
+          <input 
+            type="file" 
+            multiple 
+            className={errors.images ? "error" : ""}
+            onChange={(e) => setFiles(e.target.files)} 
           />
+          {errors.images && <span className="inline-error">{errors.images}</span>}
+
+          {address && (
+            <div className="address-display">
+              <label>
+                <MapPin size={16} /> 
+                {t("complaints.selected_location_label") || "SELECTED LOCATION"}
+              </label>
+              <p>{address}</p>
+            </div>
+          )}
         </div>
 
         {/* ================= RIGHT MAP ================= */}
         <div className="map-section">
-          <label>📍 Select Location *</label>
+          <label className="label-row">
+            <MapPin size={18} /> {t("complaints.select_location")} <span className="req">*</span>
+          </label>
+
+          <div className="search-container" ref={searchContainerRef}>
+            <input
+              type="text"
+              className="location-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => {
+                if (searchResults.length > 0 || noResults) setShowDropdown(true);
+              }}
+              placeholder={t("complaints.placeholder_search_location") || "Search for a location..."}
+            />
+            {isSearching && (
+              <div className="search-loader">
+                <div className="mini-spinner"></div>
+              </div>
+            )}
+
+            {showDropdown && (
+              <ul className="search-results-dropdown">
+                {noResults && (
+                  <li className="no-results">
+                    <Search size={18} /> {t("complaints.no_locations_found") || "No locations found"}
+                  </li>
+                )}
+                {searchResults.map((result, idx) => {
+                  const addr = result.address || {};
+                  const mainName = addr.amenity || addr.road || addr.suburb || result.display_name.split(',')[0];
+                  const subName = result.display_name.replace(mainName + ',', '').trim();
+
+                  return (
+                    <li
+                      key={idx}
+                      className="suggestion-item"
+                       onClick={() => handleSelectResult(result)}
+                    >
+                      <div className="suggestion-icon"><MapPin size={14} /></div>
+                      <div className="suggestion-info">
+                        <div className="suggestion-name">{mainName}</div>
+                        <div className="suggestion-sub">{subName}</div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
 
           <div className="map-box">
             <MapContainer
-              center={[14.4673, 78.8242]}
+              center={position}
               zoom={13}
+              scrollWheelZoom={true}
               style={{ height: "100%", width: "100%" }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-              {/* 🔥 Search Bar */}
-              <SearchControl setPosition={setPosition} />
-
-              {/* Click Select */}
-              <LocationMarker setPosition={setPosition} />
-
-              {/* Marker */}
-              {position && <Marker position={position} />}
+              <ChangeMapView position={position} />
+              <LocationMarker position={position} setPosition={setPosition} setAddress={setAddress} />
             </MapContainer>
           </div>
 
-          {position && (
-            <div className="latlng-box">
-              <div>
-                <label>Latitude</label>
-                <input value={position.lat} readOnly />
-              </div>
-              <div>
-                <label>Longitude</label>
-                <input value={position.lng} readOnly />
-              </div>
+          <div className="latlng-box">
+            <div>
+              <label>Latitude</label>
+              <input value={position ? position[0].toFixed(6) : ""} readOnly />
             </div>
-          )}
+            <div>
+              <label>Longitude</label>
+              <input value={position ? position[1].toFixed(6) : ""} readOnly />
+            </div>
+          </div>
+
+          {/* Removed address-display from here */}
         </div>
       </div>
 
-      <button className="submit-btn" onClick={handleSubmit}>
-        Submit Complaint
-      </button>
-    </div>
+      <div className="submit-box">
+        <button type="submit" className="submit-btn" disabled={submitted}>
+          {submitted ? t("complaints.submitting") || "Submitting..." : t("complaints.submit_btn")}
+        </button>
+      </div>
+    </form>
   );
 };
 

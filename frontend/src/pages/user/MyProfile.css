@@ -1,5 +1,5 @@
 .profile-page {
-  background: #f4f6f9;
+  background: var(--bg-body);
   padding: 24px;
 }
 
@@ -7,13 +7,13 @@
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 /* CARD */
 .gov-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 20px;
   margin-bottom: 24px;
@@ -23,8 +23,8 @@
   font-size: 17px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #0f172a;
-  border-bottom: 1px solid #e5e7eb;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
 }
 
@@ -48,7 +48,7 @@
 .field label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
@@ -56,15 +56,15 @@
 .field textarea {
   padding: 8px 10px;
   font-size: 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  background: #f9fafb;
+  background: var(--bg-content);
 }
 
 .field input:disabled,
 .field textarea:disabled {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: var(--bg-body);
+  color: var(--text-secondary);
 }
 
 .field textarea {
@@ -88,8 +88,8 @@
 }
 
 .secondary-btn {
-  background: #e5e7eb;
-  color: #111827;
+  background: var(--border-color);
+  color: var(--text-primary);
   padding: 10px 18px;
   border: none;
   border-radius: 4px;
@@ -109,7 +109,7 @@
 hr {
   margin: 20px 0;
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
 }
 
 /* DANGER */
@@ -129,6 +129,64 @@ hr {
 .danger-outline:hover {
   background: #fee2e2;
 }
+
+/* INLINE EDITING STYLES */
+.inline-edit-group {
+  margin-bottom: 20px;
+}
+
+.inline-edit-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inline-edit-content input,
+.inline-edit-content textarea {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.inline-edit-content input:disabled,
+.inline-edit-content textarea:disabled {
+  background: var(--bg-body);
+  border-color: transparent;
+  color: var(--text-primary);
+}
+
+.inline-edit-actions {
+  display: flex;
+  gap: 5px;
+  min-width: 80px; 
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+  background: var(--bg-body);
+}
+
+.save-btn:hover { background: #dcfce7; }
+.cancel-btn:hover { background: #fee2e2; }
+.edit-btn:hover { background: #e0e7ff; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {

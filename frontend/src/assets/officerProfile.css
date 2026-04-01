@@ -1,12 +1,12 @@
 .gov-profile-page {
   padding: 30px;
-  background-color: #f4f6f9;
+  background-color: var(--bg-body);
 }
 
 .gov-profile-card {
   max-width: 700px;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   padding: 25px;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .gov-row input:disabled {
-  background: #f1f5f9;
+  background: var(--bg-body);
 }
 
 .gov-actions {

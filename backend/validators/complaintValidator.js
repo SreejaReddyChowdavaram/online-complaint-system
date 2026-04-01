@@ -26,7 +26,7 @@ exports.validateComplaint = [
   
   body('category')
     .notEmpty().withMessage('Category is required')
-    .isIn(['Road', 'Water', 'Electricity', 'Sanitation', 'Other']).withMessage('Invalid category'),
+    .isIn(['Roads', 'Water', 'Electricity', 'Drainage', 'Garbage', 'Noise']).withMessage('Invalid category'),
   
   body('location.address')
     .trim()

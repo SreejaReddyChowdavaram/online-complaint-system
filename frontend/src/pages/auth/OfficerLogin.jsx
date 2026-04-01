@@ -1,7 +1,12 @@
 import Login from "./Login";
+import { useTranslation } from "react-i18next";
 
 const OfficerLogin = () => {
-  return <Login title="Officer Login" role="Officer" />;
+  const { t } = useTranslation();
+
+  if (!t) return null;
+
+  return <Login title={t("auth.officer_login")} role="Officer" />;
 };
 
 export default OfficerLogin;

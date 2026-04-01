@@ -1,16 +1,7 @@
-.vote-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-}
-
-.upvoted {
-  background-color: green;
-  color: white;
-}
-
-.downvoted {
-  background-color: red;
-  color: white;
+/* Component styles migrated to Tailwind CSS for modern/dynamic dashboard design */
+.complaint-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
 }

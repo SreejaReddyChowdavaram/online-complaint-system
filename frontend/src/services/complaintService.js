@@ -60,11 +60,15 @@ export const getComplaintByComplaintId = async (complaintId) => {
 
 /**
  * Create new complaint
- * @param {Object} complaintData - { title, description, category, location, priority, imageUrl }
+ * @param {FormData} complaintData - FormData object containing text and files
  * @returns {Promise} Created complaint data
  */
 export const createComplaint = async (complaintData) => {
-  const response = await api.post('/complaints', complaintData)
+  const response = await api.post('/complaints/post', complaintData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
   return response.data
 }
 

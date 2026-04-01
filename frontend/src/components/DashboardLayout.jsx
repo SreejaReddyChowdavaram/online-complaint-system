@@ -1,12 +1,24 @@
 import { Outlet, NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { 
+  Home, 
+  PlusSquare, 
+  ClipboardList, 
+  Users, 
+  BarChart3, 
+  UserCircle, 
+  HelpCircle 
+} from "lucide-react";
 import "./DashboardLayout.css";
 
 const DashboardLayout = ({ role }) => {
+  const { t } = useTranslation();
+  
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout bg-light-bg dark:bg-dark-bg transition-all duration-300">
       {/* SIDEBAR */}
-      <aside className="dashboard-sidebar">
-        <h3 className="dashboard-sidebar-title">{role} Panel</h3>
+      <aside className="dashboard-sidebar bg-white dark:bg-dark-bg border-r border-light-border dark:border-dark-border transition-all duration-300 shadow-sm dark:shadow-none">
+        <h3 className="dashboard-sidebar-title text-gray-800 dark:text-dark-text">{t(`roles.${role.toLowerCase()}`)} {t("sidebar.panel")}</h3>
 
         <NavLink
           to={`/${role.toLowerCase()}/dashboard`}
@@ -16,7 +28,7 @@ const DashboardLayout = ({ role }) => {
               : "dashboard-sidebar-link"
           }
         >
-          🏠 Dashboard
+          <Home size={18} /> {t("sidebar.dashboard")}
         </NavLink>
 
         {role === "Citizen" && (
@@ -29,7 +41,7 @@ const DashboardLayout = ({ role }) => {
                   : "dashboard-sidebar-link"
               }
             >
-              📝 Register Complaint
+              <PlusSquare size={18} /> {t("sidebar.register_complaint")}
             </NavLink>
 
             <NavLink
@@ -40,7 +52,7 @@ const DashboardLayout = ({ role }) => {
                   : "dashboard-sidebar-link"
               }
             >
-              📂 My Complaints
+              <ClipboardList size={18} /> {t("sidebar.my_complaints")}
             </NavLink>
           </>
         )}
@@ -54,7 +66,7 @@ const DashboardLayout = ({ role }) => {
                 : "dashboard-sidebar-link"
             }
           >
-            📂 Assigned Complaints
+            <ClipboardList size={18} /> {t("sidebar.assigned_complaints")}
           </NavLink>
         )}
 
@@ -68,7 +80,7 @@ const DashboardLayout = ({ role }) => {
                   : "dashboard-sidebar-link"
               }
             >
-              👥 Manage Users
+              <Users size={18} /> {t("sidebar.manage_users")}
             </NavLink>
 
             <NavLink
@@ -79,7 +91,7 @@ const DashboardLayout = ({ role }) => {
                   : "dashboard-sidebar-link"
               }
             >
-              📊 All Complaints
+              <BarChart3 size={18} /> {t("sidebar.all_complaints")}
             </NavLink>
           </>
         )}
@@ -92,7 +104,7 @@ const DashboardLayout = ({ role }) => {
               : "dashboard-sidebar-link"
           }
         >
-          👤 Profile
+          <UserCircle size={18} /> {t("sidebar.profile")}
         </NavLink>
 
         <NavLink
@@ -103,12 +115,12 @@ const DashboardLayout = ({ role }) => {
               : "dashboard-sidebar-link"
           }
         >
-          ❓ Help
+          <HelpCircle size={18} /> {t("sidebar.help")}
         </NavLink>
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="dashboard-content">
+      <main className="dashboard-content bg-light-bg dark:bg-dark-bg transition-all duration-300">
         <Outlet />
       </main>
     </div>

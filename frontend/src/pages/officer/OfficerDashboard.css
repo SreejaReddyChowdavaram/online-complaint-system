@@ -3,8 +3,8 @@
 ================================ */
 .officer-dashboard {
   display: flex;
-  height: 100vh;          /* 🔥 FULL HEIGHT */
-  overflow: hidden;       /* 🔥 STOP PAGE SCROLL */
+  height: 100vh;          /* FULL HEIGHT */
+  overflow: hidden;       /* STOP PAGE SCROLL */
 }
 
 /* ===============================
@@ -12,7 +12,7 @@
 ================================ */
 .officer-sidebar {
   width: 240px;
-  background-color: #1f2937;
+  background-color: var(--text-primary);
   color: white;
 
   padding: 24px 16px;
@@ -21,7 +21,7 @@
   flex-direction: column;
   gap: 18px;
 
-  flex-shrink: 0;         /* 🔥 NEVER SHRINK */
+  flex-shrink: 0;         /* NEVER SHRINK */
 }
 
 /* TITLE */
@@ -54,6 +54,6 @@
    flex: 1;
   padding: 28px;
 
-  overflow-y: auto;       /* 🔥 SCROLL HERE */
-  background: #ffffff;
+  overflow-y: auto;       /* SCROLL HERE */
+  background: var(--bg-card);
 }

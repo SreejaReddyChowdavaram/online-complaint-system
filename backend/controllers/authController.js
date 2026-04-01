@@ -5,6 +5,9 @@ import { generateToken } from "../services/authService.js";
 import User from "../models/User.js";
 import sendEmail from "../utils/sendEmail.js";
 import bcrypt from "bcryptjs";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /* =========================
    1️⃣ SEND OTP
@@ -169,22 +172,28 @@ export const loginUser = async (req, res) => {
   try {
 
     const { email, password, role } = req.body;
+    console.log(`🔑 Login attempt for: ${email} (Role: ${role})`);
 
     const user = await User.findOne({ email });
 
     if (!user) {
+      console.log(`❌ User not found: ${email}`);
       return res.status(400).json({ message: "User not found" });
     }
 
     if (user.role !== role) {
+      console.log(`❌ Role mismatch for ${email}: Expected ${role}, but user is ${user.role}`);
       return res.status(403).json({ message: "Incorrect role login" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
+      console.log(`❌ Invalid password for ${email}`);
       return res.status(400).json({ message: "Invalid password" });
     }
+
+    console.log(`✅ Login successful for: ${email}`);
 
     const token = generateToken(user);
 
@@ -204,4 +213,113 @@ export const loginUser = async (req, res) => {
 
   }
 
+};
+/* ===============================
+   GOOGLE LOGIN
+================================ */
+export const googleLogin = async (req, res) => {
+  try {
+    const { token, role: requestedRole } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ message: "Google token is required" });
+    }
+
+    // Verify Google Token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { name, email, picture, sub: googleId } = payload;
+
+    // ⛔ ADMINS CANNOT USE GOOGLE LOGIN
+    if (requestedRole === "Admin") {
+      return res.status(403).json({ message: "Administrators must login with email and password." });
+    }
+
+    // 👮 OFFICER VALIDATION (REMOVED AS PER USER REQUEST)
+    /*
+    if (requestedRole === "Officer") {
+      const allowedOfficers = process.env.ALLOWED_OFFICER_EMAILS
+        ? process.env.ALLOWED_OFFICER_EMAILS.split(",").map(e => e.trim().toLowerCase())
+        : [];
+
+      if (!allowedOfficers.includes(email.toLowerCase())) {
+        return res.status(403).json({ message: "Authorized officer email not found. Please contact administration." });
+      }
+    }
+    */
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // If an existing Admin tries to use Google login (regardless of requestedRole)
+      if (user.role === "Admin") {
+        return res.status(403).json({ message: "This account is registered as Admin. Please use password login." });
+      }
+
+      // Preserve existing role unless it's a new Officer-whitelisted login
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.profilePic = picture;
+        user.avatar = picture;
+        if (requestedRole === "Officer") user.role = "Officer";
+        await user.save();
+      }
+    } else {
+      // Create new user (Citizen/Officer)
+      user = await User.create({
+        name,
+        email,
+        googleId,
+        profilePic: picture,
+        avatar: picture,
+        role: requestedRole === "Officer" ? "Officer" : "Citizen"
+      });
+    }
+
+    const jwtToken = generateToken(user);
+    res.status(200).json({
+      message: "Google login successful",
+      token: jwtToken,
+      user
+    });
+
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    res.status(500).json({ message: `Google authentication failed: ${error.message}` });
+  }
+};
+
+/* ===============================
+   ADMIN LOGIN (EMAIL + PASSWORD)
+================================ */
+export const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.role !== "Admin") {
+      return res.status(401).json({ message: "Unauthorized. Admin access only." });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    const token = generateToken(user);
+    res.json({
+      message: "Admin login successful",
+      token,
+      user
+    });
+
+  } catch (error) {
+    console.error("Admin Login Error:", error);
+    res.status(500).json({ message: "Server error during admin login" });
+  }
 };

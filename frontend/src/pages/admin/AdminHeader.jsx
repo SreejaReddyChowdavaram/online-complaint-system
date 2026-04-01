@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 export default function AdminHeader() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function AdminHeader() {
           admin1 <small>(Admin)</small>
         </span>
         <button style={styles.logout} onClick={handleLogout}>
-          Logout
+          <LogOut size={18} />
         </button>
       </div>
     </div>
@@ -61,11 +62,16 @@ const styles = {
     fontWeight: 500
   },
   logout: {
-    border: "1px solid #2563eb",
-    color: "#2563eb",
-    background: "transparent",
-    padding: "6px 14px",
-    borderRadius: 6,
-    cursor: "pointer"
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 36,
+    height: 36,
+    border: "1.5px solid #fee2e2",
+    color: "#dc2626",
+    background: "#fff",
+    borderRadius: "50%",
+    cursor: "pointer",
+    transition: "all 0.2s"
   }
 };
