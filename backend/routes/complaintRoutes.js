@@ -19,8 +19,10 @@ router.post(
   async (req, res) => {
     try {
       console.log("📥 Incoming Complaint Submission:");
-      console.log("Body:", req.body);
-      console.log("Files:", req.files ? req.files.length : 0);
+      console.log("   - Title:", req.body.title);
+      console.log("   - Category:", req.body.category);
+      console.log("   - Files:", req.files ? req.files.length : 0);
+      console.log("   - User ID:", req.user.id);
 
       const {
         title,

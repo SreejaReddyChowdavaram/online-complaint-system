@@ -175,9 +175,8 @@ const PostComplaint = () => {
         formData.append("files", files[i]);
       }
 
-      await api.post("/complaints/post", formData);
-
-      alert(t("complaints.submit_success") || "Complaint submitted successfully ✅");
+      const res = await api.post("/complaints/post", formData);
+      alert(res.data.message || t("complaints.submit_success") || "Complaint submitted successfully ✅");
 
       // Reset
       setTitle("");
@@ -191,7 +190,10 @@ const PostComplaint = () => {
       setSubmitted(false);
     } catch (err) {
       console.error("Post error:", err);
-      alert("Failed to submit complaint");
+      const serverMsg = err.response?.data?.message || err.message;
+      alert(`Failed to submit complaint: ${serverMsg}`);
+    } finally {
+      setSubmitted(false);
     }
   };
 
@@ -205,40 +207,47 @@ const PostComplaint = () => {
       <div className="complaint-grid">
         {/* ================= LEFT FORM ================= */}
         <div className="form-section">
-          <label className="label-row">{t("complaints.title_label")} <span className="req">*</span></label>
-          <input
-            type="text"
-            className={errors.title ? "error" : ""}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t("complaints.placeholder_title")}
-          />
-          {errors.title && <span className="inline-error">{errors.title}</span>}
+          {/* ✅ RESTORED TITLE FIELD (CRITICAL) */}
+          <div className="input-group">
+            <label className="label-row">{t("complaints.title_label") || "Complaint Title"} <span className="req">*</span></label>
+            <input
+              type="text"
+              className={errors.title ? "error" : ""}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t("complaints.placeholder_title") || "e.g. Broken streetlight"}
+            />
+            {errors.title && <span className="inline-error">{errors.title}</span>}
+          </div>
 
-          <label className="label-row">{t("complaints.category_label")} <span className="req">*</span></label>
-          <select 
-            className={errors.category ? "error" : ""}
-            value={category} 
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">{t("complaints.placeholder_category")}</option>
-            <option value="Electricity">{t("complaints.categories.Electricity")}</option>
-            <option value="Water">{t("complaints.categories.Water")}</option>
-            <option value="Roads">{t("complaints.categories.Roads")}</option>
-            <option value="Drainage">{t("complaints.categories.Drainage")}</option>
-            <option value="Garbage">{t("complaints.categories.Garbage")}</option>
-            <option value="Noise">{t("complaints.categories.Noise")}</option>
-          </select>
-          {errors.category && <span className="inline-error">{errors.category}</span>}
+          <div className="input-group">
+            <label className="label-row">{t("complaints.category_label")} <span className="req">*</span></label>
+            <select 
+              className={errors.category ? "error" : ""}
+              value={category} 
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="">{t("complaints.placeholder_category")}</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Water Supply">Water Supply</option>
+              <option value="Roads & Transport">Roads & Transport</option>
+              <option value="Drainage & Sewage">Drainage & Sewage</option>
+              <option value="Garbage & Sanitation">Garbage & Sanitation</option>
+              <option value="Noise & Pollution">Noise & Pollution</option>
+            </select>
+            {errors.category && <span className="inline-error">{errors.category}</span>}
+          </div>
 
-          <label className="label-row">{t("complaints.description_label")} <span className="req">*</span></label>
-          <textarea
-            className={errors.description ? "error" : ""}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder={t("complaints.placeholder_description")}
-          />
-          {errors.description && <span className="inline-error">{errors.description}</span>}
+          <div className="input-group">
+            <label className="label-row">{t("complaints.description_label")} <span className="req">*</span></label>
+            <textarea
+              className={errors.description ? "error" : ""}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder={t("complaints.placeholder_description")}
+            />
+            {errors.description && <span className="inline-error">{errors.description}</span>}
+          </div>
 
           <label className="label-row">{t("complaints.upload_photos")} <span className="req">*</span></label>
           <input 
