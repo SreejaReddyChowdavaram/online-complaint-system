@@ -15,9 +15,14 @@ export const autoAssignOfficer = async (complaint) => {
 
     // 1. Find all officers in the relevant department
     // We normalize the search by making it case-insensitive
+    // We make the search smarter by matching any part of the category (e.g., "Water" matches "Water Supply")
+    const departmentPrefix = complaint.category.split(" ")[0]; // Take the first word
     const deptOfficers = await User.find({
       role: "Officer",
-      department: { $regex: new RegExp(`^${complaint.category}$`, "i") }
+      $or: [
+        { department: { $regex: new RegExp(complaint.category, "i") } },
+        { department: { $regex: new RegExp(departmentPrefix, "i") } }
+      ]
     });
 
     if (deptOfficers.length === 0) {

@@ -43,8 +43,10 @@ export default function ForgotPassword() {
       setStep(2);
       setResendTimer(60);
     } catch (err) {
+      console.error("🔥 [AUTH ERROR]:", err);
       setIsError(true);
-      setMessage(err.response?.data?.message || "Error sending OTP");
+      const errMsg = err.response?.data?.message || err.message || "Unknown error";
+      setMessage(`Error sending OTP: ${errMsg}`);
     } finally {
       setLoading(false);
     }
