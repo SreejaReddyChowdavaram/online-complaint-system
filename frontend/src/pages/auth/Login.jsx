@@ -15,17 +15,29 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
  * Ensures we never try to render a raw object in JSX.
  */
 const getErrorMessage = (err, fallback = "An unexpected error occurred") => {
-  if (typeof err === "string") return err;
-  if (!err) return fallback;
-  
-  // Axios response structure
-  if (err.response?.data) {
-    const data = err.response.data;
-    return data.message || data.error || (typeof data === "string" ? data : JSON.stringify(data));
+  try {
+    console.error("🔍 [Login Debug] Raw Error:", err);
+    
+    if (typeof err === "string") return err;
+    if (!err) return String(fallback);
+    
+    let result = fallback;
+    
+    // Axios response structure
+    if (err.response?.data) {
+      const data = err.response.data;
+      result = data.message || data.error || (typeof data === "string" ? data : data);
+    } else if (err.message) {
+      result = err.message;
+    } else {
+      result = err;
+    }
+
+    // FINAL GUARD: If result is still an object, stringify it
+    return typeof result === "object" ? JSON.stringify(result) : String(result);
+  } catch (e) {
+    return String(fallback);
   }
-  
-  // Standard Error object or custom object
-  return err.message || JSON.stringify(err);
 };
 
 function Login({ title, role = "Citizen" }) {
