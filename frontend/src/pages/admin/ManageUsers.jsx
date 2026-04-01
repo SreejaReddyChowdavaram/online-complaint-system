@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import api from "../../services/api";
 import { Trash2, UserCog, Search, ShieldCheck, Users, UserCheck, User } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
@@ -16,15 +16,15 @@ const roleColors = {
 
 export default function ManageUsers() {
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("All");
-  const [changingRole, setChangingRole] = useState({}); // { [userId]: newRole }
-  const [savingId, setSavingId] = useState(null);
-  const [deletingId, setDeletingId] = useState(null);
-  const [toast, setToast] = useState(null);
+  const [users, setUsers] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [filterRole, setFilterRole] = React.useState("All");
+  const [changingRole, setChangingRole] = React.useState({}); // { [userId]: newRole }
+  const [savingId, setSavingId] = React.useState(null);
+  const [deletingId, setDeletingId] = React.useState(null);
+  const [toast, setToast] = React.useState(null);
 
   const token = localStorage.getItem("token");
   const showToast = (msg, type = "success") => {
@@ -47,7 +47,7 @@ export default function ManageUsers() {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

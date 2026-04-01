@@ -35,7 +35,8 @@ const MyProfile = () => {
       });
       // Set initial avatar preview if exists
       if (user.avatar) {
-        setPreviewUrl(`/uploads/${user.avatar}`);
+        // Handle Google avatar (URL) vs local avatar (filename)
+        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`);
       } else {
         setPreviewUrl(null);
       }
@@ -52,7 +53,7 @@ const MyProfile = () => {
         address: user.address || "",
       });
       setAvatarFile(null);
-      setPreviewUrl(user.avatar ? `/uploads/${user.avatar}` : null);
+      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`) : null);
     }
     setIsEditing(!isEditing);
   };

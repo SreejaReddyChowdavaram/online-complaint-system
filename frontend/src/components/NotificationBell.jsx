@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import api from "../services/api";
 import { useTranslation } from "react-i18next";
 import { io } from "socket.io-client";
@@ -8,12 +8,12 @@ import "./NotificationBell.css";
 
 const NotificationBell = () => {
   const { t } = useTranslation();
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = React.useState([]);
+  const [unreadCount, setUnreadCount] = React.useState(0);
+  const [isOpen, setIsOpen] = React.useState(false);
   const { user } = useAuth();
-  const dropdownRef = useRef(null);
-  const socketRef = useRef(null);
+  const dropdownRef = React.useRef(null);
+  const socketRef = React.useRef(null);
 
   useEffect(() => {
     fetchNotifications();
@@ -24,7 +24,7 @@ const NotificationBell = () => {
   }, [user?._id]);
 
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);

@@ -226,10 +226,15 @@ export const googleLogin = async (req, res) => {
   try {
     await connectDB(); // 🔥 FIX
 
-    const { token, role } = req.body;
+    const { token, credential, role } = req.body;
+    const idToken = token || credential;
+
+    if (!idToken) {
+      return res.status(400).json({ message: "No Google ID token provided." });
+    }
 
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
@@ -244,6 +249,7 @@ export const googleLogin = async (req, res) => {
         email,
         googleId,
         profilePic: picture,
+        avatar: picture, // 🔹 Synchronize Google photo with system avatar
         role: role || "Citizen"
       });
     }

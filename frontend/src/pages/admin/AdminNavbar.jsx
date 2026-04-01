@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Bell, Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
 import NotificationDropdown from "../../components/NotificationDropdown";
@@ -10,10 +10,10 @@ const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
-  const [isLangOpen, setIsLangOpen] = useState(false);
-  const langRef = useRef(null);
+  const [isLangOpen, setIsLangOpen] = React.useState(false);
+  const langRef = React.useRef(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (langRef.current && !langRef.current.contains(event.target)) setIsLangOpen(false);
     };

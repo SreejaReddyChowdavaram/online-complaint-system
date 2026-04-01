@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import CommentSection from "../../components/CommentSection";
@@ -21,13 +21,13 @@ import LocationSection from "../../components/LocationSection";
 
 function ViewaComplaints() {
   const { t } = useTranslation();
-  const [complaints, setComplaints] = useState([]);
-  const [filteredComplaints, setFilteredComplaints] = useState([]);
-  const [selectedComplaint, setSelectedComplaint] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [complaints, setComplaints] = React.useState([]);
+  const [filteredComplaints, setFilteredComplaints] = React.useState([]);
+  const [selectedComplaint, setSelectedComplaint] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [processing, setProcessing] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("all");
 
   /* ---------------- FETCH DATA ---------------- */
   const fetchData = async () => {
@@ -42,11 +42,11 @@ function ViewaComplaints() {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let result = complaints;
     if (statusFilter !== "all") {
       result = result.filter(c => c.status.toLowerCase() === statusFilter.toLowerCase());

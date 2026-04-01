@@ -1,3 +1,4 @@
+import React from "react";
 import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
@@ -20,21 +21,21 @@ const AdminProfile = () => {
 
   if (!t) return null;
   const { user, updateUser, token } = useAuth();
-  const fileInputRef = useRef(null);
+  const fileInputRef = React.useRef(null);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [profile, setProfile] = React.useState({
     name: "",
     email: "",
     mobile: "",
   });
   
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ total: 0, pending: 0, resolved: 0 });
+  const [avatarFile, setAvatarFile] = React.useState(null);
+  const [previewUrl, setPreviewUrl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [stats, setStats] = React.useState({ total: 0, pending: 0, resolved: 0 });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (user) {
       setProfile({
         name: user.name || "",
@@ -42,14 +43,15 @@ const AdminProfile = () => {
         mobile: user.mobile || "",
       });
       if (user.avatar) {
-        setPreviewUrl(`/uploads/${user.avatar}`);
+        // Handle Google avatar (URL) vs local avatar (filename)
+        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`);
       } else {
         setPreviewUrl(null);
       }
     }
   }, [user]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchStats();
   }, []);
 
@@ -76,7 +78,7 @@ const AdminProfile = () => {
         mobile: user.mobile || "",
       });
       setAvatarFile(null);
-      setPreviewUrl(user.avatar ? `/uploads/${user.avatar}` : null);
+      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`) : null);
     }
     setIsEditing(!isEditing);
   };

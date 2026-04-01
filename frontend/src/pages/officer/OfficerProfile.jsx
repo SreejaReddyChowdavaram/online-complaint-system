@@ -36,7 +36,8 @@ const OfficerProfile = () => {
         mobile: res.data.mobile || ""
       });
       if (res.data.avatar) {
-        setPreviewUrl(`/uploads/${res.data.avatar}`);
+        // Handle Google avatar (URL) vs local avatar (filename)
+        setPreviewUrl(res.data.avatar.startsWith("http") ? res.data.avatar : `/uploads/${res.data.avatar}`);
       } else {
         setPreviewUrl(null);
       }

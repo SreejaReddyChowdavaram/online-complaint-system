@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { 
@@ -17,11 +17,11 @@ import { io } from "socket.io-client";
 import { useAuth } from "../context/AuthContext";
 
 const NotificationDropdown = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const dropdownRef = useRef(null);
-  const navigate = useNavigate();
+  const [notifications, setNotifications] = React.useState([]);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const dropdownRef = React.useRef(null);
+  const socketRef = React.useRef(null);
   const { user } = useAuth();
 
   const unseenCount = notifications.filter(n => !n.isRead).length;
@@ -38,7 +38,7 @@ const NotificationDropdown = () => {
     return then.toLocaleDateString();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchNotifications();
 
     // Note: Socket.io is disabled for Vercel serverless compatibility.
