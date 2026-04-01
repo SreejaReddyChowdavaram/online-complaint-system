@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "install-frontend": "cd frontend && npm install",
+    "build": "cd frontend && npm install --legacy-peer-deps && npm run build",
+    "install-frontend": "cd frontend && npm install --legacy-peer-deps",
     "install-backend": "cd backend && npm install",
     "install-all": "npm run install-frontend && npm run install-backend"
   },
+
   "dependencies": {
 
     "@google/genai": "^1.44.0",
