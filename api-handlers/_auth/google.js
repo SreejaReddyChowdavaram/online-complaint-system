@@ -34,6 +34,7 @@ export default async function handler(req, res) {
         email,
         googleId,
         profilePic: picture,
+        avatar: picture, // 🔹 Synchronize Google photo with system avatar
         role: role || "Citizen",
       });
     }

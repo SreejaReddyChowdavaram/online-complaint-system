@@ -15,7 +15,7 @@ const NotificationBell = () => {
   const dropdownRef = React.useRef(null);
   const socketRef = React.useRef(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchNotifications();
     
     // Note: Socket.io is disabled for Vercel serverless compatibility.
