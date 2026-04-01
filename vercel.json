@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "public": false,
+  "cleanUrls": true,
+  "framework": "vite",
+  "buildCommand": "cd frontend && npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "frontend/dist/index.html" }
+  ]
+}
