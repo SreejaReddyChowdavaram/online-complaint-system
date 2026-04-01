@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* LOAD AUTH ON APP START */
+  // 🔹 Load user on app start
   useEffect(() => {
     const initAuth = async () => {
       try {
@@ -21,21 +21,25 @@ export const AuthProvider = ({ children }) => {
 
         setToken(storedToken);
 
-        // FETCH USER FROM BACKEND (via Vite proxy)
         const res = await axios.get("/api/users/me", {
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
         });
 
-        setUser(res.data);
-        localStorage.setItem("user", JSON.stringify(res.data));
-        localStorage.setItem("role", res.data.role);
+        // ✅ FIX: always extract correct user object
+        const userData =
+          res?.data?.user || res?.data?.data || res?.data || null;
+
+        setUser(userData);
+
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("role", userData?.role || "");
       } catch (error) {
         console.error("Auth init failed:", error);
         localStorage.clear();
-        setToken(null);
         setUser(null);
+        setToken(null);
       } finally {
         setLoading(false);
       }
@@ -44,26 +48,31 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  /* LOGIN */
+  // 🔹 Login
   const login = (token, user) => {
+    const userData =
+      user?.user || user?.data || user || null;
+
     setToken(token);
-    setUser(user);
+    setUser(userData);
 
     localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("role", user.role);
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("role", userData?.role || "");
   };
 
-  /* UPDATE USER (SYNC CONTEXT + STORAGE) */
+  // 🔹 Update user
   const updateUser = (updatedData) => {
     setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+
       const newUser = { ...prevUser, ...updatedData };
       localStorage.setItem("user", JSON.stringify(newUser));
       return newUser;
     });
   };
 
-  /* LOGOUT */
+  // 🔹 Logout
   const logout = () => {
     setToken(null);
     setUser(null);
