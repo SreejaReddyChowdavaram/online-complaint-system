@@ -1,29 +1,23 @@
-import dotenv from "dotenv";
 import connectDB from "../backend/config/database.js";
 import app from "../backend/app.js";
+import serverless from "serverless-http";
 
-// Load environment variables early
-dotenv.config();
+// Wrap express app with serverless-http
+const serverlessHandler = serverless(app);
 
 /**
- * PRODUCTION-READY SERVERLESS HANDLER
- * 
- * Vercel-specific entry point that handles:
- * 1. Database connection initialization/reuse.
- * 2. Express application routing.
- * 3. Graceful error handling for cold starts.
+ * ⚡ DEFINITIVE VERCEL SERVERLESS HANDLER
  */
-const handler = async (req, res) => {
+export default async (req, res) => {
   try {
-    // 1. Ensure Database is connected
+    // 1. Ensure Database is connected (Cached internally)
     await connectDB();
 
-    // 2. Pass request to Express app
-    return app(req, res);
+    // 2. Delegate to serverless-http
+    return await serverlessHandler(req, res);
   } catch (error) {
     console.error("🚨 [FATAL HANDLER ERROR]:", error);
     
-    // Ensure we always return a JSON response even if the app crashes
     if (!res.headersSent) {
       res.status(500).json({
         success: false,
@@ -33,6 +27,4 @@ const handler = async (req, res) => {
     }
   }
 };
-
-export default handler;
 

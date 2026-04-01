@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./ForgotPassword.css";
 
-const API_URL = "/api";
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
@@ -39,7 +37,7 @@ export default function ForgotPassword() {
       setLoading(true);
       setMessage("");
       setIsError(false);
-      const res = await axios.post(`${API_URL}/auth/send-otp`, { email });
+      const res = await api.post("/auth/send-otp", { email });
       setMessage(res.data.message || "OTP sent successfully");
       setStep(2);
       setResendTimer(60);
@@ -57,7 +55,7 @@ export default function ForgotPassword() {
       setLoading(true);
       setMessage("");
       setIsError(false);
-      const res = await axios.post(`${API_URL}/auth/verify-otp`, { email, otp });
+      const res = await api.post("/auth/verify-otp", { email, otp });
       setMessage(res.data.message || "OTP verified");
       setStep(3);
     } catch (err) {
@@ -74,7 +72,7 @@ export default function ForgotPassword() {
       setLoading(true);
       setMessage("");
       setIsError(false);
-      const res = await axios.post(`${API_URL}/auth/reset-password`, { email, newPassword });
+      const res = await api.post("/auth/reset-password", { email, newPassword });
       setMessage(res.data.message);
       setIsError(false);
       

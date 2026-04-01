@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import "./Register.css";
 
-const API_URL = "/api";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -44,7 +43,7 @@ const Register = () => {
     try {
       setLoading(true);
 
-      await axios.post(`${API_URL}/auth/register`, {
+      await api.post("/auth/register", {
         name,
         email,
         phone,

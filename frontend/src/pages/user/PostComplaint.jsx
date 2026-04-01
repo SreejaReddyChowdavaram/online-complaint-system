@@ -18,7 +18,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import "./PostComplaint.css";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 
 /* ===============================
@@ -175,9 +175,7 @@ const PostComplaint = () => {
         formData.append("files", files[i]);
       }
 
-      await axios.post("/api/complaints/post", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post("/complaints/post", formData);
 
       alert(t("complaints.submit_success") || "Complaint submitted successfully ✅");
 

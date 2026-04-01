@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import "../ProfileTheme.css"; // Shared styles
-
-const API_URL = "/api";
 
 const OfficerProfile = () => {
   const { t } = useTranslation();
@@ -30,9 +28,7 @@ const OfficerProfile = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get(`${API_URL}/officer/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/officer/profile");
       setProfile({
         name: res.data.name || "",
         email: res.data.email || "",
@@ -76,12 +72,11 @@ const OfficerProfile = () => {
         formData.append("avatar", avatarFile);
       }
 
-      const res = await axios.put(
-        `${API_URL}/officer/profile`,
+      const res = await api.put(
+        "/officer/profile",
         formData,
         {
           headers: { 
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data" 
           },
         }

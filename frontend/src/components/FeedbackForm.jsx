@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useTranslation } from "react-i18next";
 import { Star, CheckCircle, FileText, X } from "lucide-react";
 import "./FeedbackForm.css";
@@ -30,10 +29,7 @@ const FeedbackForm = ({ complaint, onClose, onSuccess }) => {
 
   const checkExisting = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/feedback/check/${complaint._id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get(`/feedback/check/${complaint._id}`);
       if (res.data.exists) {
         setExistingFeedback(res.data.feedback);
         setRating(res.data.feedback.rating);
@@ -78,10 +74,7 @@ const FeedbackForm = ({ complaint, onClose, onSuccess }) => {
     };
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.post("/api/feedback", feedbackData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post("/feedback", feedbackData);
       
       onSuccess(t("complaints.feedback.submit_success"));
       onClose();

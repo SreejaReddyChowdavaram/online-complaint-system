@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { 
@@ -15,7 +14,6 @@ import {
   Camera
 } from "lucide-react";
 
-const API_URL = "/api";
 
 const AdminProfile = () => {
   const { t } = useTranslation();
@@ -57,9 +55,7 @@ const AdminProfile = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`${API_URL}/admin/dashboard-data`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get("/admin/dashboard-data");
       setStats({
         total: res.data.stats?.total || 124,
         pending: res.data.stats?.pending || 18,
@@ -103,12 +99,11 @@ const AdminProfile = () => {
         formData.append("avatar", avatarFile);
       }
 
-      const res = await axios.put(
-        `${API_URL}/admin/profile`,
+      const res = await api.put(
+        "/admin/profile",
         formData,
         {
           headers: { 
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
           },
         }

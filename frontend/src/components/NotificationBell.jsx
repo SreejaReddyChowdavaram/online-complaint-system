@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useTranslation } from "react-i18next";
 import { io } from "socket.io-client";
 import { useAuth } from "../context/AuthContext";
@@ -36,12 +35,7 @@ const NotificationBell = () => {
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const res = await axios.get("/api/notifications", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get("/notifications");
       setNotifications(res.data);
       setUnreadCount(res.data.filter(n => !n.isRead).length);
     } catch (err) {
@@ -51,10 +45,7 @@ const NotificationBell = () => {
 
   const markAsRead = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`/api/notifications/mark-as-read/${id}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put(`/notifications/mark-as-read/${id}`, {});
       fetchNotifications();
     } catch (err) {
       console.error("Error marking as read:", err);
@@ -63,10 +54,7 @@ const NotificationBell = () => {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put("/api/notifications/mark-all-read", {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put("/notifications/mark-all-read", {});
       fetchNotifications();
     } catch (err) {
       console.error("Error marking all read:", err);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Trash2, UserCog, Search, ShieldCheck, Users, UserCheck, User } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import "./ManageUsers.css";
@@ -27,8 +27,6 @@ export default function ManageUsers() {
   const [toast, setToast] = useState(null);
 
   const token = localStorage.getItem("token");
-  const authHeader = { headers: { Authorization: `Bearer ${token}` } };
-
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3000);
@@ -38,7 +36,7 @@ export default function ManageUsers() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await axios.get("/api/admin/users", authHeader);
+      const { data } = await api.get("/admin/users");
       // Extra safety: ensure data is an array
       setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -63,10 +61,9 @@ export default function ManageUsers() {
     if (!newRole) return;
     setSavingId(userId);
     try {
-      await axios.put(
-        `/api/admin/user/${userId}`,
-        { role: newRole },
-        authHeader
+      await api.put(
+        `/admin/user/${userId}`,
+        { role: newRole }
       );
       showToast("Role updated successfully ✓");
       setChangingRole((prev) => { const c = { ...prev }; delete c[userId]; return c; });
@@ -85,7 +82,7 @@ export default function ManageUsers() {
     if (!confirmed) return;
     setDeletingId(userId);
     try {
-      await axios.delete(`/api/admin/user/${userId}`, authHeader);
+      await api.delete(`/admin/user/${userId}`);
       showToast("User deleted successfully ✓");
       fetchUsers();
     } catch (err) {

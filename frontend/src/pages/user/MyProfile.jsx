@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import "../ProfileTheme.css"; // Shared styles
@@ -77,12 +77,11 @@ const MyProfile = () => {
         formData.append("avatar", avatarFile);
       }
 
-      const res = await axios.put(
-        `${API_URL}/users/update/${user._id}`,
+      const res = await api.put(
+        `/users/update/${user._id}`,
         formData,
         {
           headers: { 
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data" 
           },
         }

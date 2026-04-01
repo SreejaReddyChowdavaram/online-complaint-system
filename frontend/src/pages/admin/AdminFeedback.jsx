@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { 
   AlertTriangle, 
@@ -25,11 +25,8 @@ const AdminFeedback = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const url = filterDept ? `/api/feedback/all?department=${filterDept}` : "/api/feedback/all";
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const url = filterDept ? `/feedback/all?department=${filterDept}` : "/feedback/all";
+      const res = await api.get(url);
       setFeedback(res.data.feedback);
       setOfficerStats(res.data.officerStats);
     } catch (err) {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 const AuthContext = createContext();
 
@@ -37,12 +37,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         setToken(storedToken);
-
-        const res = await axios.get("/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        });
+        const res = await api.get("/users/me");
 
         // ✅ Robust Extraction
         const userData = normalizeUser(res?.data);

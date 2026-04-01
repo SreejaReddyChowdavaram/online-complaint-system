@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
@@ -18,7 +18,6 @@ import { useAuth } from "../../context/AuthContext";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import "./AdminDashboard.css";
 
-const API_URL = "/api";
 
 function AdminDashboard() {
   const { t } = useTranslation();
@@ -36,10 +35,7 @@ function AdminDashboard() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_URL}/admin/dashboard-data`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/admin/dashboard-data");
       setData(res.data);
       setLastUpdated(new Date().toLocaleTimeString());
     } catch (error) {
@@ -51,7 +47,7 @@ function AdminDashboard() {
 
   const fetchDashboardStats = async () => {
     try {
-      const res = await axios.get("/api/dashboard-stats");
+      const res = await api.get("/dashboard-stats");
       console.log("--- DASHBOARD STATS API FETCH ---", res.data);
       // Update only the stats part of the data
       setData(prev => ({

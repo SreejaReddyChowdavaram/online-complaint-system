@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import CommentSection from "../../components/CommentSection";
 import { 
@@ -16,8 +16,6 @@ import { useAuth } from "../../context/AuthContext";
 import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
-
-const API_URL = "/api";
 
 function AssignedComplaints() {
   const { t } = useTranslation();
@@ -36,15 +34,8 @@ function AssignedComplaints() {
 
   const fetchData = async () => {
     try {
-      const assignedRes = await axios.get(
-        `${API_URL}/officer/assigned`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      const allRes = await axios.get(
-        `${API_URL}/complaints`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const assignedRes = await api.get("/officer/assigned");
+      const allRes = await api.get("/complaints");
 
       setAssigned(assignedRes.data);
       setAllComplaints(allRes.data);
@@ -59,12 +50,11 @@ function AssignedComplaints() {
       formData.append("status", status);
       if (image) formData.append("resolutionImage", image);
 
-      await axios.put(
-        `${API_URL}/officer/update/${selected._id}`,
+      await api.put(
+        `/officer/update/${selected._id}`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }

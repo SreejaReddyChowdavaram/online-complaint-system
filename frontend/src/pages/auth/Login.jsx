@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
@@ -7,7 +7,6 @@ import "./Login.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { GoogleLogin } from "@react-oauth/google";
 
-const API_URL = "/api";
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 /**
@@ -60,9 +59,9 @@ function Login({ title, role = "Citizen" }) {
 
     try {
       // Admins use /admin-login, others use /login (if they still use email/pass)
-      const endpoint = role === "Admin" ? `${API_URL}/auth/admin-login` : `${API_URL}/auth/login`;
+      const endpoint = role === "Admin" ? `/auth/admin-login` : `/auth/login`;
 
-      const res = await axios.post(endpoint, {
+      const res = await api.post(endpoint, {
         email,
         password,
         role,
@@ -86,7 +85,7 @@ function Login({ title, role = "Citizen" }) {
   const handleGoogleSuccess = async (response) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/auth/google`, {
+      const res = await api.post(`/auth/google`, {
         token: response.credential,
         role: role // Send the role we are logging in as
       });

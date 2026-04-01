@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
+import api from "../../services/api";
 import { 
   FileText, 
   Globe, 
@@ -15,8 +14,6 @@ import "./ViewComplaints.css";
 import ComplaintCard from "../../components/ComplaintCard";
 import FeedbackForm from "../../components/FeedbackForm";
 import WelcomeHeader from "../../components/WelcomeHeader";
-
-const API_URL = "/api";
 
 const ViewComplaints = () => {
   const { t } = useTranslation();
@@ -46,15 +43,9 @@ const ViewComplaints = () => {
 
       try {
 
-        const myRes = await axios.get(
-          `${API_URL}/complaints/user`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const myRes = await api.get("/complaints/user");
 
-        const allRes = await axios.get(
-          `${API_URL}/complaints`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const allRes = await api.get("/complaints");
 
         setMyComplaints(myRes.data);
         setAllComplaints(allRes.data);
@@ -81,11 +72,7 @@ const ViewComplaints = () => {
 
   const handleUpvote = async (id) => {
     try {
-      const res = await axios.post(
-        `${API_URL}/complaints/upvote/${id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post(`/complaints/upvote/${id}`, {});
 
       const updateList = (prev) =>
         prev.map((c) =>
@@ -107,11 +94,7 @@ const ViewComplaints = () => {
 
   const handleDownvote = async (id) => {
     try {
-      const res = await axios.post(
-        `${API_URL}/complaints/downvote/${id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post(`/complaints/downvote/${id}`, {});
 
       const updateList = (prev) =>
         prev.map((c) =>
@@ -131,10 +114,7 @@ const ViewComplaints = () => {
 /* ================= FETCH COMMENTS ================= */
 const fetchComments = async (complaintId) => {
   try {
-    const res = await axios.get(
-      `${API_URL}/complaints/comments/${complaintId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await api.get(`/complaints/comments/${complaintId}`);
     setComments(res.data);
   } catch (err) {
     console.log(err);
@@ -145,10 +125,9 @@ const fetchComments = async (complaintId) => {
 const addComment = async (complaintId) => {
   if (!newComment.trim()) return;
   try {
-    const res = await axios.post(
-      `${API_URL}/complaints/comment/${complaintId}`,
-      { text: newComment },
-      { headers: { Authorization: `Bearer ${token}` } }
+    const res = await api.post(
+      `/complaints/comment/${complaintId}`,
+      { text: newComment }
     );
     // Since we are fetching comments list in modal, we can just fetch again
     fetchComments(complaintId);

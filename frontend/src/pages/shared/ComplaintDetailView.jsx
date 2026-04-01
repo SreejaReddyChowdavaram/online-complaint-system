@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/api";
 import { 
   ArrowLeft, 
   MapPin, 
@@ -28,10 +28,7 @@ const ComplaintDetailView = () => {
   useEffect(() => {
     const fetchComplaint = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const { data } = await axios.get(`/api/complaints/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const { data } = await api.get(`/complaints/${id}`);
         setComplaint(data);
       } catch (err) {
         console.error("Error fetching complaint:", err);

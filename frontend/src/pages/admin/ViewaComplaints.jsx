@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { useTranslation } from "react-i18next";
 import CommentSection from "../../components/CommentSection";
 import { 
@@ -19,8 +19,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import ComplaintCard from "../../components/ComplaintCard";
 import LocationSection from "../../components/LocationSection";
 
-const API_URL = "/api";
-
 function ViewaComplaints() {
   const { t } = useTranslation();
   const [complaints, setComplaints] = useState([]);
@@ -31,15 +29,11 @@ function ViewaComplaints() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const token = localStorage.getItem("token");
-
   /* ---------------- FETCH DATA ---------------- */
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/admin/complaints`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/admin/complaints");
       setComplaints(res.data);
     } catch (error) {
       console.error(error);
