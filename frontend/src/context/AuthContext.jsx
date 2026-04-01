@@ -1,7 +1,24 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
+
+/**
+ * 🔹 HELPER: Robust user data extraction
+ * Handles: { user: {...} }, { data: { user: {...} } }, or direct {...}
+ */
+const normalizeUser = (data) => {
+  if (!data) return null;
+  let user = data.user || data.data?.user || data.data || data;
+  if (typeof user !== 'object') return null;
+
+  // 🔹 Standardize ID naming
+  if (user._id && !user.id) user.id = user._id;
+  if (user.id && !user._id) user._id = user.id;
+
+  return user;
+};
+
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -27,14 +44,16 @@ export const AuthProvider = ({ children }) => {
           },
         });
 
-        // ✅ FIX: always extract correct user object
-        const userData =
-          res?.data?.user || res?.data?.data || res?.data || null;
+        // ✅ Robust Extraction
+        const userData = normalizeUser(res?.data);
 
-        setUser(userData);
-
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("role", userData?.role || "");
+        if (userData) {
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
+          localStorage.setItem("role", userData.role || "");
+        } else {
+          throw new Error("Invalid user data in response");
+        }
       } catch (error) {
         console.error("Auth init failed:", error);
         localStorage.clear();
@@ -49,20 +68,24 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // 🔹 Login
-  const login = (token, user) => {
-    const userData =
-      user?.user || user?.data || user || null;
+  const login = useCallback((token, rawUser) => {
+    const userData = normalizeUser(rawUser);
+
+    if (!userData) {
+      console.warn("Attempted to login with invalid user data:", rawUser);
+      return;
+    }
 
     setToken(token);
     setUser(userData);
 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("role", userData?.role || "");
-  };
+    localStorage.setItem("role", userData.role || "");
+  }, []);
 
   // 🔹 Update user
-  const updateUser = (updatedData) => {
+  const updateUser = useCallback((updatedData) => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;
 
@@ -70,14 +93,14 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(newUser));
       return newUser;
     });
-  };
+  }, []);
 
   // 🔹 Logout
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
     localStorage.clear();
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -87,6 +110,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateUser,
+        isAuthenticated: !!token && !!user,
+        role: user?.role || null,
       }}
     >
       {!loading && children}
@@ -94,4 +119,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

@@ -104,7 +104,7 @@ export default function ForgotPassword() {
             <h2 className="auth-title">Forgot Password</h2>
             <p className="auth-subtitle">Recover your online complaint account</p>
             
-            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>}
+            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{String(message)}</div>}
 
             <input
               type="email"
@@ -130,7 +130,7 @@ export default function ForgotPassword() {
               An email with a verification code was just sent to <strong>{email}</strong>
             </p>
 
-            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>}
+            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{String(message)}</div>}
 
             <input
               type="text"
@@ -163,7 +163,7 @@ export default function ForgotPassword() {
               Create a strong, new password that you don't use for other websites.
             </p>
 
-            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>}
+            {message && <div className={`message ${isError ? 'error' : 'success'}`}>{String(message)}</div>}
 
             <input
               type="password"

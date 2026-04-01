@@ -81,7 +81,8 @@ const Register = () => {
 
         <h2 className="auth-title">{t("register.title")}</h2>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && <p className="error-text">{String(error)}</p>}
+
 
         <input
           type="text"

@@ -205,24 +205,25 @@ function ViewaComplaints() {
               <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10 sticky top-0">
                 <div className="flex-1 pr-4">
                   <h2 className="text-xl font-black text-slate-800 dark:text-white tracking-tight leading-tight">
-                    {selectedComplaint.title}
+                    {selectedComplaint?.title || "Complaint Detail"}
                   </h2>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-                    Reference ID: {selectedComplaint._id.slice(-8).toUpperCase()}
+                    Reference ID: {selectedComplaint?._id?.slice(-8)?.toUpperCase() || "UNKNOWN"}
                   </p>
                 </div>
+
                 <div className="flex items-center gap-3">
                   <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border ${
-                    selectedComplaint.status === 'Pending' ? 'bg-orange-500/10 text-orange-600 border-orange-500/20' :
-                    selectedComplaint.status === 'In Progress' ? 'bg-blue-500/10 text-blue-600 border-blue-500/20' :
+                    selectedComplaint?.status === 'Pending' ? 'bg-orange-500/10 text-orange-600 border-orange-500/20' :
+                    selectedComplaint?.status === 'In Progress' ? 'bg-blue-500/10 text-blue-600 border-blue-500/20' :
                     'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                   }`}>
-                    {selectedComplaint.status}
+                    {selectedComplaint?.status || "Status N/A"}
                   </div>
 
                   {/* High Priority Escalation Badge */}
-                  {selectedComplaint.status !== "Resolved" && 
-                   selectedComplaint.assignedAt && 
+                  {selectedComplaint?.status !== "Resolved" && 
+                   selectedComplaint?.assignedAt && 
                    (new Date() - new Date(selectedComplaint.assignedAt)) > (24 * 60 * 60 * 1000) && (
                     <div className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-red-600 text-white shadow-lg shadow-red-500/30 animate-pulse border border-red-700">
                       🚨 Escalated / Overdue
@@ -252,16 +253,16 @@ function ViewaComplaints() {
                              {/* Category Icon logic can be here, using generic icon for now */}
                              <AlertCircle size={14} className="text-blue-500" />
                           </div>
-                          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t(`complaints.categories.${selectedComplaint.category}`)}</p>
+                          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t(`complaints.categories.${selectedComplaint?.category || 'General'}`)}</p>
                         </div>
                       </div>
                       <div className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{t("complaints.date_submitted")}</p>
                         <div className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200">
                           <Calendar size={14} className="text-slate-400" />
-                          {new Date(selectedComplaint.createdAt).toLocaleDateString(undefined, {
+                          {selectedComplaint?.createdAt ? new Date(selectedComplaint.createdAt).toLocaleDateString(undefined, {
                             year: 'numeric', month: 'long', day: 'numeric'
-                          })}
+                          }) : "N/A"}
                         </div>
                       </div>
                     </div>
@@ -270,12 +271,12 @@ function ViewaComplaints() {
                     <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                       <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t("complaints.modal_description")}</h4>
                       <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm whitespace-pre-line">
-                        {selectedComplaint.description}
+                        {selectedComplaint?.description || "No description provided."}
                       </p>
                     </div>
 
                     {/* Images Section */}
-                    {selectedComplaint.images?.length > 0 && (
+                    {selectedComplaint?.images?.length > 0 && (
                       <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <h4 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                           <Camera size={14} /> {t("complaints.modal_citizen_images")}
@@ -303,22 +304,22 @@ function ViewaComplaints() {
                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t("complaints.submitted_by")}</p>
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20">
-                          {selectedComplaint.userId?.name.charAt(0)}
+                          {selectedComplaint?.userId?.name?.charAt(0) || "U"}
                         </div>
                         <div className="flex-1 overflow-hidden">
-                          <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate" title={selectedComplaint.userId?.name}>
-                            {selectedComplaint.userId?.name}
+                          <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate" title={selectedComplaint?.userId?.name || "User"}>
+                            {selectedComplaint?.userId?.name || "Unknown User"}
                           </p>
-                          <p className="text-xs text-slate-400 truncate">{selectedComplaint.userId?.email}</p>
+                          <p className="text-xs text-slate-400 truncate">{selectedComplaint?.userId?.email || "No Email"}</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Highly Professional Location Section */}
                     <LocationSection 
-                      address={selectedComplaint.location?.address} 
-                      lat={selectedComplaint.location?.lat} 
-                      lng={selectedComplaint.location?.lng} 
+                      address={selectedComplaint?.location?.address} 
+                      lat={selectedComplaint?.location?.lat} 
+                      lng={selectedComplaint?.location?.lng} 
                     />
 
                     {/* Transparency Section (Optional bit of context) */}
@@ -332,12 +333,13 @@ function ViewaComplaints() {
 
                 {/* Comments Area (Full Width at Bottom) */}
                 <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800">
-                  <CommentSection complaintId={selectedComplaint._id} isReadOnly={true} />
+                  <CommentSection complaintId={selectedComplaint?._id} isReadOnly={true} />
                 </div>
               </div>
             </motion.div>
           </div>
         )}
+
       </AnimatePresence>
     </div>
   );

@@ -107,13 +107,13 @@ const OfficerFeedback = () => {
     return (
       <div className="feedback-status-container">
         <AlertTriangle size={48} color="#dc2626" />
-        <p className="error-text">{error}</p>
+        <p className="error-text">{String(error)}</p>
         <button onClick={fetchFeedback} className="retry-btn">Try Again</button>
       </div>
     );
   }
 
-  const safeAvgRating = Number(stats.avgRating) || 0;
+  const safeAvgRating = Number(stats?.avgRating) || 0;
 
   return (
     <div className="feedback-container">
@@ -152,15 +152,15 @@ const OfficerFeedback = () => {
           <div className="stat-icon"><MessageSquare size={24} color="#2563eb" /></div>
           <div className="stat-info">
             <span className="stat-label">Total Feedback</span>
-            <div className="stat-value">{stats.totalCount}</div>
+            <div className="stat-value">{stats?.totalCount || 0}</div>
           </div>
         </div>
         <div className="stat-card satisfaction-card">
           <div className="stat-icon"><TrendingUp size={24} color="#16a34a" /></div>
           <div className="stat-info">
             <span className="stat-label">Satisfaction Rate</span>
-            <div className="stat-value" style={{ color: stats.positivePercent > 70 ? '#16a34a' : stats.positivePercent < 40 ? '#dc2626' : '#111827' }}>
-              {stats.positivePercent}%
+            <div className="stat-value" style={{ color: (stats?.positivePercent || 0) > 70 ? '#16a34a' : (stats?.positivePercent || 0) < 40 ? '#dc2626' : '#111827' }}>
+              {stats?.positivePercent || 0}%
             </div>
           </div>
         </div>
@@ -186,34 +186,41 @@ const OfficerFeedback = () => {
         ) : (
           <div className="feedback-list">
             {filteredFeedback.map((item) => (
-              <div key={item._id} className="feedback-item">
+              <div key={item?._id} className="feedback-item">
                 <div className="item-header">
                   <div className="rating-row">
-                    <span className={`sentiment-badge ${item.type.toLowerCase()}`}>
-                      {item.type}
+                    <span className={`sentiment-badge ${item?.type?.toLowerCase() || 'neutral'}`}>
+                      {item?.type || "Review"}
                     </span>
                     <div className="star-display">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
                           size={14} 
-                          fill={i < item.rating ? "#f59e0b" : "none"} 
-                          color={i < item.rating ? "#f59e0b" : "#cbd5e1"} 
+                          fill={(i < (item?.rating || 0)) ? "#f59e0b" : "none"} 
+                          color={(i < (item?.rating || 0)) ? "#f59e0b" : "#cbd5e1"} 
                         />
                       ))}
                     </div>
                   </div>
-                  <span className="date-stamp">{new Date(item.submittedAt).toLocaleDateString()}</span>
+                  <span className="date-stamp">
+                    {item?.submittedAt ? new Date(item.submittedAt).toLocaleDateString() : "Date N/A"}
+                  </span>
                 </div>
-                <p className="item-message">{item.message}</p>
+                <p className="item-message">{item?.message || "No comment provided."}</p>
                 <div className="item-footer">
-                  <span className="dept-tag">{t(`complaints.categories.${item.officerId?.department || item.department}`) || "General"}</span>
-                  {item.complaintId && <span className="cid-ref">REF: #{item.complaintId.slice(-8).toUpperCase()}</span>}
+                  <span className="dept-tag">
+                    {t(`complaints.categories.${item?.officerId?.department || item?.department || 'General'}`)}
+                  </span>
+                  {item?.complaintId && typeof item.complaintId === 'string' && (
+                    <span className="cid-ref">REF: #{item.complaintId.slice(-8).toUpperCase()}</span>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
+
       </div>
     </div>
   );

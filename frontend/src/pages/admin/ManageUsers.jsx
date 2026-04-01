@@ -127,7 +127,7 @@ export default function ManageUsers() {
       {/* Toast */}
       {toast && (
         <div className={`mu-toast ${toast.type === "error" ? "mu-toast-error" : "mu-toast-success"}`}>
-          {toast.msg}
+          {String(toast?.msg || "")}
         </div>
       )}
 
@@ -144,22 +144,22 @@ export default function ManageUsers() {
       {/* Stats bar */}
       <div className="mu-stats">
         <div className="mu-stat">
-          <span className="mu-stat-number">{counts.total}</span>
+          <span className="mu-stat-number">{counts?.total || 0}</span>
           <span className="mu-stat-label">Total Users</span>
         </div>
         <div className="mu-stat">
           <UserCheck size={16} />
-          <span className="mu-stat-number">{counts.citizens}</span>
+          <span className="mu-stat-number">{counts?.citizens || 0}</span>
           <span className="mu-stat-label">Citizens</span>
         </div>
         <div className="mu-stat">
           <ShieldCheck size={16} />
-          <span className="mu-stat-number">{counts.officers}</span>
+          <span className="mu-stat-number">{counts?.officers || 0}</span>
           <span className="mu-stat-label">Officers</span>
         </div>
         <div className="mu-stat">
           <UserCog size={16} />
-          <span className="mu-stat-number">{counts.admins}</span>
+          <span className="mu-stat-number">{counts?.admins || 0}</span>
           <span className="mu-stat-label">Admins</span>
         </div>
       </div>
@@ -197,7 +197,7 @@ export default function ManageUsers() {
         </div>
       ) : error ? (
         <div className="mu-state-center mu-error">
-          <p>{error}</p>
+          <p>{String(error)}</p>
           <button className="mu-btn mu-btn-primary" onClick={fetchUsers}>Retry</button>
         </div>
       ) : filtered.length === 0 ? (
@@ -219,27 +219,27 @@ export default function ManageUsers() {
             </thead>
             <tbody>
               {filtered.map((u, idx) => {
-                const isSelf = currentUser?._id === u?._id || currentUser?.id === u?._id;
-                const pendingRole = changingRole[u?._id];
+                const isSelf = currentUser?._id === u?._id || currentUser?.id === u?._id || currentUser?._id === u?.id || currentUser?.id === u?.id;
+                const pendingRole = changingRole[u?._id || u?.id];
                 return (
-                  <tr key={u?._id} className={isSelf ? "mu-row-self" : ""}>
+                  <tr key={u?._id || u?.id} className={isSelf ? "mu-row-self" : ""}>
                     <td className="mu-td-num">{idx + 1}</td>
                     <td className="mu-td-name">
                       <span className="mu-user-name">{u?.name || "N/A"}</span>
                       {isSelf && <span className="mu-you-badge">You</span>}
                     </td>
-                    <td className="mu-td-email">{u?.email}</td>
+                    <td className="mu-td-email">{u?.email || "N/A"}</td>
                     <td>
                       <span className={`mu-role-badge ${roleColors[u?.role] || ""}`}>
-                        {u?.role}
+                        {u?.role || "Citizen"}
                       </span>
                     </td>
                     <td>
                       <div className="mu-role-change">
                         <select
                           className="mu-select"
-                          value={pendingRole || u?.role}
-                          onChange={(e) => handleRoleSelect(u?._id, e.target.value)}
+                          value={pendingRole || u?.role || "Citizen"}
+                          onChange={(e) => handleRoleSelect(u?._id || u?.id, e.target.value)}
                           disabled={isSelf || u?.role === "Admin"}
                         >
                           {ROLES.filter(r => r !== "Admin").map((r) => (
@@ -249,22 +249,22 @@ export default function ManageUsers() {
                         </select>
                         <button
                           className={`mu-btn mu-btn-save ${(pendingRole && pendingRole !== u?.role) ? 'mu-btn-active' : ''}`}
-                          disabled={isSelf || !pendingRole || pendingRole === u?.role || savingId === u?._id}
-                          onClick={() => handleRoleSave(u?._id)}
+                          disabled={isSelf || !pendingRole || pendingRole === u?.role || savingId === (u?._id || u?.id)}
+                          onClick={() => handleRoleSave(u?._id || u?.id)}
                         >
-                          {savingId === u?._id ? "Saving…" : "Save"}
+                          {savingId === (u?._id || u?.id) ? "Saving…" : "Save"}
                         </button>
                       </div>
                     </td>
                     <td>
                       <button
                         className="mu-btn mu-btn-delete"
-                        disabled={isSelf || deletingId === u?._id}
-                        onClick={() => handleDelete(u?._id, u?.name)}
+                        disabled={isSelf || deletingId === (u?._id || u?.id)}
+                        onClick={() => handleDelete(u?._id || u?.id, u?.name)}
                         title={isSelf ? "Cannot delete yourself" : "Delete user"}
                       >
                         <Trash2 size={15} />
-                        {deletingId === u?._id ? "Deleting…" : "Delete"}
+                        {deletingId === (u?._id || u?.id) ? "Deleting…" : "Delete"}
                       </button>
                     </td>
                   </tr>
@@ -273,6 +273,7 @@ export default function ManageUsers() {
             </tbody>
           </table>
         </div>
+
       )}
     </div>
   );

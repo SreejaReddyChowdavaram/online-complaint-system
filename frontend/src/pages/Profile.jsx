@@ -80,7 +80,8 @@ const Profile = () => {
         confirmPassword: ''
       })
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update password')
+      const errorMsg = err.response?.data?.message || 'Failed to update password';
+      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
     } finally {
       setLoading(false)
     }
@@ -105,7 +106,7 @@ const Profile = () => {
               <strong>Phone:</strong> {user?.phone || 'Not provided'}
             </div>
             <div className="info-item">
-              <strong>Role:</strong> <span className="badge">{user?.role}</span>
+              <strong>Role:</strong> <span className="badge">{user?.role || "Citizen"}</span>
             </div>
           </div>
         </div>
@@ -134,7 +135,7 @@ const Profile = () => {
           <h2>Change Password</h2>
           
           <ErrorMessage message={error} />
-          {success && <div className="success">{success}</div>}
+          {success && <div className="success">{String(success)}</div>}
 
           <form onSubmit={handlePasswordUpdate}>
             <div className="form-group">

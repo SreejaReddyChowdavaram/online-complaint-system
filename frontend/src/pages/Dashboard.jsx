@@ -171,32 +171,35 @@ const Dashboard = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <Link
-                      to={`/complaints/${complaint._id}`}
+                      to={`/complaints/${complaint?._id}`}
                       className="complaint-item"
                     >
                       <div className="complaint-item-header">
-                        <h4>{complaint.title}</h4>
+                        <h4>{complaint?.title || "Untitled Complaint"}</h4>
                         <motion.span
-                          className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}
+                          className={`badge badge-${complaint?.status?.toLowerCase()?.replace(' ', '-') || 'pending'}`}
                           whileHover={{ scale: 1.1 }}
                         >
-                          {complaint.status}
+                          {complaint?.status || "Pending"}
                         </motion.span>
                       </div>
-                      <p className="complaint-item-desc">{complaint.description.substring(0, 100)}...</p>
+                      <p className="complaint-item-desc">
+                        {complaint?.description ? (complaint.description.substring(0, 100) + "...") : "No description provided."}
+                      </p>
                       <div className="complaint-item-footer">
-                        <span className="complaint-category">{complaint.category}</span>
-                        {/* Show submitted by for Officers/Admins */}
-                        {!isCitizen && complaint.submittedBy && (
+                        <span className="complaint-category">{complaint?.category || "General"}</span>
+                        {/* Show submitted by for Officers/Admins with safety */}
+                        {!isCitizen && complaint?.submittedBy && (
                           <span className="complaint-submitter">
-                            By: {complaint.submittedBy.name}
+                            By: {complaint?.submittedBy?.name || "Unknown User"}
                           </span>
                         )}
                         <span className="complaint-date">
-                          {new Date(complaint.createdAt).toLocaleDateString()}
+                          {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : "Date N/A"}
                         </span>
                       </div>
                     </Link>
+
                   </motion.div>
                 </motion.div>
               ))}

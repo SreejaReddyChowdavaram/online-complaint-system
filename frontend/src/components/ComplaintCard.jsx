@@ -91,18 +91,18 @@ const ComplaintCard = ({
     };
   };
 
-  const statusConfig = getStatusConfig(complaint.status);
+  const statusConfig = getStatusConfig(complaint?.status);
 
-  const userUpvoted = complaint.votes?.some(
+  const userUpvoted = complaint?.votes?.some(
     (v) => (v.user?.toString() === currentUserId?.toString()) && v.voteType === "upvote"
   );
 
-  const userDownvoted = complaint.votes?.some(
+  const userDownvoted = complaint?.votes?.some(
     (v) => (v.user?.toString() === currentUserId?.toString()) && v.voteType === "downvote"
   );
 
-  const isOverdue = complaint.status !== "Resolved" && 
-                    complaint.assignedAt && 
+  const isOverdue = complaint?.status !== "Resolved" && 
+                    complaint?.assignedAt && 
                     (new Date() - new Date(complaint.assignedAt)) > (24 * 60 * 60 * 1000);
 
   return (
@@ -125,14 +125,14 @@ const ComplaintCard = ({
         <div className="flex-1 pr-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              {getCategoryIcon(complaint.category)}
+              {getCategoryIcon(complaint?.category)}
             </div>
             <span className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
-              {getTranslatedCategory(complaint.category)}
+              {getTranslatedCategory(complaint?.category)}
             </span>
           </div>
           <h2 className="text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {complaint.title}
+            {complaint?.title || "Untitled"}
           </h2>
         </div>
         <div className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${statusConfig.badge}`}>
@@ -143,13 +143,13 @@ const ComplaintCard = ({
       {/* ──── Body ──── */}
       <div className="mb-6">
         <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-          {complaint.description || "No description provided."}
+          {complaint?.description || "No description provided."}
         </p>
         <div className="flex items-center gap-3 mt-4 text-[12px] text-slate-400 dark:text-slate-500 font-medium">
           <div className="flex items-center gap-1.5">
             <Calendar size={14} className="opacity-70" />
             <span>
-              {complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "N/A"}
+              {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
             </span>
           </div>
         </div>
@@ -164,13 +164,13 @@ const ComplaintCard = ({
               <motion.button
                 whileTap={{ scale: 1.15 }}
                 className={`p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
-                onClick={() => onUpvote && onUpvote(complaint._id)}
+                onClick={() => onUpvote && onUpvote(complaint?._id)}
                 title="Like"
               >
                 <ThumbsUp size={18} fill="none" strokeWidth={2.5} />
               </motion.button>
               <span className={`text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
-                {complaint.upvotes || 0}
+                {complaint?.upvotes || 0}
               </span>
             </div>
 
@@ -179,13 +179,13 @@ const ComplaintCard = ({
               <motion.button
                 whileTap={{ scale: 1.15 }}
                 className={`p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
-                onClick={() => onDownvote && onDownvote(complaint._id)}
+                onClick={() => onDownvote && onDownvote(complaint?._id)}
                 title="Dislike"
               >
                 <ThumbsDown size={18} fill="none" strokeWidth={2.5} />
               </motion.button>
               <span className={`text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
-                {complaint.downvotes || 0}
+                {complaint?.downvotes || 0}
               </span>
             </div>
 
@@ -199,12 +199,12 @@ const ComplaintCard = ({
                 <MessageSquare size={18} strokeWidth={2.5} />
               </button>
               <span className="text-xs font-bold text-slate-400">
-                {complaint.commentCount || 0}
+                {complaint?.commentCount || 0}
               </span>
             </div>
           </div>
 
-          {onRateClick && complaint.status === "Resolved" && (
+          {onRateClick && complaint?.status === "Resolved" && (
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -216,6 +216,7 @@ const ComplaintCard = ({
           )}
         </div>
       )}
+
     </motion.div>
   );
 };

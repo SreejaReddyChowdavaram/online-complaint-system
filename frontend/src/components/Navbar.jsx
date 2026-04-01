@@ -125,20 +125,21 @@ const Navbar = () => {
             <div className="control-item profile-selector" ref={profileRef}>
               <button className="profile-btn" onClick={() => setIsProfileOpen(!isProfileOpen)}>
                 <div className="avatar-small">
-                  {user.avatar ? (
+                  {user?.avatar ? (
                     <img src={`/uploads/${user.avatar}`} alt="Avatar" />
                   ) : (
-                    <span>{user.name?.[0]?.toUpperCase()}</span>
+                    <span>{user?.name?.[0]?.toUpperCase() || "U"}</span>
                   )}
                 </div>
                 <div className="profile-info">
-                  <span className="name">{user.name}</span>
-                  <span className="role">{user.role?.toUpperCase()}</span>
+                  <span className="name">{user?.name || "User"}</span>
+                  <span className="role">{user?.role?.toUpperCase() || "CITIZEN"}</span>
                 </div>
                 <ChevronDown size={14} className="chevron" />
               </button>
               <AnimatePresence>
                 {isProfileOpen && (
+
                   <motion.div 
                     className="gov-dropdown profile-dropdown"
                     initial={{ opacity: 0, y: 10 }}
