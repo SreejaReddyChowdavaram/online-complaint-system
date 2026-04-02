@@ -45,13 +45,13 @@ const UserNavbar = () => {
   };
 
   return (
-    <header className="flex justify-between items-center px-6 h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
+    <header className="flex justify-between items-center px-3 sm:px-6 h-14 sm:h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
       <div className="flex items-center gap-6">
         {/* BRANDING */}
         <div className="flex items-center gap-2 sm:gap-3">
           <img src="/logo.png" alt="Logo" className="h-7 w-7 sm:h-8 sm:w-8 object-contain" />
           <div className="flex flex-col">
-            <span className="text-gray-800 dark:text-white font-bold text-sm sm:text-base whitespace-nowrap leading-none transition-all">
+            <span className="text-gray-800 dark:text-white font-black text-sm sm:text-base whitespace-nowrap leading-none transition-all">
               Online Complaint System
             </span>
             <span className="text-blue-600 dark:text-blue-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 sm:mt-1">
@@ -61,7 +61,7 @@ const UserNavbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-1.5 sm:gap-4">
         {/* Language Selector */}
         <div className="relative" ref={langRef}>
           <button
