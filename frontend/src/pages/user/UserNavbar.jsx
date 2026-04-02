@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Bell, Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
+import { Bell, Sun, Moon, Globe, ChevronDown } from "lucide-react";
 import NotificationDropdown from "../../components/NotificationDropdown";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-const UserNavbar = ({ onMenuClick, isSidebarOpen }) => {
+const UserNavbar = () => {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
@@ -47,14 +47,6 @@ const UserNavbar = ({ onMenuClick, isSidebarOpen }) => {
   return (
     <header className="flex justify-between items-center px-6 h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
       <div className="flex items-center gap-6">
-        {/* MOBILE MENU TOGGLE */}
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
-        >
-          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
         {/* BRANDING */}
         <div className="flex items-center gap-2 sm:gap-3">
           <img src="/logo.png" alt="Logo" className="h-7 w-7 sm:h-8 sm:w-8 object-contain" />
