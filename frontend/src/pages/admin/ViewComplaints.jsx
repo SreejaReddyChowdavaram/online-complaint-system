@@ -147,6 +147,7 @@ function ViewComplaints() {
           >
             <option value="all">{t("complaints.status_all")}</option>
             <option value="pending">{t("complaints.status_pending")}</option>
+            <option value="assigned">{t("complaints.status_assigned")}</option>
             <option value="in progress">{t("complaints.status_progress")}</option>
             <option value="resolved">{t("complaints.status_resolved")}</option>
           </select>
