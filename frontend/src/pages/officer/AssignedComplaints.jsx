@@ -38,7 +38,16 @@ function AssignedComplaints() {
       const allRes = await api.get("/complaints");
 
       setAssigned(assignedRes.data);
-      setAllComplaints(allRes.data);
+
+      const statusPriority = { "Assigned": 1, "Pending": 2, "In Progress": 3, "Resolved": 4 };
+      const sortedAll = (allRes.data || []).sort((a,b) => {
+        const pA = statusPriority[a.status] || 99;
+        const pB = statusPriority[b.status] || 99;
+        if (pA !== pB) return pA - pB;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      setAllComplaints(sortedAll);
     } catch (err) {
       console.error("Fetch error:", err);
     }

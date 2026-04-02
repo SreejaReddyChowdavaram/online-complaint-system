@@ -192,11 +192,13 @@ function Login({ title, role = "Citizen" }) {
           </>
         )}
 
-        {/* Footer: Register link for all roles as per user request */}
-        <p className="auth-footer">
-          {t("auth.dont_have_account")}{" "}
-          <Link to="/register">{t("auth.register")}</Link>
-        </p>
+        {/* Footer: Register link for non-Admin roles */}
+        {!isAdmin && (
+          <p className="auth-footer">
+            {t("auth.dont_have_account")}{" "}
+            <Link to="/register">{t("auth.register")}</Link>
+          </p>
+        )}
       </div>
     </div>
   );

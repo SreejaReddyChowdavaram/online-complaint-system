@@ -146,7 +146,6 @@ const Register = () => {
           </option>
           <option value="Citizen">{t("roles.citizen")}</option>
           <option value="Officer">{t("roles.officer")}</option>
-          <option value="Admin">{t("roles.admin")}</option>
         </select>
 
         <button className="auth-btn" type="submit" disabled={loading}>

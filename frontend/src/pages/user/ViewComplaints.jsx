@@ -50,7 +50,17 @@ const ViewComplaints = () => {
         const allRes = await api.get("/complaints");
 
         setMyComplaints(myRes.data);
-        setAllComplaints(allRes.data);
+
+        // ✅ Status Sorting Logic
+        const statusPriority = { "Assigned": 1, "Pending": 2, "In Progress": 3, "Resolved": 4 };
+        const sortedAll = (allRes.data || []).sort((a,b) => {
+          const pA = statusPriority[a.status] || 99;
+          const pB = statusPriority[b.status] || 99;
+          if (pA !== pB) return pA - pB;
+          return new Date(b.createdAt) - new Date(a.createdAt); // Secondary sort by date
+        });
+
+        setAllComplaints(sortedAll);
 
       } catch (err) {
 
@@ -380,17 +390,7 @@ const addComment = async (complaintId) => {
 
             </div>
 
-            {selectedComplaint.status === "Resolved" && openedFromAll && (
-              <button
-                className="feedback-btn modal-feedback-btn"
-                onClick={() => {
-                  setComplaintForFeedback(selectedComplaint);
-                  setShowFeedbackModal(true);
-                }}
-              >
-                <Star size={18} fill="currentColor" /> {t("complaints.rate_feedback")}
-              </button>
-            )}
+
             </div>
 
           </div>

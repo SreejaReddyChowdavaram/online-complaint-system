@@ -33,8 +33,14 @@ function ViewaComplaints() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/admin/complaints");
-      setComplaints(res.data);
+      const statusPriority = { "Assigned": 1, "Pending": 2, "In Progress": 3, "Resolved": 4 };
+      const sorted = (res.data || []).sort((a,b) => {
+        const pA = statusPriority[a.status] || 99;
+        const pB = statusPriority[b.status] || 99;
+        if (pA !== pB) return pA - pB;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      setComplaints(sorted);
     } catch (error) {
       console.error(error);
     } finally {
