@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { 
   FileText, 
   Globe, 
@@ -298,7 +298,7 @@ const addComment = async (complaintId) => {
                     return (
                       <img
                         key={index}
-                        src={`/uploads/${cleaned}`}
+                        src={`${BASE_URL}/uploads/${cleaned}`}
                         alt="complaint"
                       />
                     );
@@ -321,7 +321,7 @@ const addComment = async (complaintId) => {
                 <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
 
                 <img
-                  src={`/uploads/${selectedComplaint.resolutionImage}`}
+                  src={`${BASE_URL}/uploads/${selectedComplaint.resolutionImage}`}
                   alt="resolution"
                 />
 

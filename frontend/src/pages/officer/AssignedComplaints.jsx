@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
 import CommentSection from "../../components/CommentSection";
 import { 
@@ -202,7 +202,7 @@ function AssignedComplaints() {
                   {selected.images.map((img, i) => (
                     <img
                       key={i}
-                      src={`/uploads/${img}`}
+                      src={`${BASE_URL}/uploads/${img}`}
                       alt="complaint"
                       style={styles.image}
                     />
@@ -221,7 +221,7 @@ function AssignedComplaints() {
                       .replace(/^\/+/, "")
                       .replace(/^uploads\//, "");
 
-                    const finalUrl = `/uploads/${cleanPath}`;
+                    const finalUrl = `${BASE_URL}/uploads/${cleanPath}`;
 
                     return (
                       <img

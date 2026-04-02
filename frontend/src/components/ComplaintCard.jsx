@@ -10,7 +10,10 @@ import {
   AlertCircle,
   HelpCircle,
   ShieldAlert,
-  Calendar
+  Calendar,
+  Trash2,
+  Volume2,
+  Wind
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import './ComplaintCard.css';
@@ -41,18 +44,37 @@ const ComplaintCard = ({
 
   const getCategoryIcon = (category) => {
     const normalized = category?.toLowerCase() || "";
-    if (normalized.includes("electricity") || normalized.includes("power")) return <Zap size={16} className="text-amber-500" />;
-    if (normalized.includes("water") || normalized.includes("drainage")) return <Droplets size={16} className="text-blue-500" />;
-    if (normalized.includes("road") || normalized.includes("traffic")) return <TrafficCone size={16} className="text-orange-500" />;
-    if (normalized.includes("safety") || normalized.includes("crime")) return <ShieldAlert size={16} className="text-red-500" />;
-    if (normalized.includes("health")) return <AlertCircle size={16} className="text-emerald-500" />;
+    if (normalized.includes("electricity") || normalized.includes("power") || normalized.includes("light")) return <Zap size={16} className="text-amber-500" />;
+    if (normalized.includes("water") || normalized.includes("drainage") || normalized.includes("sewage")) return <Droplets size={16} className="text-blue-500" />;
+    if (normalized.includes("road") || normalized.includes("traffic") || normalized.includes("street")) return <TrafficCone size={16} className="text-orange-500" />;
+    if (normalized.includes("sanitation") || normalized.includes("garbage") || normalized.includes("waste") || normalized.includes("trash")) return <Trash2 size={16} className="text-teal-500" />;
+    if (normalized.includes("noise") || normalized.includes("sound") || normalized.includes("other")) return <Volume2 size={16} className="text-indigo-500" />;
+    if (normalized.includes("pollution") || normalized.includes("air") || normalized.includes("wind") || normalized.includes("smoke")) return <Wind size={16} className="text-sky-400" />;
+    if (normalized.includes("safety") || normalized.includes("crime") || normalized.includes("security")) return <ShieldAlert size={16} className="text-red-500" />;
+    if (normalized.includes("health") || normalized.includes("medical") || normalized.includes("hospital")) return <AlertCircle size={16} className="text-emerald-500" />;
     return <HelpCircle size={16} className="text-slate-400" />;
   };
 
   const getTranslatedCategory = (category) => {
     if (!category) return "N/A";
-    const translated = t(`complaints.categories.${category}`);
-    if (!translated || translated === `complaints.categories.${category}`) {
+    
+    // Normalize mapping for i18n keys
+    const categoryKeyMap = {
+      "road": "Roads",
+      "water": "Water",
+      "electricity": "Electricity",
+      "sanitation": "Garbage",
+      "garbage": "Garbage",
+      "health": "Drainage",
+      "noise": "Noise",
+      "other": "Noise"
+    };
+
+    const normalizedLower = category.toLowerCase();
+    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || category;
+    
+    const translated = t(`complaints.categories.${key}`);
+    if (!translated || translated === `complaints.categories.${key}`) {
       return category.replace(/([A-Z])/g, ' $1').trim();
     }
     return translated;

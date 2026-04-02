@@ -1,5 +1,5 @@
 import React from "react";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
 import CommentSection from "../../components/CommentSection";
 import { 
@@ -69,7 +69,7 @@ function ViewaComplaints() {
       .replace(/^\/+/g, "")
       .replace(/^uploads\//, "");
 
-    return `/uploads/${cleaned}`;
+    return `${BASE_URL}/uploads/${cleaned}`;
   };
 
   /* ---------------- STATUS COLORS ---------------- */

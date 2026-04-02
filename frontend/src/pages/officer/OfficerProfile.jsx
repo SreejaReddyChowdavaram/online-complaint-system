@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import "../ProfileTheme.css"; // Shared styles
@@ -37,7 +37,7 @@ const OfficerProfile = () => {
       });
       if (res.data.avatar) {
         // Handle Google avatar (URL) vs local avatar (filename)
-        setPreviewUrl(res.data.avatar.startsWith("http") ? res.data.avatar : `/uploads/${res.data.avatar}`);
+        setPreviewUrl(res.data.avatar.startsWith("http") ? res.data.avatar : `${BASE_URL}/uploads/${res.data.avatar}`);
       } else {
         setPreviewUrl(null);
       }

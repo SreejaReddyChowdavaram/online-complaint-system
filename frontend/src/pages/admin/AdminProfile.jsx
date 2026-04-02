@@ -1,5 +1,5 @@
 import React from "react";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { 
@@ -44,7 +44,7 @@ const AdminProfile = () => {
       });
       if (user.avatar) {
         // Handle Google avatar (URL) vs local avatar (filename)
-        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`);
+        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`);
       } else {
         setPreviewUrl(null);
       }
@@ -78,7 +78,7 @@ const AdminProfile = () => {
         mobile: user.mobile || "",
       });
       setAvatarFile(null);
-      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `/uploads/${user.avatar}`) : null);
+      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`) : null);
     }
     setIsEditing(!isEditing);
   };

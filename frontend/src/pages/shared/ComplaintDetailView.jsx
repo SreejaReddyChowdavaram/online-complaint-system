@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import api, { BASE_URL } from "../../services/api";
 import { 
   ArrowLeft, 
   MapPin, 
@@ -174,7 +174,7 @@ const ComplaintDetailView = () => {
                 {complaint.images.map((img, i) => (
                   <div key={i} className="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
                     <img 
-                      src={`/uploads/${img}`} 
+                      src={`${BASE_URL}/uploads/${img}`} 
                       alt={`Complaint media ${i+1}`}
                       className="w-full h-full object-cover"
                     />

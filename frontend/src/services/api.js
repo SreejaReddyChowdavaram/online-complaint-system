@@ -3,10 +3,12 @@ import axios from "axios";
 
 /**
  * ⚡ CENTRALIZED AXIOS INSTANCE
- * Ensures all API calls are directed to the Vercel serverless /api prefix.
+ * Ensures all API calls are directed to the Backend server.
  */
+export const BASE_URL = import.meta.env.VITE_API_URL || "";
+
 const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL || "") + "/api",
+  baseURL: `${BASE_URL}/api`,
   headers: {},
   withCredentials: true,
 });
