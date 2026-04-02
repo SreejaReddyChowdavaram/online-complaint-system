@@ -23,7 +23,7 @@ function AdminDashboard() {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
   const [data, setData] = useState({
-    stats: { total: 0, pending: 0, inProgress: 0, resolved: 0 },
+    stats: { total: 0, pending: 0, assigned: 0, inProgress: 0, resolved: 0 },
     userMetrics: { totalUsers: 0, totalOfficers: 0 },
     recentComplaints: [],
     topOfficers: [],
@@ -55,6 +55,7 @@ function AdminDashboard() {
         stats: {
            total: res.data.total,
            pending: res.data.pending,
+           assigned: res.data.assigned,
            inProgress: res.data.inProgress,
            resolved: res.data.resolved
         }
@@ -103,6 +104,15 @@ function AdminDashboard() {
       color: "card-orange",
       progress: calculatePercentage(data.stats.pending, data.stats.total),
       trend: "Awaiting review",
+    },
+    {
+      id: "assigned",
+      title: "Assigned",
+      value: data.stats.assigned,
+      icon: <User size={22} />,
+      color: "card-cyan",
+      progress: calculatePercentage(data.stats.assigned, data.stats.total),
+      trend: "Allocated to officer",
     },
     {
       id: "inProgress",
@@ -169,7 +179,7 @@ function AdminDashboard() {
         <div className="main-stats-section space-y-8">
 
           {/* Stats Grid */}
-          <div className="stats-cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="stats-cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {statsCards.map((card, i) => (
               <motion.div
                 key={card.id}

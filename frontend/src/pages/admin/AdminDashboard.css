@@ -51,9 +51,27 @@
 /* ─── Stats Cards ─── */
 .stats-cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   margin-bottom: 24px;
+}
+
+@media (max-width: 1400px) {
+  .stats-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .stats-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-cards-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .stat-card-v2 {
@@ -145,11 +163,13 @@
 }
 
 /* Color Variants */
-.card-blue { border: 2px solid #3b82f6; }
-.card-blue .card-v2-icon { background: #eff6ff; color: #3b82f6; }
-.card-blue .card-v2-percent { background: #eff6ff; color: #3b82f6; }
-.card-blue .trend-tag { color: #3b82f6; }
 .card-blue .progress-fill { background: #3b82f6; }
+
+.card-cyan { border: 2px solid #06b6d4; }
+.card-cyan .card-v2-icon { background: #ecfeff; color: #06b6d4; }
+.card-cyan .card-v2-percent { background: #ecfeff; color: #06b6d4; }
+.card-cyan .trend-tag { color: #06b6d4; }
+.card-cyan .progress-fill { background: #06b6d4; }
 
 .card-orange { border: 2px solid #f59e0b; }
 .card-orange .card-v2-icon { background: #fff7ed; color: #f59e0b; }

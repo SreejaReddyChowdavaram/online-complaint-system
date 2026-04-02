@@ -2,6 +2,7 @@ import React from "react";
 import api from "../../services/api";
 import { Trash2, UserCog, Search, ShieldCheck, Users, UserCheck, User } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import "./ManageUsers.css";
 
 const ROLES = ["Citizen", "Officer", "Admin"];
@@ -15,6 +16,7 @@ const roleColors = {
 };
 
 export default function ManageUsers() {
+  const { t } = useTranslation();
   const { user: currentUser } = useAuth();
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -132,9 +134,9 @@ export default function ManageUsers() {
       <div className="mu-header">
         <div>
           <h1 className="mu-title">
-            <Users size={26} /> Manage Users &amp; Officers
+            <Users size={26} /> {t("manage_users.title")}
           </h1>
-          <p className="mu-subtitle">View, assign roles, or remove user accounts</p>
+          <p className="mu-subtitle">{t("manage_users.subtitle")}</p>
         </div>
       </div>
 
@@ -142,22 +144,22 @@ export default function ManageUsers() {
       <div className="mu-stats">
         <div className="mu-stat">
           <span className="mu-stat-number">{counts?.total || 0}</span>
-          <span className="mu-stat-label">Total Users</span>
+          <span className="mu-stat-label">{t("manage_users.total_users")}</span>
         </div>
         <div className="mu-stat">
           <UserCheck size={16} />
           <span className="mu-stat-number">{counts?.citizens || 0}</span>
-          <span className="mu-stat-label">Citizens</span>
+          <span className="mu-stat-label">{t("manage_users.citizens")}</span>
         </div>
         <div className="mu-stat">
           <ShieldCheck size={16} />
           <span className="mu-stat-number">{counts?.officers || 0}</span>
-          <span className="mu-stat-label">Officers</span>
+          <span className="mu-stat-label">{t("manage_users.officers")}</span>
         </div>
         <div className="mu-stat">
           <UserCog size={16} />
           <span className="mu-stat-number">{counts?.admins || 0}</span>
-          <span className="mu-stat-label">Admins</span>
+          <span className="mu-stat-label">{t("manage_users.admins")}</span>
         </div>
       </div>
 
@@ -168,7 +170,7 @@ export default function ManageUsers() {
           <input
             className="mu-search"
             type="text"
-            placeholder="Search by name or email…"
+            placeholder={t("manage_users.search_placeholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -180,7 +182,7 @@ export default function ManageUsers() {
               className={`mu-filter-btn ${filterRole === r ? "active" : ""}`}
               onClick={() => setFilterRole(r)}
             >
-              {r}
+              {r === "All" ? t("manage_users.filter_all") : t(`roles.${r.toLowerCase()}`)}
             </button>
           ))}
         </div>
@@ -190,7 +192,7 @@ export default function ManageUsers() {
       {loading ? (
         <div className="mu-state-center">
           <div className="mu-spinner" />
-          <p>Loading users…</p>
+          <p>{t("manage_users.loading_users")}</p>
         </div>
       ) : error ? (
         <div className="mu-state-center mu-error">
@@ -199,19 +201,19 @@ export default function ManageUsers() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="mu-state-center">
-          <p>No users found.</p>
+          <p>{t("manage_users.no_users_found")}</p>
         </div>
       ) : (
         <div className="mu-table-wrap">
           <table className="mu-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Current Role</th>
-                <th>Change Role</th>
-                <th>Actions</th>
+                <th>{t("manage_users.table_header_num")}</th>
+                <th>{t("manage_users.table_header_name")}</th>
+                <th>{t("manage_users.table_header_email")}</th>
+                <th>{t("manage_users.table_header_role")}</th>
+                <th>{t("manage_users.table_header_change")}</th>
+                <th>{t("manage_users.table_header_actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -223,12 +225,12 @@ export default function ManageUsers() {
                     <td className="mu-td-num">{idx + 1}</td>
                     <td className="mu-td-name">
                       <span className="mu-user-name">{u?.name || "N/A"}</span>
-                      {isSelf && <span className="mu-you-badge">You</span>}
+                      {isSelf && <span className="mu-you-badge">{t("manage_users.you_badge")}</span>}
                     </td>
                     <td className="mu-td-email">{u?.email || "N/A"}</td>
                     <td>
                       <span className={`mu-role-badge ${roleColors[u?.role] || ""}`}>
-                        {u?.role || "Citizen"}
+                        {t(`roles.${(u?.role || "Citizen").toLowerCase()}`)}
                       </span>
                     </td>
                     <td>
@@ -240,16 +242,16 @@ export default function ManageUsers() {
                           disabled={isSelf || u?.role === "Admin"}
                         >
                           {ROLES.filter(r => r !== "Admin").map((r) => (
-                            <option key={r} value={r}>{r}</option>
+                            <option key={r} value={r}>{t(`roles.${r.toLowerCase()}`)}</option>
                           ))}
-                          {u?.role === "Admin" && <option value="Admin">Admin</option>}
+                          {u?.role === "Admin" && <option value="Admin">{t("roles.admin")}</option>}
                         </select>
                         <button
                           className={`mu-btn mu-btn-save ${(pendingRole && pendingRole !== u?.role) ? 'mu-btn-active' : ''}`}
                           disabled={isSelf || !pendingRole || pendingRole === u?.role || savingId === (u?._id || u?.id)}
                           onClick={() => handleRoleSave(u?._id || u?.id)}
                         >
-                          {savingId === (u?._id || u?.id) ? "Saving…" : "Save"}
+                          {savingId === (u?._id || u?.id) ? t("manage_users.btn_saving") : t("manage_users.btn_save")}
                         </button>
                       </div>
                     </td>
@@ -258,10 +260,10 @@ export default function ManageUsers() {
                         className="mu-btn mu-btn-delete"
                         disabled={isSelf || deletingId === (u?._id || u?.id)}
                         onClick={() => handleDelete(u?._id || u?.id, u?.name)}
-                        title={isSelf ? "Cannot delete yourself" : "Delete user"}
+                        title={isSelf ? t("manage_users.delete_self_err") : t("manage_users.btn_delete")}
                       >
                         <Trash2 size={15} />
-                        {deletingId === (u?._id || u?.id) ? "Deleting…" : "Delete"}
+                        {deletingId === (u?._id || u?.id) ? t("manage_users.btn_deleting") : t("manage_users.btn_delete")}
                       </button>
                     </td>
                   </tr>

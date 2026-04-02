@@ -11,10 +11,11 @@ export const getDashboardData = async (req, res) => {
       { $group: { _id: "$status", count: { $sum: 1 } } }
     ]);
 
-    let stats = { total: 0, pending: 0, inProgress: 0, resolved: 0 };
+    let stats = { total: 0, pending: 0, assigned: 0, inProgress: 0, resolved: 0 };
     statsResult.forEach(item => {
       const status = (item._id || "").toLowerCase();
       if (status === "pending") stats.pending += item.count;
+      else if (status === "assigned") stats.assigned += item.count;
       else if (status === "in progress" || status === "in_progress" || status === "in-progress") stats.inProgress += item.count;
       else if (status === "resolved") stats.resolved += item.count;
       
@@ -83,12 +84,14 @@ export const getDashboardStats = async (req, res) => {
     
     // Using case-insensitive regex to handle inconsistent values in DB
     const pending = await Complaint.countDocuments({ status: { $regex: /^pending$/i } });
+    const assigned = await Complaint.countDocuments({ status: { $regex: /^assigned$/i } });
     const inProgress = await Complaint.countDocuments({ status: { $regex: /^(in progress|in_progress|in-progress)$/i } });
     const resolved = await Complaint.countDocuments({ status: { $regex: /^resolved$/i } });
 
     console.log("--- DASHBOARD STATS DEBUG ---");
     console.log("Total:", total);
     console.log("Pending:", pending);
+    console.log("Assigned:", assigned);
     console.log("In Progress:", inProgress);
     console.log("Resolved:", resolved);
     console.log("----------------------------");
@@ -96,6 +99,7 @@ export const getDashboardStats = async (req, res) => {
     res.json({
       total,
       pending,
+      assigned,
       inProgress,
       resolved,
     });
