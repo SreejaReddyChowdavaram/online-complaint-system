@@ -192,11 +192,42 @@
   font-weight: 500;
 }
 
-.divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #94a3b8; font-size: 0.85rem; font-weight: 500; }
-.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-.dark .divider::before, .dark .divider::after { border-bottom-color: #334155; }
-.divider::before { margin-right: 15px; }
-.divider::after { margin-left: 15px; }
+/* RESPONSIVE */
 
-.google-login-container { display: flex; justify-content: center; width: 100%; margin-top: 10px; }
+@media (max-width: 1024px) {
+  .auth-card {
+    max-width: 400px;
+    padding: 40px;
+  }
+  .auth-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-wrapper {
+    padding: 16px;
+    height: auto;
+    min-height: 100vh;
+  }
+  .auth-card {
+    max-width: 100%;
+    padding: 32px 20px;
+    border-radius: 20px;
+  }
+  .auth-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  .auth-input, .auth-btn {
+    padding: 16px; /* Larger touch target */
+    font-size: 15px;
+  }
+  .auth-btn {
+    min-height: 48px;
+  }
+  .divider {
+    margin: 20px 0;
+  }
+}
 
