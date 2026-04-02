@@ -45,7 +45,7 @@ const UserNavbar = ({ onMenuClick, isSidebarOpen }) => {
   };
 
   return (
-    <header className="flex justify-between items-center px-6 h-16 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-dark-border shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <header className="flex justify-between items-center px-6 h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
       <div className="flex items-center gap-6">
         {/* MOBILE MENU TOGGLE */}
         <button
