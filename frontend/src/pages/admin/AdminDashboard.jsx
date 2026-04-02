@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import WelcomeHeader from "../../components/WelcomeHeader";
-import "./AdminDashboard.css";
 
 
 function AdminDashboard() {
