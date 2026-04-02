@@ -26,7 +26,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 /* USER */
 import UserDashboard from "./pages/user/UserDashboard";
-import ViewComplaints from "./pages/user/ViewComplaints";
+import CitizenViewComplaints from "./pages/user/ViewComplaints";
 import PostComplaint from "./pages/user/PostComplaint";
 import MyProfile from "./pages/user/MyProfile";
 
@@ -39,7 +39,7 @@ import OfficerFeedback from "./pages/officer/OfficerFeedback";
 /* ADMIN */
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import ViewComplaints from "./pages/admin/ViewComplaints";
+import AdminViewComplaints from "./pages/admin/ViewComplaints";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import ManageUsers from "./pages/admin/ManageUsers";
@@ -116,7 +116,7 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-                <Route index element={<ViewComplaints />} />
+                <Route index element={<CitizenViewComplaints />} />
                 <Route
                   path="complaint/:id"
                   element={<ComplaintDetailView />}
@@ -154,7 +154,7 @@ function App() {
                 }
               >
                 <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="complaints" element={<ViewComplaints />} />
+                <Route path="complaints" element={<AdminViewComplaints />} />
                 <Route
                   path="complaints/:id"
                   element={<ComplaintDetailView />}
