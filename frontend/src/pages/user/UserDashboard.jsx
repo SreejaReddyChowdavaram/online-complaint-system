@@ -10,7 +10,7 @@ const UserDashboard = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300">
+    <div className={`flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300 ${isSidebarOpen ? 'sidebar-is-open' : ''}`}>
 
       {/* 🚀 TOP NAVBAR (Fixed) */}
       <div className="fixed top-0 left-0 w-full z-[1100] bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
@@ -21,7 +21,7 @@ const UserDashboard = () => {
       <div className="lg:hidden sticky top-14 z-[900] px-4 py-2 mt-14 bg-transparent">
         <button
           onClick={toggleSidebar}
-          className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
+          className="w-10 h-10 rounded-[10px] bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-[0_6px_16px_rgba(0,0,0,0.25)] active:scale-95 transition-all"
         >
           <Menu size={20} />
         </button>

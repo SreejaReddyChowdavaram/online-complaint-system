@@ -17,13 +17,14 @@ const UserSidebar = ({ onClose }) => {
 
   return (
     <div className="flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative">
-      {/* MOBILE CLOSE BUTTON */}
-      <div className="lg:hidden absolute top-4 right-4 z-[1060]">
+      {/* MOBILE CLOSE BUTTON (❌ FIX) */}
+      <div className="lg:hidden absolute top-4 right-4 z-[1100]">
         <button 
           onClick={onClose}
-          className="p-2 rounded-xl bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800 transition-all border border-slate-700/50"
+          className="w-9 h-9 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all flex items-center justify-center font-bold text-lg"
+          aria-label="Close Sidebar"
         >
-          <X size={20} />
+          ✕
         </button>
       </div>
 
