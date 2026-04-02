@@ -133,9 +133,10 @@ const ComplaintCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className={`relative group bg-white dark:bg-slate-900 rounded-[28px] p-7 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className={`relative group bg-white dark:bg-slate-900 rounded-[24px] sm:rounded-[28px] p-4 sm:p-7 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
       {/* Overdue Alert Strip */}
@@ -145,31 +146,32 @@ const ComplaintCard = ({
       {/* ──── Header ──── */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex-1 pr-4">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              {getCategoryIcon(complaint?.category)}
+          <div className="flex items-center gap-2 mb-1 sm:mb-2">
+            <div className="p-1 sm:p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+              {React.cloneElement(getCategoryIcon(complaint?.category), { size: 14 })}
             </div>
-            <span className="text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
+            <span className="text-[9px] sm:text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase truncate">
               {getTranslatedCategory(complaint?.category)}
             </span>
           </div>
-          <h2 className="text-base sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h2 className="text-sm sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
             {complaint?.title || "Untitled"}
           </h2>
         </div>
-        <div className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${statusConfig.badge}`}>
+        <div className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border self-start whitespace-nowrap ${statusConfig.badge}`}>
           {statusConfig.label}
         </div>
       </div>
 
       {/* ──── Body ──── */}
       <div className="mb-6 flex-1">
-        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
+        <p className="text-[12px] sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 sm:line-clamp-3 leading-relaxed">
           {complaint?.description || "No description provided."}
         </p>
-        <div className="flex items-center gap-3 mt-4 text-[12px] text-slate-400 dark:text-slate-500 font-medium">
-          <div className="flex items-center gap-1.5">
-            <Calendar size={14} className="opacity-70" />
+        <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-4 text-[10px] sm:text-[12px] text-slate-400 dark:text-slate-500 font-medium">
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            <Calendar size={12} className="opacity-70 sm:hidden" />
+            <Calendar size={14} className="opacity-70 hidden sm:block" />
             <span>
               {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
             </span>
@@ -179,20 +181,21 @@ const ComplaintCard = ({
 
       {/* ──── Footer ──── */}
       {!hideStats && (
-        <div className="pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-4" onClick={(e) => e.stopPropagation()}>
+        <div className="pt-3 sm:pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-2 sm:space-y-4" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               {/* LIKES (Outline style as per user request) */}
               <div className="flex items-center gap-1">
                 <motion.button
                   whileTap={{ scale: 1.15 }}
-                  className={`p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
                   onClick={() => onUpvote && onUpvote(complaint?._id)}
                   title="Like"
                 >
-                  <ThumbsUp size={18} fill="none" strokeWidth={2.5} />
+                  <ThumbsUp size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
+                  <ThumbsUp size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
                 </motion.button>
-                <span className={`text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-[10px] sm:text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.upvotes || 0}
                 </span>
               </div>
@@ -201,13 +204,14 @@ const ComplaintCard = ({
               <div className="flex items-center gap-1">
                 <motion.button
                   whileTap={{ scale: 1.15 }}
-                  className={`p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
                   onClick={() => onDownvote && onDownvote(complaint?._id)}
                   title="Dislike"
                 >
-                  <ThumbsDown size={18} fill="none" strokeWidth={2.5} />
+                  <ThumbsDown size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
+                  <ThumbsDown size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
                 </motion.button>
-                <span className={`text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-[10px] sm:text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.downvotes || 0}
                 </span>
               </div>
@@ -215,13 +219,14 @@ const ComplaintCard = ({
               {/* COMMENTS */}
               <div className="flex items-center gap-1">
                 <button
-                  className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                  className="p-1 sm:p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
                   onClick={() => onCommentClick && onCommentClick(complaint)}
                   title="Comments"
                 >
-                  <MessageSquare size={18} strokeWidth={2.5} />
+                  <MessageSquare size={14} strokeWidth={2.5} className="sm:hidden" />
+                  <MessageSquare size={18} strokeWidth={2.5} className="hidden sm:block" />
                 </button>
-                <span className="text-xs font-bold text-slate-400">
+                <span className="text-[10px] sm:text-xs font-bold text-slate-400">
                   {complaint?.commentCount || 0}
                 </span>
               </div>
@@ -233,10 +238,12 @@ const ComplaintCard = ({
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-2 py-3 px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-[0.97] transition-all"
+              className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-3 sm:px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[9px] sm:text-xs shadow-lg shadow-emerald-500/20 transition-all"
               onClick={() => onRateClick(complaint)}
             >
-              <Star size={14} fill="white" /> {t("complaints.rate_feedback")}
+              <Star size={10} fill="white" className="sm:hidden" />
+              <Star size={14} fill="white" className="hidden sm:block" /> 
+              {t("complaints.rate_feedback")}
             </motion.button>
           )}
         </div>

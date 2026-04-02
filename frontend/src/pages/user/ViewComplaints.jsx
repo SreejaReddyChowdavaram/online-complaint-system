@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import api, { BASE_URL } from "../../services/api";
 import { 
   FileText, 
@@ -9,7 +10,8 @@ import {
   MapPin, 
   Camera, 
   CheckCircle,
-  X
+  X,
+  Plus
 } from "lucide-react";
 import "./ViewComplaints.css";
 import ComplaintCard from "../../components/ComplaintCard";
@@ -417,6 +419,15 @@ const addComment = async (complaintId) => {
           {feedbackSuccess}
         </div>
       )}
+
+      {/* ================= FLOATING ACTION BUTTON (FAB) ================= */}
+      <Link
+        to="/dashboard/post-complaint"
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 w-14 h-14 bg-blue-600 hover:bg-blue-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:shadow-blue-500/40 transition-all duration-300 z-50 hover:scale-110 active:scale-95 group"
+        title={t("sidebar.post_complaint")}
+      >
+        <Plus size={28} className="group-hover:rotate-90 transition-transform duration-300" />
+      </Link>
 
     </div>
 

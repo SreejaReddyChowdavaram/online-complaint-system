@@ -253,8 +253,8 @@ input:disabled, select:disabled, textarea:disabled {
 ================================ */
 .complaints-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 card per row */
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr); /* Mobile: 2 cards per row */
+  gap: 12px;
   margin-bottom: 30px;
 }
 
@@ -262,6 +262,7 @@ input:disabled, select:disabled, textarea:disabled {
 @media (min-width: 640px) {
   .complaints-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
 
