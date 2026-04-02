@@ -236,12 +236,130 @@ hr {
   color: #fecaca;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .sub-title, .profile-info {
+/* RESPONSIVE TOGGLES */
+.mobile-tablet-only {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .navbar-controls.desktop-only {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-only {
+    display: flex !important;
+  }
+}
+
+/* HAMBURGER MENU */
+.hamburger-menu {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.hamburger-menu:hover {
+  background: var(--bg-card-hover);
+}
+
+.dark .hamburger-menu {
+  color: #f8fafc;
+}
+
+/* MOBILE OVERLAY */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1999;
+}
+
+/* MOBILE DRAWER */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 85vw;
+  z-index: 2001;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+}
+
+.drawer-header {
+  height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.close-drawer-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.close-drawer-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.dark .close-drawer-btn:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+/* DRAWER COMPONENTS */
+.drawer-link {
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #334155;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.dark .drawer-link {
+  color: #cbd5e1;
+}
+
+.drawer-link:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
+.dark .drawer-link:hover {
+  background: #1e293b;
+  color: #60a5fa;
+}
+
+.drawer-primary-btn:hover { background: #1d4ed8; }
+.drawer-secondary-btn:hover { background: rgba(37, 99, 235, 0.05); }
+
+@media (max-width: 640px) {
+  .sub-title {
     display: none;
   }
-  .navbar-container {
-    padding: 0 16px;
-  }
-}
+}
+

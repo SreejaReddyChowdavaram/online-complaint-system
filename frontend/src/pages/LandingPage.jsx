@@ -51,7 +51,7 @@ const LandingPage = () => {
         {/* Title & Subtitle */}
         <div className="text-center mb-10">
           <motion.h1 
-            className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3 whitespace-nowrap px-4"
+            className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3 px-4"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
