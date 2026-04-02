@@ -1,10 +1,16 @@
 .post-complaint {
   background: white;
-  padding: 32px;
+  padding: 20px; /* Mobile padding */
   border-radius: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border: 1px solid #E2E8F0;
   transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .post-complaint {
+    padding: 32px;
+  }
 }
 
 .dark .post-complaint {
@@ -37,8 +43,14 @@
 
 .complaint-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1fr;
   gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .complaint-grid {
+    grid-template-columns: 1fr 1.2fr;
+  }
 }
 
 /* LABEL + INLINE ERROR */
@@ -192,7 +204,8 @@
 }
 
 .submit-btn {
-  padding: 16px 64px;
+  padding: 16px 32px;
+  width: 100%; /* Mobile: full width */
   background: #2563EB;
   color: #fff;
   border: none;
@@ -202,6 +215,13 @@
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+}
+
+@media (min-width: 640px) {
+  .submit-btn {
+    width: auto;
+    padding: 16px 64px;
+  }
 }
 
 .dark .submit-btn {

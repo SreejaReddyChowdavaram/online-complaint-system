@@ -153,7 +153,7 @@ const ComplaintCard = ({
               {getTranslatedCategory(complaint?.category)}
             </span>
           </div>
-          <h2 className="text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h2 className="text-base sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {complaint?.title || "Untitled"}
           </h2>
         </div>

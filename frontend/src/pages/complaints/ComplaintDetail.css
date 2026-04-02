@@ -1,5 +1,11 @@
 .complaint-detail-page {
-  padding: 2rem 0;
+  padding: 1rem 0;
+}
+
+@media (min-width: 640px) {
+  .complaint-detail-page {
+    padding: 2rem 0;
+  }
 }
 
 .complaint-header {
@@ -168,8 +174,22 @@
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .details-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .complaint-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .complaint-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .complaint-actions button {
+    flex: 1;
   }
 }

@@ -1,6 +1,12 @@
 .profile-page {
   background: var(--bg-body);
-  padding: 24px;
+  padding: 16px; /* Mobile */
+}
+
+@media (min-width: 640px) {
+  .profile-page {
+    padding: 24px;
+  }
 }
 
 .page-title {
@@ -42,7 +48,7 @@
 }
 
 .field.full {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
 .field label {
@@ -189,12 +195,12 @@ hr {
 .edit-btn:hover { background: #e0e7ff; }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .profile-grid {
     grid-template-columns: 1fr;
   }
 
   .field.full {
-    grid-column: span 1;
+    grid-column: 1 / -1;
   }
 }

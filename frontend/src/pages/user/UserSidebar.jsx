@@ -16,7 +16,17 @@ const UserSidebar = ({ onClose }) => {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300">
+    <div className="flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative">
+      {/* MOBILE CLOSE BUTTON */}
+      <div className="lg:hidden flex justify-end p-4 pb-0">
+        <button 
+          onClick={onClose}
+          className="p-2 rounded-xl bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800 transition-all border border-slate-700/50"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
       {/* Navigation */}
       <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (

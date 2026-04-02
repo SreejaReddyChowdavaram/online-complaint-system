@@ -17,16 +17,28 @@ const UserDashboard = () => {
       </div>
 
       {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+        
+        {/* MOBILE OVERLAY */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
+            onClick={toggleSidebar}
+          />
+        )}
 
-        {/* SIDEBAR (Below Nav) */}
-        <aside className="w-64 h-full bg-slate-900 border-r border-light-border dark:border-dark-border z-30 transition-all duration-300 overflow-y-auto">
+        {/* SIDEBAR (Drawer on mobile, Fixed on Desktop) */}
+        <aside className={`fixed lg:relative lg:translate-x-0 inset-y-0 left-0 w-64 h-full bg-[#0f172a] dark:bg-dark-card border-r border-light-border dark:border-dark-border z-50 transition-transform duration-300 ease-in-out overflow-y-auto ${
+          isSidebarOpen ? "translate-x-0 shadow-2xl lg:shadow-none" : "-translate-x-full"
+        }`}>
           <UserSidebar onClose={() => setIsSidebarOpen(false)} />
         </aside>
 
         {/* MAIN CONTENT Area */}
-        <main className="flex-1 p-6 bg-gray-50 dark:bg-[#0B1120] overflow-auto">
-          <Outlet />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-[#0B1120] overflow-auto transition-all duration-300">
+          <div className="max-w-[1600px] mx-auto">
+            <Outlet />
+          </div>
         </main>
 
       </div>

@@ -253,7 +253,22 @@ input:disabled, select:disabled, textarea:disabled {
 ================================ */
 .complaints-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: 1fr; /* Mobile: 1 card per row */
   gap: 20px;
   margin-bottom: 30px;
+}
+
+/* Tablet (640px - 1024px): 2 cards per row */
+@media (min-width: 640px) {
+  .complaints-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop (> 1024px): Auto-fit columns */
+@media (min-width: 1024px) {
+  .complaints-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
 }

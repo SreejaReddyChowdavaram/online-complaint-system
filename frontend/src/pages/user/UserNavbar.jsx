@@ -56,29 +56,29 @@ const UserNavbar = ({ onMenuClick, isSidebarOpen }) => {
         </button>
 
         {/* BRANDING */}
-        <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <img src="/logo.png" alt="Logo" className="h-7 w-7 sm:h-8 sm:w-8 object-contain" />
           <div className="flex flex-col">
-            <span className="text-gray-800 dark:text-white font-semibold whitespace-nowrap leading-none">
+            <span className="text-gray-800 dark:text-white font-bold text-sm sm:text-base whitespace-nowrap leading-none transition-all">
               Online Complaint System
             </span>
-            <span className="text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider mt-1">
+            <span className="text-blue-600 dark:text-blue-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 sm:mt-1">
               Citizen Portal
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {/* Language Selector */}
         <div className="relative" ref={langRef}>
           <button
-            className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-glow-blue transition-all duration-300 text-xs md:text-sm font-semibold"
+            className="flex items-center gap-2 p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 text-xs font-semibold"
             onClick={() => setIsLangOpen(!isLangOpen)}
           >
             <Globe size={18} className="text-blue-600 dark:text-blue-400" />
-            <span className="hidden md:block">{currentLangLabel}</span>
-            <ChevronDown size={14} className={`transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+            <span className="hidden lg:block">{currentLangLabel}</span>
+            <ChevronDown size={14} className={`transition-transform hidden sm:block ${isLangOpen ? 'rotate-180' : ''}`} />
           </button>
 
           <AnimatePresence>
