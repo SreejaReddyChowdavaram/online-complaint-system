@@ -145,7 +145,12 @@ const ComplaintCard = ({
         <div className="absolute top-0 left-0 right-0 h-1 bg-red-500 animate-pulse" />
       )}
       {/* ──── Header ──── */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6">
+        {/* Status Badge - First line on mobile, Last on desktop */}
+        <div className={`order-first sm:order-last px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border self-start whitespace-nowrap mb-2 sm:mb-0 ${statusConfig.badge}`}>
+          {statusConfig.label}
+        </div>
+
         <div className="flex-1 pr-4">
           <div className="flex items-center gap-2 mb-1 sm:mb-2">
             <div className="p-1 sm:p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
@@ -158,9 +163,6 @@ const ComplaintCard = ({
           <h2 className="text-sm sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
             {complaint?.title || "Untitled"}
           </h2>
-        </div>
-        <div className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border self-start whitespace-nowrap ${statusConfig.badge}`}>
-          {statusConfig.label}
         </div>
       </div>
 
