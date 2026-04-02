@@ -7,11 +7,9 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  TrendingUp,
   Calendar,
   User,
   Users,
-  Star,
   ShieldAlert
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
@@ -281,29 +279,6 @@ function AdminDashboard() {
         {/* ─── Insights Panel (Right) ─── */}
         <aside className="insights-panel space-y-6">
           
-          {/* Platform Health Score */}
-          <div className="neumorphic-card bg-gradient-to-br from-blue-600 to-indigo-700 border-none p-6 text-white overflow-hidden relative">
-            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-            <h3 className="text-xs font-black uppercase tracking-widest text-blue-100 mb-6 flex justify-between items-center">
-              System Health
-              <ShieldAlert size={14} />
-            </h3>
-            <div className="flex items-end justify-between">
-              <div>
-                <p className="text-4xl font-black mb-1">98%</p>
-                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-widest opacity-80">Platform Efficiency</p>
-              </div>
-              <div className="h-12 w-24">
-                {/* Sparkline Placeholder */}
-                <div className="flex items-end gap-1 h-full">
-                  {[20, 35, 25, 45, 60, 40, 50].map((h, i) => (
-                    <div key={i} className="flex-1 bg-white/30 rounded-t-sm" style={{ height: `${h}%` }} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Quick Metrics */}
           <div className="neumorphic-card">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">User Distribution</h3>
@@ -329,32 +304,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* System Alerts */}
-          <div className="neumorphic-card border-slate-100 dark:border-slate-800">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">System Logs</h3>
-              <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse delay-75" />
-              </div>
-            </div>
-            <div className="space-y-3">
-              {data.alerts.criticalIssues.map((alert, i) => (
-                <div className="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100/50 dark:border-red-900/20" key={i}>
-                  <AlertCircle size={14} className="text-red-500 mt-0.5" />
-                  <span className="text-[11px] font-bold text-red-600 dark:text-red-400 leading-snug">{alert}</span>
-                </div>
-              ))}
-              {data.alerts.criticalIssues.length === 0 && (
-                <div className="flex flex-col items-center py-6">
-                  <div className="p-3 bg-green-50 dark:bg-green-900/10 text-green-500 rounded-full mb-3">
-                    <CheckCircle2 size={24} />
-                  </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-500">All Nodes Healthy</p>
-                </div>
-              )}
-            </div>
-          </div>
 
         </aside>
       </div>

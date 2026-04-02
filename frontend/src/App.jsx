@@ -39,7 +39,7 @@ import OfficerFeedback from "./pages/officer/OfficerFeedback";
 /* ADMIN */
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import ViewaComplaints from "./pages/admin/ViewaComplaints";
+import ViewComplaints from "./pages/admin/ViewComplaints";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import ManageUsers from "./pages/admin/ManageUsers";
@@ -154,7 +154,7 @@ function App() {
                 }
               >
                 <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="complaints" element={<ViewaComplaints />} />
+                <Route path="complaints" element={<ViewComplaints />} />
                 <Route
                   path="complaints/:id"
                   element={<ComplaintDetailView />}

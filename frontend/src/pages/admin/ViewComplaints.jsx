@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ComplaintCard from "../../components/ComplaintCard";
 import LocationSection from "../../components/LocationSection";
 
-function ViewaComplaints() {
+function ViewComplaints() {
   const { t } = useTranslation();
   const [complaints, setComplaints] = React.useState([]);
   const [filteredComplaints, setFilteredComplaints] = React.useState([]);
@@ -33,6 +33,9 @@ function ViewaComplaints() {
   const fetchData = async () => {
     try {
       setLoading(true);
+      const res = await api.get("/admin/complaints");
+      console.log("--- ADMIN COMPLAINTS FETCHED ---", res.data);
+      
       const statusPriority = { "Assigned": 1, "Pending": 2, "In Progress": 3, "Resolved": 4 };
       const sorted = (res.data || []).sort((a,b) => {
         const pA = statusPriority[a.status] || 99;
@@ -42,7 +45,7 @@ function ViewaComplaints() {
       });
       setComplaints(sorted);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching admin complaints:", error);
     } finally {
       setLoading(false);
     }
@@ -345,4 +348,4 @@ function ViewaComplaints() {
   );
 }
 
-export default ViewaComplaints;
+export default ViewComplaints;
