@@ -13,33 +13,33 @@ const UserDashboard = () => {
     <div className="flex flex-col h-screen bg-light-bg dark:bg-[#0B1120] text-light-text dark:text-dark-text overflow-hidden transition-all duration-300">
 
       {/* 🚀 TOP NAVBAR (Fixed) */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
+      <div className="fixed top-0 left-0 w-full z-[1100] bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border shadow-sm">
         <UserNavbar />
       </div>
 
-      {/* 📱 MOBILE SIDEBAR TOGGLE BAR (Sticky) */}
-      <div className="lg:hidden sticky top-14 z-30 p-2.5 px-4 bg-white dark:bg-[#0B1120] border-b border-light-border dark:border-dark-border mt-14">
+      {/* 📱 MOBILE SIDEBAR TOGGLE (Compact) */}
+      <div className="lg:hidden sticky top-14 z-[900] px-4 py-2 mt-14 bg-transparent">
         <button
           onClick={toggleSidebar}
-          className="w-full p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
+          className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
         >
-          <Menu size={18} /> Menu
+          <Menu size={20} />
         </button>
       </div>
 
       {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
       <div className="flex flex-1 overflow-hidden relative pt-0 sm:pt-16">
         
-        {/* MOBILE OVERLAY (Below Navbar & Toggle) */}
+        {/* MOBILE OVERLAY (Full Screen Backdrop) */}
         {isSidebarOpen && (
           <div 
-            className="fixed inset-x-0 bottom-0 top-[110px] sm:top-16 bg-slate-900/60 backdrop-blur-sm z-45 lg:hidden transition-opacity duration-300"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] lg:hidden transition-opacity duration-300"
             onClick={toggleSidebar}
           />
         )}
 
-        {/* SIDEBAR (Drawer on mobile, Fixed on Desktop) */}
-        <aside className={`fixed lg:relative lg:translate-x-0 top-[110px] lg:top-0 left-0 w-64 h-[calc(100vh-110px)] lg:h-full bg-[#0f172a] dark:bg-dark-card border-r border-light-border dark:border-dark-border z-48 lg:z-30 transition-transform duration-300 ease-in-out overflow-y-auto ${
+        {/* SIDEBAR (Drawer Overlays Content) */}
+        <aside className={`fixed lg:relative lg:translate-x-0 top-0 left-0 w-64 h-full bg-[#0f172a] dark:bg-dark-card border-r border-light-border dark:border-dark-border z-[1000] lg:z-30 transition-transform duration-300 ease-in-out overflow-y-auto ${
           isSidebarOpen ? "translate-x-0 shadow-2xl lg:shadow-none" : "-translate-x-full"
         }`}>
           <UserSidebar onClose={() => setIsSidebarOpen(false)} />

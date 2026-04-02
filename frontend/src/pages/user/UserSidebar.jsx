@@ -18,7 +18,7 @@ const UserSidebar = ({ onClose }) => {
   return (
     <div className="flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative">
       {/* MOBILE CLOSE BUTTON */}
-      <div className="lg:hidden flex justify-end p-4 pb-0">
+      <div className="lg:hidden absolute top-4 right-4 z-[1060]">
         <button 
           onClick={onClose}
           className="p-2 rounded-xl bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800 transition-all border border-slate-700/50"
@@ -28,7 +28,7 @@ const UserSidebar = ({ onClose }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+      <nav className="flex-1 pt-20 lg:pt-6 pb-6 px-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (
           <NavLink
             key={item.to}
