@@ -18,11 +18,7 @@ router.post(
   upload.array("files", 5),
   async (req, res) => {
     try {
-      console.log("📥 Incoming Complaint Submission:");
-      console.log("   - Title:", req.body.title);
-      console.log("   - Category:", req.body.category);
-      console.log("   - Files:", req.files ? req.files.length : 0);
-      console.log("   - User ID:", req.user.id);
+      console.log(`[${new Date().toISOString()}] 📥 Submission: ${req.body.title} (User: ${req.user.id})`);
 
       const {
         title,
@@ -33,30 +29,26 @@ router.post(
         longitude,
       } = req.body;
 
-      if (
-        !title ||
-        !category ||
-        !description ||
-        !latitude ||
-        !longitude
-      ) {
-        console.warn("⚠️ Validation Failed: Missing fields in body", req.body);
+      // 1. Validation (Fast)
+      if (!title || !category || !description || !latitude || !longitude) {
+        console.warn("⚠️ Validation: Missing fields", { title, category, description, latitude, longitude });
         return res.status(400).json({
-          message: "Missing required fields",
+          success: false,
+          message: "All fields are required. Please check your input.",
         });
       }
 
-      if (!req.files || req.files.length === 0) {
-        console.warn("⚠️ Validation Failed: No files uploaded");
+      const files = req.files || [];
+      if (files.length === 0) {
+        console.warn("⚠️ Validation: No files");
         return res.status(400).json({
-          message: "No files uploaded",
+          success: false,
+          message: "At least one evidence image is required.",
         });
       }
 
-     const images = req.files.map(
-  (file) => file.filename
-);
-
+      // 2. Database Record Creation (Fast)
+      const images = files.map(file => file.filename);
       const complaint = await Complaint.create({
         title,
         category,
@@ -70,39 +62,53 @@ router.post(
         userId: req.user.id,
       });
 
-      // 🤖 SMART AUTO-ASSIGNMENT
-      // Attempt to find the best officer for this complaint automatically
-      const assignedOfficer = await autoAssignOfficer(complaint);
+      // 3. Smart Auto-Assignment (Requires assignment logic, but optimized)
+      let assignedOfficer = null;
+      try {
+        assignedOfficer = await autoAssignOfficer(complaint);
+      } catch (assignErr) {
+        console.error("❌ Auto-Assignment Failed (Non-fatal):", assignErr.message);
+        // We continue even if assignment fails, complaint is still saved
+      }
 
+      // 4. Send Immediate Success Response
       res.status(201).json({
+        success: true,
         message: assignedOfficer 
           ? `Complaint assigned to ${assignedOfficer.name}` 
           : "Complaint submitted successfully (Pending Review)",
-        complaint,
+        data: complaint,
       });
 
-      // 🔔 Notify ALL Admins (Real-time)
-      try {
-        const admins = await User.find({ role: "Admin" });
-        await Promise.all(admins.map(admin => 
-          sendNotification({
-            userId: admin._id,
-            role: "Admin",
-            message: "📩 New complaint submitted",
-            type: "info",
-            targetId: complaint._id
-          })
-        ));
-      } catch (err) {
-        console.error("Notification Error (New Complaint):", err);
-      }
-
+      // 5. Post-Response Tasks (Async notifications)
+      // These run in the background and don't block the user
+      (async () => {
+        try {
+          const admins = await User.find({ role: "Admin" }).select('_id').lean();
+          await Promise.all(admins.map(admin => 
+            sendNotification({
+              userId: admin._id,
+              role: "Admin",
+              message: "📩 New complaint submitted",
+              type: "info",
+              targetId: complaint._id
+            }).catch(e => console.error("Admin Notify Error:", e.message))
+          ));
+        } catch (err) {
+          console.error("Post-Response Notification Error:", err.message);
+        }
+      })();
 
     } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        message: err.message,
-      });
+      console.error("🔥 Submission Critical Error:", err);
+      // Ensure we haven't already sent a response
+      if (!res.headersSent) {
+        res.status(500).json({
+          success: false,
+          message: "System error: Failed to submit complaint. Please try again later.",
+          error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
+      }
     }
   }
 );

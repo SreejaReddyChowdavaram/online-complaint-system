@@ -47,6 +47,8 @@ const CreateComplaint = () => {
   const [previews, setPreviews] = useState([])
   const [formError, setFormError] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isCompressing, setIsCompressing] = useState(false)
 
   // Handle text input changes
   const handleChange = (e) => {
@@ -126,35 +128,64 @@ const CreateComplaint = () => {
       return
     }
 
-    // 2. FormData Construction
-    const submissionData = new FormData()
-    
-    // Append text fields
-    submissionData.append('title', formData.title)
-    submissionData.append('category', formData.category)
-    submissionData.append('description', formData.description)
-    submissionData.append('address', formData.address)
-    submissionData.append('latitude', formData.latitude)
-    submissionData.append('longitude', formData.longitude)
-
-    // Append files (matching backend field name "files")
-    images.forEach((file, index) => {
-      submissionData.append('files', file)
-      console.log(`📎 Appending file [${index}]:`, file.name)
-    })
-
     console.log("📡 Sending Multipart Request to Backend...")
     
+    // 0. Image Compression (Production-ready optimization)
+    const [imageCompression] = await Promise.all([
+      import('browser-image-compression')
+    ]);
+
+    const compressionOptions = {
+      maxSizeMB: 0.5,           // Target 500KB
+      maxWidthOrHeight: 1280,  // Max dimension 1280px
+      useWebWorker: true,
+      initialQuality: 0.8
+    };
+
     try {
+      setIsCompressing(true);
+      const compressedImages = await Promise.all(
+        images.map(async (file) => {
+          try {
+            console.log(`- Compressing ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+            const compressedFile = await imageCompression.default(file, compressionOptions);
+            console.log(`  Done: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
+            return compressedFile;
+          } catch (e) {
+            console.error(`  Compression failed for ${file.name}, using original:`, e);
+            return file; // Fallback to original
+          }
+        })
+      );
+      setIsCompressing(false);
+
+      // 2. FormData Construction (Moved down to use compressed images)
+      const submissionData = new FormData()
+      
+      // Append text fields
+      submissionData.append('title', formData.title)
+      submissionData.append('category', formData.category)
+      submissionData.append('description', formData.description)
+      submissionData.append('address', formData.address)
+      submissionData.append('latitude', formData.latitude)
+      submissionData.append('longitude', formData.longitude)
+
+      // Append compressed files
+      compressedImages.forEach((file, index) => {
+        submissionData.append('files', file, images[index].name) // Keep original filename
+        console.log(`📎 Appending file [${index}]:`, images[index].name)
+      })
+
       // 3. API Call
       const result = await createComplaint(submissionData)
 
       if (result.success) {
         console.log("✅ Complaint Created Successfully:", result.data)
+        setSuccessMessage(result.message || t('complaints.submit_success'))
         setIsSuccess(true)
         setTimeout(() => {
           navigate(`/complaints/${result.data._id}`)
-        }, 1500)
+        }, 2000)
       } else {
         console.error("❌ API Error:", result.error)
         setFormError(result.error || t('complaints.submit_error'))
@@ -180,7 +211,7 @@ const CreateComplaint = () => {
         {isSuccess && (
           <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-700 animate-pulse">
             <CheckCircle size={20} />
-            <span className="font-bold">{t('complaints.submit_success')}</span>
+            <span className="font-bold">{successMessage}</span>
           </div>
         )}
 
@@ -369,7 +400,11 @@ const CreateComplaint = () => {
               disabled={loading || isSuccess}
               className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? (
+              {isCompressing ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} /> Optimizing Images...
+                </>
+              ) : loading ? (
                 <>
                   <Loader2 className="animate-spin" size={20} /> {t('complaints.submitting')}
                 </>

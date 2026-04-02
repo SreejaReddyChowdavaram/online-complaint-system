@@ -77,8 +77,10 @@ export const ComplaintProvider = ({ children }) => {
     setError(null)
     try {
       const response = await createComplaintApi(complaintData)
-      setComplaints(prev => [response.data, ...prev])
-      return { success: true, data: response.data }
+      // The backend now returns { success, message, data }
+      const newComplaint = response.data || response; 
+      setComplaints(prev => [newComplaint, ...prev])
+      return { success: true, data: newComplaint, message: response.message }
     } catch (err) {
       const errorMsg =
         err.response?.data?.message || 'Failed to create complaint'

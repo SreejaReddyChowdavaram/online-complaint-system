@@ -23,7 +23,7 @@ export const autoAssignOfficer = async (complaint) => {
         { department: { $regex: new RegExp(complaint.category, "i") } },
         { department: { $regex: new RegExp(departmentPrefix, "i") } }
       ]
-    });
+    }).lean();
 
     if (deptOfficers.length === 0) {
       console.warn("⚠️ No officers found for department:", complaint.category);
