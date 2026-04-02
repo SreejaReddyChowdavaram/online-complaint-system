@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import ComplaintCard from "../../components/ComplaintCard";
 import LocationSection from "../../components/LocationSection";
+import ComplaintGrid from "../../components/ComplaintGrid";
 
 function ViewComplaints() {
   const { t } = useTranslation();
@@ -127,37 +128,32 @@ function ViewComplaints() {
       </div>
 
       {/* ──── Complaints Grid / Empty State ──── */}
-      <AnimatePresence mode="popLayout">
-        {filteredComplaints.length > 0 ? (
-          <motion.div 
-            layout
-            className="responsive-grid"
-          >
-            {filteredComplaints.map((complaint) => (
-              <ComplaintCard
-                key={complaint._id}
-                complaint={complaint}
-                onCardClick={(comp) => setSelectedComplaint(comp)}
-                onCommentClick={(comp) => setSelectedComplaint(comp)}
-              />
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-20 md:py-32 bg-white dark:bg-slate-900/50 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-sm"
-          >
-            <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-[32px] flex items-center justify-center text-slate-300 dark:text-slate-600 mb-8 shadow-inner">
-              <Inbox size={48} />
-            </div>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-200 mb-3 tracking-tight">{t("complaints.no_complaints_found")}</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-center max-w-sm px-6 font-medium leading-relaxed">
-              {t("complaints.no_complaints_matching")}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {filteredComplaints.length > 0 ? (
+        <ComplaintGrid loading={loading}>
+          {filteredComplaints.map((complaint) => (
+            <ComplaintCard
+              key={complaint._id}
+              complaint={complaint}
+              onCardClick={(comp) => setSelectedComplaint(comp)}
+              onCommentClick={(comp) => setSelectedComplaint(comp)}
+            />
+          ))}
+        </ComplaintGrid>
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center justify-center py-20 md:py-32 bg-white dark:bg-slate-900/50 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-sm"
+        >
+          <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-[32px] flex items-center justify-center text-slate-300 dark:text-slate-600 mb-8 shadow-inner">
+            <Inbox size={48} />
+          </div>
+          <h3 className="text-2xl font-black text-slate-900 dark:text-slate-200 mb-3 tracking-tight">{t("complaints.no_complaints_found")}</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-center max-w-sm px-6 font-medium leading-relaxed">
+            {t("complaints.no_complaints_matching")}
+          </p>
+        </motion.div>
+      )}
 
       {/* ──── Responsive Modal Component ──── */}
       <AnimatePresence>

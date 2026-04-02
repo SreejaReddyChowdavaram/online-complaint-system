@@ -97,11 +97,17 @@
   }
 
   .main-container {
-    @apply max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full;
+  }
+
+  .complaint-grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    @apply gap-6;
   }
 
   .responsive-grid {
-    @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:complaint-grid-auto gap-6;
   }
 
   .stats-grid {
