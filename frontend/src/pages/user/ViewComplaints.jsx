@@ -15,6 +15,7 @@ import "./ViewComplaints.css";
 import ComplaintCard from "../../components/ComplaintCard";
 import FeedbackForm from "../../components/FeedbackForm";
 import WelcomeHeader from "../../components/WelcomeHeader";
+import LocationSection from "../../components/LocationSection";
 
 const ViewComplaints = () => {
   const { t } = useTranslation();
@@ -267,11 +268,11 @@ const addComment = async (complaintId) => {
 
             <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selectedComplaint.category}`)}</p>
 
-            {selectedComplaint.location?.address && (
-              <p>
-                <strong><MapPin size={16} /> {t("complaints.modal_address") || "Address"}:</strong> {selectedComplaint.location.address}
-              </p>
-            )}
+            <LocationSection 
+              address={selectedComplaint.location?.address} 
+              lat={selectedComplaint.location?.lat} 
+              lng={selectedComplaint.location?.lng} 
+            />
 
             <p><strong>{t("complaints.modal_description")}:</strong> {selectedComplaint.description}</p>
 

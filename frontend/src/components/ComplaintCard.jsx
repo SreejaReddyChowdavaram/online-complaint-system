@@ -135,7 +135,7 @@ const ComplaintCard = ({
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
-      className={`relative group bg-white dark:bg-slate-900 rounded-[24px] p-6 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
+      className={`relative group bg-white dark:bg-slate-900 rounded-[28px] p-7 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
       {/* Overdue Alert Strip */}
@@ -163,8 +163,8 @@ const ComplaintCard = ({
       </div>
 
       {/* ──── Body ──── */}
-      <div className="mb-6">
-        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+      <div className="mb-6 flex-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
           {complaint?.description || "No description provided."}
         </p>
         <div className="flex items-center gap-3 mt-4 text-[12px] text-slate-400 dark:text-slate-500 font-medium">
@@ -179,58 +179,61 @@ const ComplaintCard = ({
 
       {/* ──── Footer ──── */}
       {!hideStats && (
-        <div className="flex items-center justify-between pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50" onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center gap-4">
-            {/* LIKES (Outline style as per user request) */}
-            <div className="flex items-center gap-1">
-              <motion.button
-                whileTap={{ scale: 1.15 }}
-                className={`p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
-                onClick={() => onUpvote && onUpvote(complaint?._id)}
-                title="Like"
-              >
-                <ThumbsUp size={18} fill="none" strokeWidth={2.5} />
-              </motion.button>
-              <span className={`text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
-                {complaint?.upvotes || 0}
-              </span>
-            </div>
+        <div className="pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-4" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* LIKES (Outline style as per user request) */}
+              <div className="flex items-center gap-1">
+                <motion.button
+                  whileTap={{ scale: 1.15 }}
+                  className={`p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  onClick={() => onUpvote && onUpvote(complaint?._id)}
+                  title="Like"
+                >
+                  <ThumbsUp size={18} fill="none" strokeWidth={2.5} />
+                </motion.button>
+                <span className={`text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
+                  {complaint?.upvotes || 0}
+                </span>
+              </div>
 
-            {/* DISLIKES (Outline style) */}
-            <div className="flex items-center gap-1">
-              <motion.button
-                whileTap={{ scale: 1.15 }}
-                className={`p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
-                onClick={() => onDownvote && onDownvote(complaint?._id)}
-                title="Dislike"
-              >
-                <ThumbsDown size={18} fill="none" strokeWidth={2.5} />
-              </motion.button>
-              <span className={`text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
-                {complaint?.downvotes || 0}
-              </span>
-            </div>
+              {/* DISLIKES (Outline style) */}
+              <div className="flex items-center gap-1">
+                <motion.button
+                  whileTap={{ scale: 1.15 }}
+                  className={`p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  onClick={() => onDownvote && onDownvote(complaint?._id)}
+                  title="Dislike"
+                >
+                  <ThumbsDown size={18} fill="none" strokeWidth={2.5} />
+                </motion.button>
+                <span className={`text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
+                  {complaint?.downvotes || 0}
+                </span>
+              </div>
 
-            {/* COMMENTS */}
-            <div className="flex items-center gap-1">
-              <button
-                className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
-                onClick={() => onCommentClick && onCommentClick(complaint)}
-                title="Comments"
-              >
-                <MessageSquare size={18} strokeWidth={2.5} />
-              </button>
-              <span className="text-xs font-bold text-slate-400">
-                {complaint?.commentCount || 0}
-              </span>
+              {/* COMMENTS */}
+              <div className="flex items-center gap-1">
+                <button
+                  className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                  onClick={() => onCommentClick && onCommentClick(complaint)}
+                  title="Comments"
+                >
+                  <MessageSquare size={18} strokeWidth={2.5} />
+                </button>
+                <span className="text-xs font-bold text-slate-400">
+                  {complaint?.commentCount || 0}
+                </span>
+              </div>
             </div>
           </div>
 
+          {/* New Green Row for Rate & Feedback */}
           {onRateClick && complaint?.status === "Resolved" && (
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-blue-500/20 active:scale-[0.97]"
+              className="flex items-center justify-center gap-2 py-3 px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-[0.97] transition-all"
               onClick={() => onRateClick(complaint)}
             >
               <Star size={14} fill="white" /> {t("complaints.rate_feedback")}
