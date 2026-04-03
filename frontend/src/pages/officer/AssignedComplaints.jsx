@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
-import CommentSection from "../../components/CommentSection";
 import { 
   Pin, 
   Globe, 
@@ -16,6 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
+import "../user/ViewComplaints.css"; // Reuse the same styles
 
 function AssignedComplaints() {
   const { t } = useTranslation();
@@ -23,10 +23,11 @@ function AssignedComplaints() {
   const [assigned, setAssigned] = useState([]);
   const [allComplaints, setAllComplaints] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [comments, setComments] = useState([]);
   const [status, setStatus] = useState("");
   const [image, setImage] = useState(null);
-
-  const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -50,10 +51,23 @@ function AssignedComplaints() {
       setAllComplaints(sortedAll);
     } catch (err) {
       console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchComments = async (complaintId) => {
+    try {
+      const res = await api.get(`/complaints/comments/${complaintId}`);
+      setComments(res.data);
+    } catch (err) {
+      console.error("Fetch comments error:", err);
     }
   };
 
   const handleUpdate = async () => {
+    if (!status) return;
+    setUpdating(true);
     try {
       const formData = new FormData();
       formData.append("status", status);
@@ -63,9 +77,7 @@ function AssignedComplaints() {
         `/officer/update/${selected._id}`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
@@ -75,55 +87,48 @@ function AssignedComplaints() {
     } catch (error) {
       console.error("Update error:", error);
       alert(t("complaints.update_failed") || "Update Failed");
+    } finally {
+      setUpdating(false);
     }
-  };
-
-  const getCardStyle = (status) => {
-    if (status === "Pending")
-      return { 
-        backgroundColor: "rgba(245, 158, 11, 0.1)", 
-        borderLeft: "6px solid #f59e0b", 
-        color: "var(--text-primary)",
-        text: t("complaints.status_pending") 
-      };
-
-    if (status === "In Progress")
-      return { 
-        backgroundColor: "rgba(37, 99, 235, 0.1)", 
-        borderLeft: "6px solid #2563eb", 
-        color: "var(--text-primary)",
-        text: t("complaints.status_progress") 
-      };
-
-    if (status === "Resolved")
-      return { 
-        backgroundColor: "rgba(34, 197, 94, 0.1)", 
-        borderLeft: "6px solid #22c55e", 
-        color: "var(--text-primary)",
-        text: t("complaints.status_resolved") 
-      };
-
-    return { text: status };
   };
 
   const isAssigned = (complaintId) => {
     return assigned.some((a) => a._id === complaintId);
   };
 
+  const getStatusClasses = (status) => {
+    if (status === "Pending")
+      return { badge: "status pending", text: t("complaints.status_pending") };
+    if (status === "In Progress")
+      return { badge: "status in-progress", text: t("complaints.status_progress") };
+    if (status === "Resolved")
+      return { badge: "status resolved", text: t("complaints.status_resolved") };
+    return { badge: "status", text: status };
+  };
+
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="spinner"></div>
+        <p>{t("complaints.loading")}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-1">
+    <div className="complaints-page">
       {/* ================= WELCOME GREETING ================= */}
       <WelcomeHeader userName={user?.name || "Officer"} role={user?.role} />
 
       {/* ================= ASSIGNED ================= */}
-      <h2 style={{ display: "flex", alignItems: "center", gap: "10px", color: "#166534", marginBottom: "20px" }}>
-        <Pin size={22} className="text-green-600" />
+      <h2 className="section-title">
+        <Pin size={22} className="icon-blue" />
         {t("complaints.assigned_complaints")}
       </h2>
 
       <div className="complaints-grid">
         {assigned.length === 0 ? (
-          <p>{t("complaints.no_assigned")}</p>
+          <p className="no-data">{t("complaints.no_assigned")}</p>
         ) : (
           assigned.map((c) => (
             <ComplaintCard
@@ -133,15 +138,16 @@ function AssignedComplaints() {
               onCardClick={(comp) => {
                 setSelected(comp);
                 setStatus(comp.status);
+                fetchComments(comp._id);
               }}
             />
           ))
         )}
       </div>
 
-      {/* ================= ALL ================= */}
-      <h2 className="section-title" style={{ marginBottom: "20px", color: "#166534", display: "flex", alignItems: "center", gap: "10px" }}>
-        <Globe size={22} className="text-green-600" />
+      {/* ================= ALL COMPLAINTS ================= */}
+      <h2 className="section-title">
+        <Globe size={22} className="icon-blue" />
         {t("complaints.all_complaints")}
       </h2>
 
@@ -153,10 +159,11 @@ function AssignedComplaints() {
             onCardClick={(comp) => {
               setSelected(comp);
               setStatus(comp.status);
+              fetchComments(comp._id);
             }}
             onCommentClick={(comp) => {
               setSelected(comp);
-              setStatus(comp.status);
+              fetchComments(comp._id);
             }}
           />
         ))}
@@ -164,242 +171,124 @@ function AssignedComplaints() {
 
       {/* ================= MODAL ================= */}
       {selected && (
-        <div style={styles.overlay} onClick={() => setSelected(null)}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setSelected(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             
-            {/* ──── Sticky Close Icon (Top-Right) ──── */}
+            {/* ──── Close Icon (Top-Right) ──── */}
             <button 
+              className="modal-close-icon"
               onClick={() => setSelected(null)}
-              style={styles.closeIconBtn}
               title={t("complaints.modal_close_btn")}
             >
               <X size={20} />
             </button>
 
-            <div style={styles.modalBody}>
-              <h2 style={{ paddingRight: "40px", marginBottom: "20px" }}>{selected.title}</h2>
+            <div className="modal-body scrollbar-thin">
+              <h2>{selected.title}</h2>
 
               <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selected.category}`)}</p>
               
-              {/* Professional Location Section with Live Map */}
               <LocationSection 
                 address={selected.location?.address} 
                 lat={selected.location?.lat} 
                 lng={selected.location?.lng} 
               />
 
-              <p style={{ marginTop: "20px" }}><strong>{t("complaints.modal_description")}:</strong> {selected.description}</p>
+              <p className="description-text"><strong>{t("complaints.modal_description")}:</strong> {selected.description}</p>
 
-              <p>
-                <strong>{t("complaints.submitted_by")}:</strong>{" "}
-                {selected.userId?.name} ({selected.userId?.email})
-              </p>
+              <div className="metadata-row">
+                <p><strong>{t("complaints.submitted_by")}:</strong> {selected.userId?.name}</p>
+                <p><strong>{t("complaints.date_submitted")}:</strong> {new Date(selected.createdAt).toLocaleDateString()}</p>
+              </div>
 
-              <p>
-                <strong>{t("complaints.date_submitted")}:</strong>{" "}
-                {new Date(selected.createdAt).toLocaleString()}
-              </p>
-
+              <p><strong>{t("complaints.modal_status")}:</strong> {getStatusClasses(selected.status).text}</p>
 
               {/* Citizen Images */}
               {selected.images?.length > 0 && (
-                <div style={{ marginTop: "15px" }}>
-                  <strong style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <Camera size={18} /> {t("complaints.modal_citizen_images")}
-                  </strong>
-
-                  {selected.images.map((img, i) => (
-                    <img
-                      key={i}
-                      src={`${BASE_URL}/uploads/${img}`}
-                      alt="complaint"
-                      style={styles.image}
-                    />
-                  ))}
-                </div>
-              )}
-              {selected.resolutionImage && (
-                <div style={{ marginTop: "15px" }}>
-                  <strong style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <CheckCircle size={18} /> {t("complaints.modal_officer_proof")}
-                  </strong>
-
-                  {(() => {
-                    const cleanPath = selected.resolutionImage
-                      .replace(/\\/g, "/")
-                      .replace(/^\/+/, "")
-                      .replace(/^uploads\//, "");
-
-                    const finalUrl = `${BASE_URL}/uploads/${cleanPath}`;
-
-                    return (
+                <div className="modal-images">
+                  <h4><Camera size={18} /> {t("complaints.modal_citizen_images")}</h4>
+                  <div className="image-grid">
+                    {selected.images.map((img, i) => (
                       <img
-                        src={finalUrl}
-                        alt="resolution"
-                        style={styles.image}
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                        }}
+                        key={i}
+                        src={`${BASE_URL}/uploads/${img}`}
+                        alt="complaint"
                       />
-                    );
-                  })()}
+                    ))}
+                  </div>
                 </div>
               )}
-              {/* Show update section ONLY if assigned */}
-              {isAssigned(selected._id) && (
-                <div style={{ marginTop: "25px", padding: "20px", background: "var(--bg-content)", borderRadius: "16px", border: "1px solid var(--border-color)" }}>
-                  <label style={{ fontWeight: "800", fontSize: "12px", textTransform: "uppercase", color: "var(--text-secondary)", display: "block", marginBottom: "10px" }}>
-                    {t("complaints.modal_status")}
-                  </label>
-                  <select
-                    style={{ width: "100%", padding: "10px", borderRadius: "10px", background: "var(--bg-card)", border: "1px solid var(--border-color)", color: "var(--text-primary)" }}
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <option value="Pending">{t("complaints.status_pending")}</option>
-                    <option value="In Progress">{t("complaints.status_progress")}</option>
-                    <option value="Resolved">{t("complaints.status_resolved")}</option>
-                  </select>
 
-                  <br /><br />
-
-                  <label style={{ fontWeight: "800", fontSize: "12px", textTransform: "uppercase", color: "var(--text-secondary)", display: "block", marginBottom: "10px" }}>
-                    {t("complaints.resolution_proof_label")}
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    style={{ fontSize: "13px" }}
+              {/* Officer Resolution Image */}
+              {selected.resolutionImage && (
+                <div className="modal-images">
+                  <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
+                  <img
+                    src={`${BASE_URL}/uploads/${selected.resolutionImage.replace(/\\/g, "/").replace(/^\/+/, "").replace(/^uploads\//, "")}`}
+                    alt="resolution"
                   />
+                </div>
+              )}
 
-                  <br /><br />
+              {/* Update Section for Assigned Officer */}
+              {isAssigned(selected._id) && (
+                <div className="officer-actions-card">
+                  <h3 className="actions-title">{t("complaints.update_status_title") || "Update Progress"}</h3>
+                  
+                  <div className="form-group">
+                    <label>{t("complaints.modal_status")}</label>
+                    <select
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value)}
+                    >
+                      <option value="Pending">{t("complaints.status_pending")}</option>
+                      <option value="In Progress">{t("complaints.status_progress")}</option>
+                      <option value="Resolved">{t("complaints.status_resolved")}</option>
+                    </select>
+                  </div>
 
-                  <button onClick={handleUpdate} style={styles.updateBtn}>
-                    {t("complaints.update_btn")}
+                  <div className="form-group mt-4">
+                    <label>{t("complaints.resolution_proof_label")}</label>
+                    <input
+                      type="file"
+                      onChange={(e) => setImage(e.target.files[0])}
+                      className="file-input"
+                    />
+                  </div>
+
+                  <button 
+                    onClick={handleUpdate} 
+                    className="submit-btn mt-6"
+                    disabled={updating}
+                  >
+                    {updating ? "..." : (t("complaints.update_btn") || "Update Complaint")}
                   </button>
                 </div>
               )}
 
-              <hr style={{ margin: "25px 0", border: "0", borderTop: "1px solid var(--border-color)" }} />
-
-              <div style={{ marginTop: "20px", display: "flex", gap: "10px", marginBottom: "15px" }}>
-                <button
-                  disabled
-                  style={{
-                    backgroundColor: "var(--bg-content)",
-                    color: "var(--text-primary)",
-                    padding: "8px 16px",
-                    borderRadius: "10px",
-                    border: "1px solid var(--border-color)",
-                    cursor: "default",
-                    opacity: 0.8,
-                    fontSize: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px"
-                  }}
-                >
-                  <ThumbsUp size={14} /> {selected.upvotes || 0}
-                </button>
-
-                <button
-                  disabled
-                  style={{
-                    backgroundColor: "var(--bg-content)",
-                    color: "var(--text-primary)",
-                    padding: "8px 16px",
-                    borderRadius: "10px",
-                    border: "1px solid var(--border-color)",
-                    cursor: "default",
-                    opacity: 0.8,
-                    fontSize: "14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px"
-                  }}
-                >
-                  <ThumbsDown size={14} /> {selected.downvotes || 0}
-                </button>
+              {/* Comments Section */}
+              <div className="comment-box">
+                <h3><MessageSquare size={20} /> {t("complaints.modal_comments_title")}</h3>
+                {comments.length === 0 ? (
+                  <p>{t("complaints.modal_no_comments")}</p>
+                ) : (
+                  comments.map((com) => (
+                    <div key={com._id} className="p-3.5 rounded-2xl mb-3 relative max-w-[90%] self-start bg-slate-100 dark:bg-slate-800 border border-light-border dark:border-dark-border transition-all duration-300">
+                      <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-1">{com.userId?.name || "User"}</div>
+                      <div className="text-sm text-light-text dark:text-dark-text pb-4">{com.message}</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 absolute bottom-1.5 right-3 italic">
+                        {new Date(com.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-
-              <CommentSection complaintId={selected._id} isReadOnly={true} />
             </div>
-
           </div>
         </div>
       )}
     </div>
   );
 }
-
-const styles = {
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(15, 23, 42, 0.7)",
-    backdropFilter: "blur(8px)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    background: "var(--bg-card)",
-    color: "var(--text-primary)",
-    borderRadius: "24px",
-    width: "750px",
-    maxHeight: "90vh",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden", 
-    textAlign: "left",
-    border: "1px solid var(--border-color)",
-    position: "relative",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-  },
-  modalBody: {
-    padding: "40px",
-    overflowY: "auto",
-    flex: 1,
-  },
-  closeIconBtn: {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    width: "38px",
-    height: "38px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "12px",
-    border: "1px solid var(--border-color)",
-    background: "var(--bg-content)",
-    color: "var(--text-secondary)",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    zIndex: 100,
-  },
-  image: {
-    width: "100%",
-    maxHeight: "200px",
-    objectFit: "contain",
-    borderRadius: "12px",
-    marginTop: "12px",
-    display: "block",
-    background: "var(--bg-body)",
-    padding: "8px",
-  },
-  updateBtn: {
-    padding: "12px 24px",
-    background: "#2563eb",
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontWeight: "700",
-    fontSize: "14px",
-    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-  },
-};
 
 export default AssignedComplaints;

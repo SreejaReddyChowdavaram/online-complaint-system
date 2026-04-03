@@ -7,14 +7,16 @@ import {
   MessageSquare, 
   TrendingUp, 
   AlertTriangle, 
-  Inbox,
-  LayoutDashboard
+  Inbox
 } from "lucide-react";
-import "./OfficerFeedback.css";
+import { useAuth } from "../../context/AuthContext";
+import WelcomeHeader from "../../components/WelcomeHeader";
 import FeedbackCharts from "../../components/FeedbackCharts";
+import "./OfficerFeedback.css";
 
 const OfficerFeedback = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [allFeedback, setAllFeedback] = useState([]);
   const [filteredFeedback, setFilteredFeedback] = useState([]);
   const [stats, setStats] = useState({
@@ -44,7 +46,6 @@ const OfficerFeedback = () => {
       const res = await api.get("/feedback/my-feedback");
       
       if (res.data) {
-        console.log("Fetched Feedback Data:", res.data);
         setAllFeedback(res.data.feedback || []);
       }
     } catch (err) {
@@ -56,8 +57,6 @@ const OfficerFeedback = () => {
   };
 
   const applyFilters = () => {
-    console.log("Applying filters to:", allFeedback.length, "items");
-    // Filters are only for Time now as Department is fixed for Officer
     let results = [...allFeedback];
 
     // Time Filter
@@ -93,8 +92,8 @@ const OfficerFeedback = () => {
 
   if (loading) {
     return (
-      <div className="feedback-status-container">
-        <div className="loading-spinner"></div>
+      <div className="loader-container">
+        <div className="spinner"></div>
         <p>{t("complaints.loading") || "Loading Insights..."}</p>
       </div>
     );
@@ -113,50 +112,70 @@ const OfficerFeedback = () => {
   const safeAvgRating = Number(stats?.avgRating) || 0;
 
   return (
-    <div className="feedback-container">
-      <header className="feedback-header">
+    <div className="feedback-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ================= WELCOME GREETING ================= */}
+      <WelcomeHeader userName={user?.name || "Officer"} role={user?.role} />
+
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 mt-2">
         <div className="header-content">
-          <h1 style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <BarChart3 size={28} className="icon-blue" />
-            {t("complaints.analytics.insights_title") || "Officer Performance Feedback"}
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white flex items-center gap-3">
+            <BarChart3 size={28} className="text-blue-600 dark:text-blue-400" />
+            {t("complaints.analytics.insights_title") || "Performance Insights"}
           </h1>
-          <p>{t("complaints.analytics.insights_sub") || "Insights into service quality and citizen satisfaction"}</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base font-medium mt-1">
+            {t("complaints.analytics.insights_sub") || "Analyze your service quality and citizen satisfaction"}
+          </p>
         </div>
 
-        <div className="filter-section">
-          <div className="filter-group">
-            <label>Time Period</label>
-            <select className="filter-select" value={timeFilter} onChange={(e) => setTimeFilter(e.target.value)}>
-              <option value="All">All Time</option>
-              <option value="7d">Last 7 Days</option>
-              <option value="1m">Last Month</option>
-              <option value="1y">Last Year</option>
-            </select>
-          </div>
+        <div className="filter-group w-full md:w-auto">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block px-1">Time Period</label>
+          <select 
+            className="w-full md:w-48 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none" 
+            value={timeFilter} 
+            onChange={(e) => setTimeFilter(e.target.value)}
+          >
+            <option value="All">All Time</option>
+            <option value="7d">Last 7 Days</option>
+            <option value="1m">Last Month</option>
+            <option value="1y">Last Year</option>
+          </select>
         </div>
-      </header>
+      </div>
 
       {/* STATS CARDS */}
-      <div className="stats-grid">
-        <div className="stat-card rating-card">
-          <div className="stat-icon"><Star size={24} fill="#f59e0b" color="#f59e0b" /></div>
-          <div className="stat-info">
-            <span className="stat-label">Average Rating</span>
-            <div className="stat-value">{safeAvgRating.toFixed(1)} <Star size={14} fill="#f59e0b" color="#f59e0b" style={{display: "inline", marginBottom: "4px"}} /></div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-5 group hover:border-blue-500/30 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+            <Star size={28} fill="currentColor" />
+          </div>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Average Rating</span>
+            <div className="text-2xl font-black text-slate-800 dark:text-white flex items-center gap-1.5 mt-0.5">
+              {safeAvgRating.toFixed(1)}
+              <Star size={16} fill="#f59e0b" color="#f59e0b" />
+            </div>
           </div>
         </div>
-        <div className="stat-card feedback-card-stat">
-          <div className="stat-icon"><MessageSquare size={24} color="#2563eb" /></div>
-          <div className="stat-info">
-            <span className="stat-label">Total Feedback</span>
-            <div className="stat-value">{stats?.totalCount || 0}</div>
+
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-5 group hover:border-blue-500/30 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+            <MessageSquare size={28} fill="none" />
+          </div>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Total Feedback</span>
+            <div className="text-2xl font-black text-slate-800 dark:text-white mt-0.5">
+              {stats?.totalCount || 0}
+            </div>
           </div>
         </div>
-        <div className="stat-card satisfaction-card">
-          <div className="stat-icon"><TrendingUp size={24} color="#16a34a" /></div>
-          <div className="stat-info">
-            <span className="stat-label">Satisfaction Rate</span>
-            <div className="stat-value" style={{ color: (stats?.positivePercent || 0) > 70 ? '#16a34a' : (stats?.positivePercent || 0) < 40 ? '#dc2626' : '#111827' }}>
+
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-5 group hover:border-blue-500/30 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+            <TrendingUp size={28} />
+          </div>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Satisfaction Rate</span>
+            <div className="text-2xl font-black mt-0.5" style={{ color: (stats?.positivePercent || 0) > 70 ? '#10b981' : (stats?.positivePercent || 0) < 40 ? '#ef4444' : 'inherit' }}>
               {stats?.positivePercent || 0}%
             </div>
           </div>
@@ -164,32 +183,39 @@ const OfficerFeedback = () => {
       </div>
 
       {/* VISUAL ANALYTICS */}
-      <div className="charts-section">
+      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 mb-10">
         <FeedbackCharts data={filteredFeedback} />
       </div>
 
       {/* FEEDBACK LIST */}
-      <div className="feedback-list-section">
-        <div className="section-header">
-          <h2>Citizen Reviews</h2>
-          <span className="count-pill">{filteredFeedback.length} entries</span>
+      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white">Citizen Reviews</h2>
+          <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-black uppercase tracking-widest border border-blue-100 dark:border-blue-800/50">
+            {filteredFeedback.length} entries
+          </span>
         </div>
         
         {filteredFeedback.length === 0 ? (
-          <div className="no-data-card">
-            <Inbox size={48} color="#94a3b8" />
-            <p>No feedback entries found matching your filters.</p>
+          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <Inbox size={64} className="mb-4 opacity-20" />
+            <p className="font-bold">No feedback entries found</p>
+            <p className="text-sm opacity-60">Try adjusting your time filters</p>
           </div>
         ) : (
-          <div className="feedback-list">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredFeedback.map((item) => (
-              <div key={item?._id} className="feedback-item">
-                <div className="item-header">
-                  <div className="rating-row">
-                    <span className={`sentiment-badge ${item?.type?.toLowerCase() || 'neutral'}`}>
+              <div key={item?._id} className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 hover:border-blue-500/20 transition-all duration-300">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col gap-2">
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest self-start ${
+                      item?.type === 'Positive' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
+                      item?.type === 'Negative' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' :
+                      'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-400'
+                    }`}>
                       {item?.type || "Review"}
                     </span>
-                    <div className="star-display">
+                    <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
@@ -200,24 +226,23 @@ const OfficerFeedback = () => {
                       ))}
                     </div>
                   </div>
-                  <span className="date-stamp">
-                    {item?.submittedAt ? new Date(item.submittedAt).toLocaleDateString() : "Date N/A"}
+                  <span className="text-[10px] font-bold text-slate-400">
+                    {item?.submittedAt ? new Date(item.submittedAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : "N/A"}
                   </span>
                 </div>
-                <p className="item-message">{item?.message || "No comment provided."}</p>
-                <div className="item-footer">
-                  <span className="dept-tag">
+                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 italic">"{item?.message || "No comment provided."}"</p>
+                <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
                     {t(`complaints.categories.${item?.officerId?.department || item?.department || 'General'}`)}
                   </span>
-                  {item?.complaintId && typeof item.complaintId === 'string' && (
-                    <span className="cid-ref">REF: #{item.complaintId.slice(-8).toUpperCase()}</span>
+                  {item?.complaintId && (
+                    <span className="text-[9px] font-mono text-slate-400 uppercase">REF: #{item.complaintId.slice(-8)}</span>
                   )}
                 </div>
               </div>
             ))}
           </div>
         )}
-
       </div>
     </div>
   );
