@@ -132,7 +132,7 @@ const ComplaintCard = ({
       {/* ──── Header ──── */}
       <div className="flex justify-between items-start mb-4">
         <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${categoryStyles} shadow-sm`}>
-          {getTranslatedCategory(complaint?.category)}
+          {getTranslatedCategory(complaint?.category, t)}
         </div>
 
         <div className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border ${statusConfig.badge}`}>
