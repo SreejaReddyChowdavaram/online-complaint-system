@@ -45,7 +45,7 @@ const AdminNavbar = () => {
             <span className="text-gray-800 dark:text-white font-black text-sm sm:text-base whitespace-nowrap leading-none transition-all">
               Online Complaint System
             </span>
-            <span className="text-blue-600 dark:text-blue-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 sm:mt-1">
+            <span className="text-orange-600 dark:text-orange-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 sm:mt-1">
               Admin Portal
             </span>
           </div>
@@ -59,7 +59,7 @@ const AdminNavbar = () => {
             className="flex items-center gap-2 p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 text-xs font-semibold"
             onClick={() => setIsLangOpen(!isLangOpen)}
           >
-            <Globe size={18} className="text-blue-600 dark:text-blue-400" />
+            <Globe size={18} className="text-orange-600 dark:text-orange-400" />
             <span className="hidden lg:block">{currentLangLabel}</span>
             <ChevronDown size={14} className={`transition-transform hidden sm:block ${isLangOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -103,9 +103,9 @@ const AdminNavbar = () => {
         <div className="flex items-center gap-3 border-l border-slate-200 dark:border-slate-700 pl-4">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-bold text-gray-800 dark:text-white leading-none">{user?.name}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mt-1 tracking-wider italic">Administrator</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mt-1 tracking-wider">Administrator</p>
           </div>
-          <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20 ring-2 ring-white dark:ring-gray-900 overflow-hidden">
+          <div className="h-10 w-10 bg-orange-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-orange-500/20 ring-2 ring-white dark:ring-gray-900 overflow-hidden">
             {user?.name?.charAt(0)}
           </div>
         </div>
