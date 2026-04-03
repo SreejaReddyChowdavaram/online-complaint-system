@@ -1,7 +1,2 @@
 /* Component styles migrated to Tailwind CSS for modern/dynamic dashboard design */
-.complaint-card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
-}
+/* Redundant .complaint-card-container grid removed to use global .complaints-grid from index.css */

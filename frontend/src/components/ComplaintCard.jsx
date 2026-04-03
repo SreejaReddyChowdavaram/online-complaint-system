@@ -84,31 +84,38 @@ const ComplaintCard = ({
   const getStatusConfig = (status) => {
     const normalized = status?.toLowerCase() || "";
     
-    // Modern status styles (Pill based)
+    // Modern status styles (Pill based + Top Border)
     if (normalized.includes("resolved")) {
       return {
-        cardBorder: "border-l-[6px] border-l-[#10b981]",
-        badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+        topBorder: "border-t-[#10b981]",
+        badge: "bg-[#10b981]/10 text-[#10b981] border-[#10b981]/20",
         label: t("complaints.status_resolved")
       };
     }
     if (normalized.includes("progress")) {
       return {
-        cardBorder: "border-l-[6px] border-l-[#2563eb]",
-        badge: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+        topBorder: "border-t-[#3b82f6]",
+        badge: "bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20",
         label: t("complaints.status_progress")
       };
     }
     if (normalized.includes("pending")) {
       return {
-        cardBorder: "border-l-[6px] border-l-[#f59e0b]",
-        badge: "bg-orange-500/10 text-orange-600 border-orange-500/20",
+        topBorder: "border-t-[#f59e0b]",
+        badge: "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/20",
         label: t("complaints.status_pending")
+      };
+    }
+    if (normalized.includes("assigned")) {
+      return {
+        topBorder: "border-t-[#9ca3af]",
+        badge: "bg-[#9ca3af]/10 text-[#9ca3af] border-[#9ca3af]/20",
+        label: t("complaints.status_assigned") || "Assigned"
       };
     }
 
     return {
-      cardBorder: "border-l-[6px] border-l-slate-300",
+      topBorder: "border-t-slate-300",
       badge: "bg-slate-500/10 text-slate-600 border-slate-500/20",
       label: status
     };
@@ -134,87 +141,80 @@ const ComplaintCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)" }}
+      whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className={`relative group bg-white dark:bg-slate-900 rounded-[24px] sm:rounded-[28px] p-4 sm:p-7 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
+      className={`relative group bg-white dark:bg-slate-900 rounded-[16px] p-5 border border-slate-200 dark:border-slate-800 border-t-2 ${statusConfig.topBorder} cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 shadow-sm ${isOverdue ? 'ring-2 ring-red-500/20' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
       {/* Overdue Alert Strip */}
       {isOverdue && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-red-500 animate-pulse" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-red-500 animate-pulse z-10" />
       )}
+      
       {/* ──── Header ──── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6">
-        {/* Status Badge - First line on mobile, Last on desktop */}
-        <div className={`order-first sm:order-last px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border self-start whitespace-nowrap mb-2 sm:mb-0 ${statusConfig.badge}`}>
-          {statusConfig.label}
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-slate-500">
+            {React.cloneElement(getCategoryIcon(complaint?.category), { size: 14 })}
+          </div>
+          <span className="text-[10px] font-medium tracking-wide text-slate-400 dark:text-slate-500 uppercase truncate">
+            {getTranslatedCategory(complaint?.category)}
+          </span>
         </div>
 
-        <div className="flex-1 pr-4">
-          <div className="flex items-center gap-2 mb-1 sm:mb-2">
-            <div className="p-1 sm:p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              {React.cloneElement(getCategoryIcon(complaint?.category), { size: 14 })}
-            </div>
-            <span className="text-[9px] sm:text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase truncate">
-              {getTranslatedCategory(complaint?.category)}
-            </span>
-          </div>
-          <h2 className="text-sm sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
-            {complaint?.title || "Untitled"}
-          </h2>
+        <div className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border ${statusConfig.badge}`}>
+          {statusConfig.label}
         </div>
       </div>
 
       {/* ──── Body ──── */}
-      <div className="mb-6 flex-1">
-        <p className="text-[12px] sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+      <div className="mb-4 flex-1">
+        <h2 className="text-[16px] font-semibold leading-tight text-slate-800 dark:text-slate-100 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+          {complaint?.title || "Untitled"}
+        </h2>
+        <p className="text-[13px] text-[#6b7280] dark:text-slate-400 line-clamp-2 leading-relaxed">
           {complaint?.description || "No description provided."}
         </p>
-        <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-4 text-[10px] sm:text-[12px] text-slate-400 dark:text-slate-500 font-medium">
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            <Calendar size={12} className="opacity-70 sm:hidden" />
-            <Calendar size={14} className="opacity-70 hidden sm:block" />
-            <span>
-              {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
-            </span>
-          </div>
-        </div>
       </div>
 
-      {/* ──── Footer ──── */}
+      {/* ──── Bottom/Date ──── */}
+      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500 mt-auto">
+        <Calendar size={12} className="opacity-70" />
+        <span>
+          {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
+        </span>
+      </div>
+
+      {/* ──── Footer/Stats ──── */}
       {!hideStats && (
-        <div className="pt-3 sm:pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-2 sm:space-y-4" onClick={(e) => e.stopPropagation()}>
+        <div className="pt-4 mt-4 border-t border-slate-50 dark:border-slate-800/50 space-y-3" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* LIKES (Outline style as per user request) */}
+              {/* LIKES */}
               <div className="flex items-center gap-1">
                 <motion.button
                   whileTap={{ scale: 1.15 }}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  className={`p-1 rounded-lg transition-colors ${userUpvoted ? "text-blue-600" : "text-slate-400 hover:text-slate-600"}`}
                   onClick={() => onUpvote && onUpvote(complaint?._id)}
-                  title="Like"
                 >
-                  <ThumbsUp size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
-                  <ThumbsUp size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
+                  <ThumbsUp size={16} fill={userUpvoted ? "currentColor" : "none"} strokeWidth={2} />
                 </motion.button>
-                <span className={`text-[10px] sm:text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-[11px] font-semibold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.upvotes || 0}
                 </span>
               </div>
 
-              {/* DISLIKES (Outline style) */}
+              {/* DISLIKES */}
               <div className="flex items-center gap-1">
                 <motion.button
                   whileTap={{ scale: 1.15 }}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  className={`p-1 rounded-lg transition-colors ${userDownvoted ? "text-blue-600" : "text-slate-400 hover:text-slate-600"}`}
                   onClick={() => onDownvote && onDownvote(complaint?._id)}
-                  title="Dislike"
                 >
-                  <ThumbsDown size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
-                  <ThumbsDown size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
+                  <ThumbsDown size={16} fill={userDownvoted ? "currentColor" : "none"} strokeWidth={2} />
                 </motion.button>
-                <span className={`text-[10px] sm:text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-[11px] font-semibold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.downvotes || 0}
                 </span>
               </div>
@@ -222,30 +222,26 @@ const ComplaintCard = ({
               {/* COMMENTS */}
               <div className="flex items-center gap-1">
                 <button
-                  className="p-1 sm:p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
                   onClick={() => onCommentClick && onCommentClick(complaint)}
-                  title="Comments"
                 >
-                  <MessageSquare size={14} strokeWidth={2.5} className="sm:hidden" />
-                  <MessageSquare size={18} strokeWidth={2.5} className="hidden sm:block" />
+                  <MessageSquare size={16} strokeWidth={2} />
                 </button>
-                <span className="text-[10px] sm:text-xs font-bold text-slate-400">
+                <span className="text-[11px] font-semibold text-slate-400">
                   {complaint?.commentCount || 0}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* New Green Row for Rate & Feedback */}
           {onRateClick && complaint?.status === "Resolved" && (
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-3 sm:px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[9px] sm:text-xs shadow-lg shadow-emerald-500/20 transition-all"
+              className="flex items-center justify-center gap-2 py-2 px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold text-[11px] shadow-sm transition-all"
               onClick={() => onRateClick(complaint)}
             >
-              <Star size={10} fill="white" className="sm:hidden" />
-              <Star size={14} fill="white" className="hidden sm:block" /> 
+              <Star size={12} fill="white" /> 
               {t("complaints.rate_feedback")}
             </motion.button>
           )}
