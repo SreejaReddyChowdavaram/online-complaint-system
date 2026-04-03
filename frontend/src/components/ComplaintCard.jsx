@@ -84,38 +84,38 @@ const ComplaintCard = ({
   const getStatusConfig = (status) => {
     const normalized = status?.toLowerCase() || "";
     
-    // Modern status styles (Pill based + Thick 4-way Border)
+    // Modern status styles (Pill based + Thick 4-way Solid Border)
     if (normalized.includes("resolved")) {
       return {
-        border: "border-emerald-400/30 dark:border-emerald-800/50",
+        border: "border-emerald-500 dark:border-emerald-600",
         badge: "bg-emerald-50 text-emerald-600 border-emerald-100",
         label: t("complaints.status_resolved")
       };
     }
     if (normalized.includes("progress")) {
       return {
-        border: "border-blue-400/30 dark:border-blue-800/50",
+        border: "border-blue-500 dark:border-blue-600",
         badge: "bg-blue-50 text-blue-600 border-blue-100",
         label: t("complaints.status_progress")
       };
     }
     if (normalized.includes("pending")) {
       return {
-        border: "border-orange-400/30 dark:border-orange-800/50",
+        border: "border-orange-500 dark:border-orange-600",
         badge: "bg-orange-50 text-orange-600 border-orange-100",
         label: t("complaints.status_pending")
       };
     }
     if (normalized.includes("assigned")) {
       return {
-        border: "border-slate-300 dark:border-slate-700/50",
+        border: "border-slate-400 dark:border-slate-500",
         badge: "bg-slate-50 text-slate-600 border-slate-100",
         label: t("complaints.status_assigned") || "Assigned"
       };
     }
 
     return {
-      border: "border-slate-300 dark:border-slate-700/50",
+      border: "border-slate-400 dark:border-slate-500",
       badge: "bg-slate-50 text-slate-600 border-slate-100",
       label: status
     };
@@ -144,7 +144,7 @@ const ComplaintCard = ({
       whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className={`relative group bg-white dark:bg-slate-900 rounded-[12px] sm:rounded-[16px] p-5 border-2 ${statusConfig.border} cursor-pointer overflow-hidden flex flex-col h-full shadow-[0_2px_4px_rgba(0,0,0,0.02)] ${isOverdue ? 'ring-2 ring-red-500/10' : ''}`}
+      className={`relative group bg-white dark:bg-slate-900 rounded-[12px] sm:rounded-[16px] p-5 border border-l-4 ${statusConfig.border} cursor-pointer overflow-hidden flex flex-col h-full shadow-[0_2px_4px_rgba(0,0,0,0.02)] ${isOverdue ? 'ring-2 ring-red-500/10' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
       {/* Overdue Alert Strip */}

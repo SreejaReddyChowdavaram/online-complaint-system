@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 /* HOME */
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
+import PreviewCards from "./pages/PreviewCards";
 
 /* AUTH */
 import Login from "./pages/auth/Login";
@@ -98,6 +99,7 @@ function App() {
               {/* HOME */}
               <Route path="/" element={<Home />} />
               <Route path="/landing" element={<LandingPage />} />
+              <Route path="/preview" element={<PreviewCards />} />
 
               {/* AUTH */}
               <Route path="/login" element={<Login />} />
