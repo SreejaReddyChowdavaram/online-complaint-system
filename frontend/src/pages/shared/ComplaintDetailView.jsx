@@ -16,7 +16,7 @@ import {
   Calendar
 } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { getTranslatedCategory, getCategoryStyles } from "../../utils/complaintHelpers";
 import LocationSection from "../../components/LocationSection";
 
 const ComplaintDetailView = () => {
@@ -78,30 +78,8 @@ const ComplaintDetailView = () => {
     }
   };
 
-  const getTranslatedCategory = (category) => {
-    if (!category) return "N/A";
-    
-    // Normalize mapping for i18n keys
-    const categoryKeyMap = {
-      "road": "Roads",
-      "water": "Water",
-      "electricity": "Electricity",
-      "sanitation": "Garbage",
-      "garbage": "Garbage",
-      "health": "Drainage",
-      "noise": "Noise",
-      "other": "Noise"
-    };
-
-    const normalizedLower = category.toLowerCase().replace("complaints.categories.", "");
-    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || normalizedLower;
-    
-    const translated = t(`complaints.categories.${key}`);
-    if (!translated || translated === `complaints.categories.${key}`) {
-      // Fallback: Title case the raw string if translation fails
-      return normalizedLower.split(/[.\s]/).pop().replace(/([A-Z])/g, ' $1').trim();
-    }
-    return translated;
+  const getTranslatedCategoryLocal = (category) => {
+    return getTranslatedCategory(category, t);
   };
 
   return (
@@ -157,9 +135,11 @@ const ComplaintDetailView = () => {
                 <div className="p-2 bg-slate-50 dark:bg-slate-900 rounded-lg text-slate-500">
                   <AlertCircle size={18} />
                 </div>
-                <div>
+                <div className="flex flex-col gap-1">
                   <p className="text-[10px] text-gray-400 uppercase font-bold">Category</p>
-                  <p className="text-sm font-semibold">{getTranslatedCategory(complaint.category)}</p>
+                  <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(complaint.category)} shadow-sm w-fit`}>
+                    {getTranslatedCategoryLocal(complaint.category)}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">

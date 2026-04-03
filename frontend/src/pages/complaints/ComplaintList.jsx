@@ -12,16 +12,18 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import { useComplaint } from '../../context/ComplaintContext'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
+import ComplaintCard from '../../components/ComplaintCard'
 import './ComplaintList.css'
 
 const ComplaintList = () => {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const { complaints, loading, error, fetchComplaints } = useComplaint()
   
   const [filters, setFilters] = useState({
@@ -58,9 +60,12 @@ const ComplaintList = () => {
         <div className="page-header">
           <h1>{pageTitle}</h1>
           {showCreateButton && (
-            <Link to="/complaints/create" className="btn btn-primary">
+            <button 
+              onClick={() => navigate("/complaints/create")} 
+              className="btn btn-primary"
+            >
               Create New Complaint
-            </Link>
+            </button>
           )}
         </div>
 
@@ -140,80 +145,23 @@ const ComplaintList = () => {
               <div className="card text-center">
                 <p>No complaints found.</p>
                 {showCreateButton && (
-                  <Link to="/complaints/create" className="btn btn-primary mt-2">
+                  <button 
+                    onClick={() => navigate("/complaints/create")} 
+                    className="btn btn-primary mt-2"
+                  >
                     Create Your First Complaint
-                  </Link>
+                  </button>
                 )}
               </div>
             ) : (
               <div className="complaints-grid">
-                {complaints.map((complaint, index) => (
-                  <motion.div
+                {complaints.map((complaint) => (
+                  <ComplaintCard
                     key={complaint._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05, duration: 0.3 }}
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.03, y: -5 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Link
-                        to={`/complaints/${complaint._id}`}
-                        className="complaint-card"
-                      >
-                        <div className="complaint-card-header">
-                          <h3>{complaint.title}</h3>
-                          <motion.span
-                            className={`badge badge-${complaint.status.toLowerCase().replace(' ', '-')}`}
-                            whileHover={{ scale: 1.1 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            {complaint.status}
-                          </motion.span>
-                        </div>
-                        
-                        <p className="complaint-card-desc">
-                          {complaint.description.substring(0, 150)}
-                          {complaint.description.length > 150 ? '...' : ''}
-                        </p>
-
-                        <div className="complaint-card-meta">
-                          <div className="meta-item">
-                            <strong>Category:</strong> {complaint.category}
-                          </div>
-                          <div className="meta-item">
-                            <strong>Priority:</strong>{' '}
-                            <motion.span
-                              className={`badge badge-${complaint.priority.toLowerCase()}`}
-                              whileHover={{ scale: 1.1 }}
-                            >
-                              {complaint.priority}
-                            </motion.span>
-                          </div>
-                          <div className="meta-item">
-                            <strong>Complaint ID:</strong> {complaint.complaintId}
-                          </div>
-                          <div className="meta-item">
-                            <strong>Created:</strong>{' '}
-                            {new Date(complaint.createdAt).toLocaleDateString()}
-                          </div>
-                          {/* Show submitted by for Officers/Admins */}
-                          {!isCitizen && complaint.submittedBy && (
-                            <div className="meta-item">
-                              <strong>Submitted By:</strong> {complaint.submittedBy.name}
-                            </div>
-                          )}
-                          {/* Show assigned officer if exists */}
-                          {complaint.assignedTo && (
-                            <div className="meta-item">
-                              <strong>Assigned To:</strong> {complaint.assignedTo.name}
-                            </div>
-                          )}
-                        </div>
-                      </Link>
-                    </motion.div>
-                  </motion.div>
+                    complaint={complaint}
+                    currentUserId={user?._id}
+                    onCardClick={(c) => navigate(`/complaints/${c._id}`)}
+                  />
                 ))}
               </div>
             )}

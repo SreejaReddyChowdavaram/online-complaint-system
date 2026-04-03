@@ -15,9 +15,12 @@ import { useParams } from 'react-router-dom'
 import { getComplaintByComplaintId } from '../../services/complaintService'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
+import { useTranslation } from "react-i18next";
+import { getTranslatedCategory, getCategoryStyles } from '../../utils/complaintHelpers';
 import './ComplaintTracking.css'
 
 const ComplaintTracking = () => {
+  const { t } = useTranslation();
   const { complaintId } = useParams()
   const [complaint, setComplaint] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -77,8 +80,10 @@ const ComplaintTracking = () => {
           </div>
 
           <div className="tracking-info">
-            <div className="info-row">
-              <strong>Category:</strong> {complaint.category}
+            <div className="info-row !border-none !pb-2">
+              <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(complaint.category)} shadow-sm w-fit`}>
+                {getTranslatedCategory(complaint.category, t)}
+              </div>
             </div>
             <div className="info-row">
               <strong>Priority:</strong>{' '}
