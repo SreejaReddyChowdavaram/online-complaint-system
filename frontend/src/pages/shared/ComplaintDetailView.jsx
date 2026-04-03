@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api, { BASE_URL } from "../../services/api";
+import { useTranslation } from "react-i18next";
 import { 
   ArrowLeft, 
   MapPin, 
@@ -21,6 +22,7 @@ import LocationSection from "../../components/LocationSection";
 const ComplaintDetailView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -74,6 +76,32 @@ const ComplaintDetailView = () => {
       case "Resolved": return "bg-emerald-100 text-emerald-700 border-emerald-200 uppercase";
       default: return "bg-gray-100 text-gray-700 border-gray-200 uppercase";
     }
+  };
+
+  const getTranslatedCategory = (category) => {
+    if (!category) return "N/A";
+    
+    // Normalize mapping for i18n keys
+    const categoryKeyMap = {
+      "road": "Roads",
+      "water": "Water",
+      "electricity": "Electricity",
+      "sanitation": "Garbage",
+      "garbage": "Garbage",
+      "health": "Drainage",
+      "noise": "Noise",
+      "other": "Noise"
+    };
+
+    const normalizedLower = category.toLowerCase().replace("complaints.categories.", "");
+    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || normalizedLower;
+    
+    const translated = t(`complaints.categories.${key}`);
+    if (!translated || translated === `complaints.categories.${key}`) {
+      // Fallback: Title case the raw string if translation fails
+      return normalizedLower.split(/[.\s]/).pop().replace(/([A-Z])/g, ' $1').trim();
+    }
+    return translated;
   };
 
   return (
@@ -131,7 +159,7 @@ const ComplaintDetailView = () => {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase font-bold">Category</p>
-                  <p className="text-sm font-semibold">{complaint.category}</p>
+                  <p className="text-sm font-semibold">{getTranslatedCategory(complaint.category)}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
