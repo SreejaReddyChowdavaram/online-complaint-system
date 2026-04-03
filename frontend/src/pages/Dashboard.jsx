@@ -16,12 +16,9 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useComplaint } from '../context/ComplaintContext'
 import Loading from '../components/Loading'
-import { getCategoryLabel } from '../utils/complaintUtils'
-import { useTranslation } from 'react-i18next'
 import './Dashboard.css'
 
 const Dashboard = () => {
-  const { t } = useTranslation()
   const { user } = useAuth()
   const { complaints, loading, fetchComplaints } = useComplaint()
 
@@ -183,14 +180,14 @@ const Dashboard = () => {
                           className={`badge badge-${complaint?.status?.toLowerCase()?.replace(' ', '-') || 'pending'}`}
                           whileHover={{ scale: 1.1 }}
                         >
-                          {t(`complaints.status_${complaint?.status?.toLowerCase()?.replace(' ', '_')}`) || complaint?.status || "Pending"}
+                          {complaint?.status || "Pending"}
                         </motion.span>
                       </div>
                       <p className="complaint-item-desc">
                         {complaint?.description ? (complaint.description.substring(0, 100) + "...") : "No description provided."}
                       </p>
                       <div className="complaint-item-footer">
-                        <span className="complaint-category">{getCategoryLabel(complaint?.category, t)}</span>
+                        <span className="complaint-category">{complaint?.category || "General"}</span>
                         {/* Show submitted by for Officers/Admins with safety */}
                         {!isCitizen && complaint?.submittedBy && (
                           <span className="complaint-submitter">

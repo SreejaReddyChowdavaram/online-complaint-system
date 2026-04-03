@@ -59,8 +59,7 @@ router.put(
       if (!oldComplaint) return res.status(404).json({ message: "Complaint not found" });
 
       if (req.file) {
-        const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
-        updateData.resolutionImage = `${BASE_URL}/uploads/${req.file.filename}`;
+        updateData.resolutionImage = req.file.filename; // ✅ correct
       }
 
       const updated = await Complaint.findByIdAndUpdate(
@@ -137,8 +136,7 @@ router.put("/profile", protect, upload.single("avatar"), async (req, res) => {
     if (mobile !== undefined) updateData.mobile = mobile;
     
     if (req.file) {
-      const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
-      updateData.avatar = `${BASE_URL}/uploads/${req.file.filename}`;
+      updateData.avatar = req.file.filename;
     }
 
     const updatedUser = await User.findByIdAndUpdate(

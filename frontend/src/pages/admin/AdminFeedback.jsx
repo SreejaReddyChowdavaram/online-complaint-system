@@ -10,7 +10,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import "./AdminFeedback.css";
 import FeedbackCharts from "../../components/FeedbackCharts";
-import { getCategoryLabel } from "../../utils/complaintUtils";
 
 const AdminFeedback = () => {
   const { t } = useTranslation();
@@ -50,15 +49,12 @@ const AdminFeedback = () => {
         <div className="filters">
           <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
             <option value="">{t("complaints.analytics.all_depts")}</option>
-            <option value="electricity_issues">{t("complaints.categories.electricity_issues")}</option>
-            <option value="water_supply">{t("complaints.categories.water_supply")}</option>
-            <option value="road_maintenance">{t("complaints.categories.road_maintenance")}</option>
-            <option value="drainage">{t("complaints.categories.drainage")}</option>
-            <option value="garbage_management">{t("complaints.categories.garbage_management")}</option>
-            <option value="noise_pollution">{t("complaints.categories.noise_pollution")}</option>
-            <option value="health_sanitation">{t("complaints.categories.health_sanitation")}</option>
-            <option value="public_safety">{t("complaints.categories.public_safety")}</option>
-            <option value="other">{t("complaints.categories.other")}</option>
+            <option value="Electricity">{t("complaints.categories.Electricity")}</option>
+            <option value="Water">{t("complaints.categories.Water")}</option>
+            <option value="Roads">{t("complaints.categories.Roads")}</option>
+            <option value="Drainage">{t("complaints.categories.Drainage")}</option>
+            <option value="Garbage">{t("complaints.categories.Garbage")}</option>
+            <option value="Noise">{t("complaints.categories.Noise")}</option>
           </select>
         </div>
       </header>
@@ -94,7 +90,7 @@ const AdminFeedback = () => {
                 {officerStats.map((off) => (
                   <tr key={off._id}>
                     <td><strong>{off.name || t("complaints.analytics.unknown")}</strong></td>
-                    <td>{getCategoryLabel(off.dept, t) || t("complaints.analytics.no_dept")}</td>
+                    <td>{off.dept || t("complaints.analytics.no_dept")}</td>
                     <td>
                       <span className="rating-badge">
                         {off.avgRating.toFixed(1)} 
@@ -134,7 +130,7 @@ const AdminFeedback = () => {
                 </div>
                 <p className="trend-msg">{f.message}</p>
                 <div className="trend-footer">
-                  <span>{getCategoryLabel(f.officerId?.department || f.department, t)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
+                  <span>{t(`complaints.categories.${f.officerId?.department || f.department}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
                 </div>
               </div>
             ))}
@@ -174,7 +170,7 @@ const AdminFeedback = () => {
                       </div>
                       <p className="trend-msg">{f.message}</p>
                       <div className="trend-footer">
-                        <span>{getCategoryLabel(f.officerId?.department || f.department, t)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
+                        <span>{t(`complaints.categories.${f.officerId?.department || f.department}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
                       </div>
                     </div>
                   ))}

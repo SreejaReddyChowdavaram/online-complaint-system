@@ -48,10 +48,7 @@ router.post(
       }
 
       // 2. Database Record Creation (Fast)
-      const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
-      const imageFilenames = files.map(file => file.filename);
-      const fullImageUrls = imageFilenames.map(name => `${BASE_URL}/uploads/${name}`);
-
+      const images = files.map(file => file.filename);
       const complaint = await Complaint.create({
         title,
         category,
@@ -61,8 +58,7 @@ router.post(
           lat: Number(latitude),
           lng: Number(longitude),
         },
-        images: fullImageUrls,
-        imageUrl: fullImageUrls[0] || null,
+        images,
         userId: req.user.id,
       });
 

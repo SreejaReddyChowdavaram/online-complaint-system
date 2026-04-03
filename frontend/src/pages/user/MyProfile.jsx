@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import api, { BASE_URL } from "../../services/api";
-import ImageWithFallback from "../../components/ImageWithFallback";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import "../ProfileTheme.css"; // Shared styles
@@ -36,7 +35,8 @@ const MyProfile = () => {
       });
       // Set initial avatar preview if exists
       if (user.avatar) {
-        setPreviewUrl(user.avatar);
+        // Handle Google avatar (URL) vs local avatar (filename)
+        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`);
       } else {
         setPreviewUrl(null);
       }
@@ -53,7 +53,7 @@ const MyProfile = () => {
         address: user.address || "",
       });
       setAvatarFile(null);
-      setPreviewUrl(user.avatar || null);
+      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`) : null);
     }
     setIsEditing(!isEditing);
   };
@@ -119,12 +119,13 @@ const MyProfile = () => {
                 className={`relative group w-28 h-28 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-500 ${isEditing ? 'cursor-pointer hover:ring-4 ring-blue-500/10' : ''}`}
                 onClick={() => isEditing && fileInputRef.current.click()}
               >
-                <ImageWithFallback 
-                  src={previewUrl} 
-                  alt="Avatar" 
-                  className="w-full h-full"
-                  fallbackText={user?.name?.[0]?.toUpperCase() || "C"}
-                />
+                {previewUrl ? (
+                  <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold text-slate-400">
+                    {user?.name?.[0]?.toUpperCase() || "C"}
+                  </div>
+                )}
                 
                 {isEditing && (
                   <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center transition-all duration-300">

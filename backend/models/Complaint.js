@@ -12,7 +12,6 @@ const complaintSchema = new mongoose.Schema(
       lng: Number,
     },
 
-    imageUrl: { type: String, default: null },
     images: [String],
 
     userId: {

@@ -18,8 +18,6 @@ import ComplaintCard from "../../components/ComplaintCard";
 import FeedbackForm from "../../components/FeedbackForm";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
-import { getCategoryLabel } from "../../utils/complaintUtils";
-import ImageWithFallback from "../../components/ImageWithFallback";
 
 const ViewComplaints = () => {
   const { t } = useTranslation();
@@ -280,7 +278,7 @@ const addComment = async (complaintId) => {
             <div className="modal-body scrollbar-thin">
               <h2>{selectedComplaint.title}</h2>
 
-            <p><strong>{t("complaints.modal_category")}:</strong> {getCategoryLabel(selectedComplaint.category, t)}</p>
+            <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selectedComplaint.category}`)}</p>
 
             <LocationSection 
               address={selectedComplaint.location?.address} 
@@ -304,14 +302,20 @@ const addComment = async (complaintId) => {
 
                 <div className="image-grid">
 
-                  {selectedComplaint.images.map((img, index) => (
-                    <ImageWithFallback
-                      key={index}
-                      src={img}
-                      alt={`Evidence ${index + 1}`}
-                      className="rounded-xl h-32 w-full"
-                    />
-                  ))}
+                  {selectedComplaint.images.map((img, index) => {
+                    const cleaned = String(img)
+                      .replace(/\\/g, "/")
+                      .replace(/^\/+/g, "")
+                      .replace(/^uploads\//, "");
+
+                    return (
+                      <img
+                        key={index}
+                        src={`${BASE_URL}/uploads/${cleaned}`}
+                        alt="complaint"
+                      />
+                    );
+                  })}
 
                 </div>
 
@@ -329,10 +333,9 @@ const addComment = async (complaintId) => {
 
                 <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
 
-                <ImageWithFallback
-                  src={selectedComplaint.resolutionImage}
+                <img
+                  src={`${BASE_URL}/uploads/${selectedComplaint.resolutionImage}`}
                   alt="resolution"
-                  className="rounded-xl w-full h-auto max-h-80"
                 />
 
               </div>
