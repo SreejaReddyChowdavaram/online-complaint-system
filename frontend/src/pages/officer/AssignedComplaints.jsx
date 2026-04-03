@@ -15,7 +15,6 @@ import { useAuth } from "../../context/AuthContext";
 import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
-import { getTranslatedCategory, getCategoryStyles } from "../../utils/complaintHelpers";
 import "../user/ViewComplaints.css"; // Reuse the same styles
 
 function AssignedComplaints() {
@@ -187,12 +186,7 @@ function AssignedComplaints() {
             <div className="modal-body scrollbar-thin">
               <h2>{selected.title}</h2>
 
-              <div className="flex flex-col gap-1 mb-4">
-                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">{t("complaints.modal_category")}</span>
-                <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(selected.category)} shadow-sm w-fit`}>
-                  {getTranslatedCategory(selected.category, t)}
-                </div>
-              </div>
+              <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selected.category}`)}</p>
               
               <LocationSection 
                 address={selected.location?.address} 

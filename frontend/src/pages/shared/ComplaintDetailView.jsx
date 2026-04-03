@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api, { BASE_URL } from "../../services/api";
-import { useTranslation } from "react-i18next";
 import { 
   ArrowLeft, 
   MapPin, 
@@ -16,13 +15,12 @@ import {
   Calendar
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { getTranslatedCategory, getCategoryStyles } from "../../utils/complaintHelpers";
+
 import LocationSection from "../../components/LocationSection";
 
 const ComplaintDetailView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -78,10 +76,6 @@ const ComplaintDetailView = () => {
     }
   };
 
-  const getTranslatedCategoryLocal = (category) => {
-    return getTranslatedCategory(category, t);
-  };
-
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -135,11 +129,9 @@ const ComplaintDetailView = () => {
                 <div className="p-2 bg-slate-50 dark:bg-slate-900 rounded-lg text-slate-500">
                   <AlertCircle size={18} />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div>
                   <p className="text-[10px] text-gray-400 uppercase font-bold">Category</p>
-                  <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(complaint.category)} shadow-sm w-fit`}>
-                    {getTranslatedCategoryLocal(complaint.category)}
-                  </div>
+                  <p className="text-sm font-semibold">{complaint.category}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

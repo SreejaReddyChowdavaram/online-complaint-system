@@ -18,7 +18,6 @@ import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
 import CommentSection from "../../components/CommentSection";
-import { getTranslatedCategory, getCategoryStyles } from "../../utils/complaintHelpers";
 import "../user/ViewComplaints.css";
 
 function ViewComplaints() {
@@ -168,11 +167,9 @@ function ViewComplaints() {
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col gap-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t("complaints.modal_category")}</p>
-                    <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(selectedComplaint.category)} shadow-sm w-fit`}>
-                      {getTranslatedCategory(selectedComplaint.category, t)}
-                    </div>
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{t("complaints.modal_category")}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t(`complaints.categories.${selectedComplaint.category}`)}</p>
                   </div>
                   <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{t("complaints.date_submitted")}</p>

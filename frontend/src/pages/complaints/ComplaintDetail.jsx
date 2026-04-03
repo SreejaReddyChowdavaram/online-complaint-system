@@ -13,17 +13,14 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { useComplaint } from '../../context/ComplaintContext'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
-import { getTranslatedCategory, getCategoryStyles } from '../../utils/complaintHelpers';
 import './ComplaintDetail.css'
 
 const ComplaintDetail = () => {
   const { id } = useParams()
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
   const { currentComplaint, loading, error, fetchComplaint, addComment, updateStatus, deleteComplaint } = useComplaint()
@@ -98,9 +95,7 @@ const ComplaintDetail = () => {
                   {currentComplaint.status}
                 </span>
                 <span className="complaint-id">ID: {currentComplaint.complaintId}</span>
-                <span className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(currentComplaint.category)} shadow-sm w-fit inline-block`}>
-                  {getTranslatedCategory(currentComplaint.category, t)}
-                </span>
+                <span className="complaint-category">{currentComplaint.category}</span>
                 <span className={`badge badge-${currentComplaint.priority.toLowerCase()}`}>
                   {currentComplaint.priority}
                 </span>

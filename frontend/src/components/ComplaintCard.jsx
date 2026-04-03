@@ -17,7 +17,6 @@ import {
   Wind
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getTranslatedCategory, getCategoryStyles } from '../utils/complaintHelpers';
 import './ComplaintCard.css';
 
 const ComplaintCard = ({
@@ -55,6 +54,31 @@ const ComplaintCard = ({
     if (normalized.includes("safety") || normalized.includes("crime") || normalized.includes("security")) return <ShieldAlert size={16} className="text-red-500" />;
     if (normalized.includes("health") || normalized.includes("medical") || normalized.includes("hospital")) return <AlertCircle size={16} className="text-emerald-500" />;
     return <HelpCircle size={16} className="text-slate-400" />;
+  };
+
+  const getTranslatedCategory = (category) => {
+    if (!category) return "N/A";
+    
+    // Normalize mapping for i18n keys
+    const categoryKeyMap = {
+      "road": "Roads",
+      "water": "Water",
+      "electricity": "Electricity",
+      "sanitation": "Garbage",
+      "garbage": "Garbage",
+      "health": "Drainage",
+      "noise": "Noise",
+      "other": "Noise"
+    };
+
+    const normalizedLower = category.toLowerCase();
+    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || category;
+    
+    const translated = t(`complaints.categories.${key}`);
+    if (!translated || translated === `complaints.categories.${key}`) {
+      return category.replace(/([A-Z])/g, ' $1').trim();
+    }
+    return translated;
   };
 
   const getStatusConfig = (status) => {
@@ -98,7 +122,6 @@ const ComplaintCard = ({
   };
 
   const statusConfig = getStatusConfig(complaint?.status);
-  const categoryStyles = getCategoryStyles(complaint?.category);
 
   const userUpvoted = complaint?.votes?.some(
     (v) => (v.user?.toString() === currentUserId?.toString()) && v.voteType === "upvote"
@@ -131,8 +154,13 @@ const ComplaintCard = ({
       
       {/* ──── Header ──── */}
       <div className="flex justify-between items-start mb-4">
-        <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${categoryStyles} shadow-sm`}>
-          {getTranslatedCategory(complaint?.category, t)}
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-slate-500">
+            {React.cloneElement(getCategoryIcon(complaint?.category), { size: 14 })}
+          </div>
+          <span className="text-[10px] font-medium tracking-wide text-slate-400 dark:text-slate-500 uppercase truncate">
+            {getTranslatedCategory(complaint?.category)}
+          </span>
         </div>
 
         <div className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border ${statusConfig.badge}`}>

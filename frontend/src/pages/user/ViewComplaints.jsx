@@ -18,7 +18,6 @@ import ComplaintCard from "../../components/ComplaintCard";
 import FeedbackForm from "../../components/FeedbackForm";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
-import { getTranslatedCategory, getCategoryStyles } from "../../utils/complaintHelpers";
 
 const ViewComplaints = () => {
   const { t } = useTranslation();
@@ -279,12 +278,7 @@ const addComment = async (complaintId) => {
             <div className="modal-body scrollbar-thin">
               <h2>{selectedComplaint.title}</h2>
 
-              <div className="flex flex-col gap-1 mb-4">
-                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">{t("complaints.modal_category")}</span>
-                <div className={`px-2.5 py-1 rounded-full text-[12px] font-medium border ${getCategoryStyles(selectedComplaint.category)} shadow-sm w-fit`}>
-                  {getTranslatedCategory(selectedComplaint.category, t)}
-                </div>
-              </div>
+            <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selectedComplaint.category}`)}</p>
 
             <LocationSection 
               address={selectedComplaint.location?.address} 
