@@ -145,18 +145,19 @@ function AdminDashboard() {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="admin-dashboard-v2 p-8 bg-[#f8fafc] dark:bg-[#0b1120] min-h-screen transition-all duration-500"
+      className="admin-dashboard-v2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
     >
       {/* ─── Header & Greeting ─── */}
-      <div className="dash-v2-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-        <div className="header-greeting">
-          <WelcomeHeader userName={currentUser?.name || "Admin"} role="admin" />
-          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium -mt-6 ml-1">
+      <WelcomeHeader userName={currentUser?.name || "Admin"} role="Admin" />
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 mt-2">
+        <div className="header-content">
+          <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base font-medium">
             Real-time insights and system administration at your fingertips.
           </p>
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm">
             <Calendar size={14} className="text-blue-500" />
             <span className="text-xs font-bold text-slate-500 tracking-wide uppercase">
@@ -171,140 +172,138 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <div className="dashboard-grid-layout grid grid-cols-1 xl:grid-cols-[1fr,340px] gap-8">
+      {/* Stats Grid - Standardized to 2 columns on mobile */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mb-10">
+        {statsCards.map((card, i) => (
+          <motion.div
+            key={card.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center group hover:border-blue-500/30 transition-all duration-300"
+            whileHover={{ y: -5 }}
+          >
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform ${
+              card.id === 'total' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20' :
+              card.id === 'pending' ? 'bg-amber-50 text-amber-500 dark:bg-amber-900/20' :
+              card.id === 'assigned' ? 'bg-cyan-50 text-cyan-500 dark:bg-cyan-900/20' :
+              card.id === 'inProgress' ? 'bg-purple-50 text-purple-600 dark:bg-purple-900/20' :
+              'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20'
+            }`}>
+              {card.icon}
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{card.title}</span>
+            <div className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">
+              {card.value}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr,340px] gap-8">
         
         {/* ─── Main Section (Left) ─── */}
-        <div className="main-stats-section space-y-8">
-
-          {/* Stats Grid */}
-          <div className="stats-cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {statsCards.map((card, i) => (
-              <motion.div
-                key={card.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className={`stat-card-v2 group ${card.color} border-l-[6px] relative overflow-hidden`}
-                whileHover={{ y: -8 }}
-              >
-                {/* Visual Glass Effect */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-current opacity-[0.03] rounded-full -mr-16 -mt-16 group-hover:opacity-[0.06] transition-opacity" />
-                
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 group-hover:scale-110 transition-transform">
-                    {card.icon}
-                  </div>
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
-                    {card.title}
-                  </h3>
-                </div>
-
-                <div className="text-center">
-                  <div className="flex items-baseline justify-center gap-1.5">
-                    <span className="text-3xl font-black text-slate-800 dark:text-white leading-none">
-                      {card.value}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
+        <div className="space-y-8">
           {/* Recent Complaints Table */}
-          <div className="recent-complaints-box neumorphic-card">
+          <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 rounded-xl">
+                <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 rounded-xl flex items-center justify-center">
                   <ClipboardList size={22} />
                 </div>
-                <h2 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Recent Complaints</h2>
+                <h2 className="text-xl font-bold text-slate-800 dark:text-white">Recent Activity</h2>
               </div>
-              <button className="px-4 py-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 hover:text-indigo-600 dark:hover:bg-indigo-900/40 transition-all">
-                View All Activity
-              </button>
             </div>
             
-            <div className="overflow-x-auto border border-slate-50 dark:border-slate-800 rounded-[24px]">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-slate-50/50 dark:bg-slate-800/20">
-                    <th className="p-5 text-left text-[11px] font-black uppercase tracking-widest text-slate-400">Complaint ID</th>
-                    <th className="p-5 text-left text-[11px] font-black uppercase tracking-widest text-slate-400">Subject</th>
-                    <th className="p-5 text-left text-[11px] font-black uppercase tracking-widest text-slate-400 text-center">Lifecycle</th>
-                    <th className="p-5 text-left text-[11px] font-black uppercase tracking-widest text-slate-400">Owner</th>
-                    <th className="p-5 text-left text-[11px] font-black uppercase tracking-widest text-slate-400 text-right">Created</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
-                  {data.recentComplaints.map((c) => (
-                    <tr key={c._id} className="group hover:bg-slate-50/30 dark:hover:bg-slate-800/20 transition-all relative">
-                      <td className="p-5 align-middle">
-                        <span className="font-mono text-xs font-black text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-lg">
-                          #{c._id.slice(-6).toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="p-5 align-middle">
-                        <span className="font-extrabold text-slate-700 dark:text-slate-200 block truncate max-w-[180px]">
-                          {c.title}
-                        </span>
-                      </td>
-                      <td className="p-5 align-middle text-center">
-                        <span className={`status-pill status-${c.status.toLowerCase().replace(" ", "-")} text-[10px] font-black py-1.5 px-3 rounded-xl inline-block border`}>
-                          {c.status}
-                        </span>
-                      </td>
-                      <td className="p-5 align-middle">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-[10px] font-black text-slate-400">
-                            {c.assignedTo?.name?.charAt(0) || <User size={12} />}
-                          </div>
-                          <span className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                            {c.assignedTo?.name || "Unassigned"}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-5 align-middle text-right shrink-0">
-                        <span className="text-xs font-bold text-slate-400 dark:text-slate-500 italic">
-                          {new Date(c.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                        </span>
-                      </td>
+            <div className="overflow-x-auto -mx-6 sm:mx-0">
+              <div className="inline-block min-w-full align-middle px-6 sm:px-0">
+                <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-800">
+                  <thead>
+                    <tr>
+                      <th className="py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">ID</th>
+                      <th className="py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400 px-4">Subject</th>
+                      <th className="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                      <th className="py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400 px-4">Owner</th>
+                      <th className="py-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Created</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
+                    {data.recentComplaints.map((c) => (
+                      <tr key={c._id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all">
+                        <td className="py-4 whitespace-nowrap">
+                          <span className="font-mono text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md">
+                            #{c._id.slice(-6).toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 max-w-[200px]">
+                          <span className="font-semibold text-slate-700 dark:text-slate-200 block truncate">
+                            {c.title}
+                          </span>
+                        </td>
+                        <td className="py-4 text-center">
+                          <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${
+                            c.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/20 dark:border-amber-800/50' :
+                            c.status === 'In Progress' ? 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/50' :
+                            'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-800/50'
+                          }`}>
+                            {c.status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center text-[10px] font-bold text-indigo-600">
+                              {c.assignedTo?.name?.charAt(0) || '?'}
+                            </div>
+                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                              {c.assignedTo?.name || "Unassigned"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 text-right whitespace-nowrap">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                            {new Date(c.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
 
         {/* ─── Insights Panel (Right) ─── */}
-        <aside className="insights-panel space-y-6">
-          
-          {/* Quick Metrics */}
-          <div className="neumorphic-card">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">User Distribution</h3>
+        <aside className="space-y-6">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-6">User Distribution</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 text-blue-500 rounded-xl">
-                    <Users size={18} />
+                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 text-blue-600 flex items-center justify-center rounded-xl">
+                    <Users size={20} />
                   </div>
-                  <span className="text-sm font-bold text-slate-600 dark:text-slate-300">Total Citizens</span>
+                  <div>
+                    <p className="text-xs font-bold text-slate-600 dark:text-slate-300">Total Citizens</p>
+                    <p className="text-[10px] text-slate-400 font-medium tracking-tight">Verified accounts</p>
+                  </div>
                 </div>
-                <strong className="text-lg font-black text-slate-800 dark:text-white">{data.userMetrics.totalUsers}</strong>
+                <strong className="text-xl font-black text-slate-800 dark:text-white">{data.userMetrics.totalUsers}</strong>
               </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl">
-                    <ShieldAlert size={18} />
+                  <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center rounded-xl">
+                    <ShieldAlert size={20} />
                   </div>
-                  <span className="text-sm font-bold text-slate-600 dark:text-slate-300">Active Officers</span>
+                  <div>
+                    <p className="text-xs font-bold text-slate-600 dark:text-slate-300">Active Officers</p>
+                    <p className="text-[10px] text-slate-400 font-medium tracking-tight">Departmental staff</p>
+                  </div>
                 </div>
-                <strong className="text-lg font-black text-slate-800 dark:text-white">{data.userMetrics.totalOfficers}</strong>
+                <strong className="text-xl font-black text-slate-800 dark:text-white">{data.userMetrics.totalOfficers}</strong>
               </div>
             </div>
           </div>
-
-
         </aside>
       </div>
     </motion.div>

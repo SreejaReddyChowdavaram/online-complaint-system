@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
+const AdminNavbar = () => {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
@@ -35,50 +35,33 @@ const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
     setIsLangOpen(false);
   };
 
-  const getRoleLabel = (role) => {
-    switch (role?.toLowerCase()) {
-      case "citizen": return "Citizen Portal";
-      case "officer": return "Officer Portal";
-      case "admin": return "Admin Portal";
-      default: return "";
-    }
-  };
-
   return (
-    <header className="flex justify-between items-center px-6 h-16 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-dark-border shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <header className="flex justify-between items-center px-3 sm:px-6 h-14 sm:h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
       <div className="flex items-center gap-6">
-        {/* MOBILE MENU TOGGLE */}
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
-        >
-          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
         {/* BRANDING */}
-        <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <img src="/logo.png" alt="Logo" className="h-7 w-7 sm:h-8 sm:w-8 object-contain" />
           <div className="flex flex-col">
-            <span className="text-gray-800 dark:text-white font-semibold whitespace-nowrap leading-none">
+            <span className="text-gray-800 dark:text-white font-black text-sm sm:text-base whitespace-nowrap leading-none transition-all">
               Online Complaint System
             </span>
-            <span className="text-orange-500 dark:text-orange-400 text-[10px] font-bold uppercase tracking-wider mt-1">
+            <span className="text-blue-600 dark:text-blue-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 sm:mt-1">
               Admin Portal
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-4">
+      <div className="flex items-center gap-1.5 sm:gap-4">
         {/* Language Selector */}
         <div className="relative" ref={langRef}>
           <button
-            className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-glow-blue transition-all duration-300 text-xs md:text-sm font-semibold"
+            className="flex items-center gap-2 p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 text-xs font-semibold"
             onClick={() => setIsLangOpen(!isLangOpen)}
           >
-            <Globe size={18} className="text-red-600 dark:text-red-400" />
-            <span className="hidden md:block">{currentLangLabel}</span>
-            <ChevronDown size={14} className={`transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+            <Globe size={18} className="text-blue-600 dark:text-blue-400" />
+            <span className="hidden lg:block">{currentLangLabel}</span>
+            <ChevronDown size={14} className={`transition-transform hidden sm:block ${isLangOpen ? 'rotate-180' : ''}`} />
           </button>
 
           <AnimatePresence>
@@ -92,7 +75,7 @@ const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
                 {languages.map(lang => (
                   <button
                     key={lang.code}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 ${i18n.language === lang.code ? 'text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-900/20' : 'text-slate-600 dark:text-slate-300'
+                    className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 ${i18n.language === lang.code ? 'text-blue-600 dark:text-blue-400 font-bold bg-blue-50 dark:bg-blue-900/20' : 'text-slate-600 dark:text-slate-300'
                       }`}
                     onClick={() => changeLanguage(lang.code)}
                   >
@@ -120,9 +103,9 @@ const AdminNavbar = ({ onMenuClick, isSidebarOpen }) => {
         <div className="flex items-center gap-3 border-l border-slate-200 dark:border-slate-700 pl-4">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-bold text-gray-800 dark:text-white leading-none">{user?.name}</p>
-            <p className="text-[10px] text-red-500 dark:text-red-400 font-semibold uppercase mt-1 tracking-wider italic">Administrator</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mt-1 tracking-wider italic">Administrator</p>
           </div>
-          <div className="h-10 w-10 bg-red-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-red-500/20 ring-2 ring-white dark:ring-gray-900 overflow-hidden">
+          <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20 ring-2 ring-white dark:ring-gray-900 overflow-hidden">
             {user?.name?.charAt(0)}
           </div>
         </div>
