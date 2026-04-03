@@ -37,9 +37,9 @@ const UserSidebar = ({ onClose }) => {
             end={item.end}
             onClick={() => { if (window.innerWidth < 1024) onClose(); }}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-black tracking-tight ${isActive
+              `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ease-in-out text-sm font-medium ${isActive
                 ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 dark:text-slate-500 hover:bg-blue-500/10 hover:text-blue-500 dark:hover:bg-blue-500/10 dark:hover:text-blue-400"
+                : "text-gray-400 hover:bg-white/10 hover:text-white transition-all"
               }`
             }
           >
