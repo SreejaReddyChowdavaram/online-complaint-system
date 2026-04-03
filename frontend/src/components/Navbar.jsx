@@ -1,24 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
 import { 
   Globe, 
   UserCircle, 
-  Settings, 
   LogOut, 
   ChevronDown,
-  HelpCircle,
   Sun,
   Moon,
   Menu,
   X
 } from "lucide-react";
-import Logo from "./Logo";
-import NotificationBell from "./NotificationBell";
-import "./Navbar.css";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import NotificationDropdown from "./NotificationDropdown";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -32,13 +28,11 @@ const Navbar = () => {
 
   const langRef = useRef(null);
   const profileRef = useRef(null);
-  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (langRef.current && !langRef.current.contains(event.target)) setIsLangOpen(false);
       if (profileRef.current && !profileRef.current.contains(event.target)) setIsProfileOpen(false);
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) setIsMobileMenuOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -47,6 +41,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     navigate("/", { replace: true });
+    setIsMobileMenuOpen(false);
   };
 
   const changeLanguage = (code) => {
@@ -63,215 +58,228 @@ const Navbar = () => {
 
   const currentLangLabel = languages.find(l => l.code === i18n.language)?.label || "English";
 
-  if (!t) return null;
+  const getRoleLabel = (role) => {
+    switch (role?.toLowerCase()) {
+      case "citizen": return "Citizen Portal";
+      case "officer": return "Officer Portal";
+      case "admin": return "Admin Portal";
+      default: return "Complaints Portal";
+    }
+  };
 
   return (
     <motion.nav
-      className="gov-navbar bg-light-card dark:bg-dark-card border-b border-light-border dark:border-dark-border transition-all duration-300 shadow-sm"
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
+      className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 sm:px-8 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 transition-all duration-300"
     >
-      <div className="navbar-container">
-        {/* LEFT: Logo & System Name */}
-        <Link to="/" className="navbar-brand">
-          <Logo size="sm" showText={false} />
-          <div className="brand-text">
-            <span className="main-title">{t("navbar.title")}</span>
+      {/* LEFT: Branding */}
+      <div className="flex items-center gap-6">
+        <Link to="/" className="flex items-center gap-3">
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 sm:h-9 sm:w-9 object-contain" />
+          <div className="flex flex-col">
+            <span className="text-slate-800 dark:text-white font-black text-sm sm:text-lg whitespace-nowrap leading-none tracking-tight">
+              Online Complaint System
+            </span>
+            <span className="text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1">
+              {token && user ? getRoleLabel(user.role) : "Complaints System"}
+            </span>
           </div>
         </Link>
-
-        {/* RIGHT: Desktop Controls */}
-        <div className="navbar-controls-wrapper">
-          <div className="navbar-controls desktop-only">
-            {/* Theme Toggle */}
-            <button 
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-glow-blue transition-all duration-300" 
-              onClick={toggleTheme}
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-indigo-600" />}
-            </button>
-
-            {/* 1. Language Selector */}
-            <div className="control-item language-selector-v2" ref={langRef}>
-              <button className="control-btn" onClick={() => setIsLangOpen(!isLangOpen)}>
-                <Globe size={18} className="icon-blue" />
-                <span className="label text-slate-700 dark:text-slate-200">{currentLangLabel}</span>
-                <ChevronDown size={14} className="chevron" />
-              </button>
-              <AnimatePresence>
-                {isLangOpen && (
-                  <motion.div 
-                    className="gov-dropdown"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                  >
-                    {languages.map(lang => (
-                      <button 
-                        key={lang.code} 
-                        className={`dropdown-item ${i18n.language === lang.code ? 'active' : ''}`}
-                        onClick={() => changeLanguage(lang.code)}
-                      >
-                        {lang.label}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* 2. Notifications Bell */}
-            <div className="control-item notification-bell-wrapper">
-              <NotificationBell />
-            </div>
-
-            {/* 3. User Profile (Name + Role) */}
-            {token && user && (
-              <div className="control-item profile-selector" ref={profileRef}>
-                <button className="profile-btn" onClick={() => setIsProfileOpen(!isProfileOpen)}>
-                  <div className="avatar-small">
-                    {user?.avatar ? (
-                      <img src={`/uploads/${user.avatar}`} alt="Avatar" />
-                    ) : (
-                      <span>{user?.name?.[0]?.toUpperCase() || "U"}</span>
-                    )}
-                  </div>
-                  <div className="profile-info">
-                    <span className="name">{user?.name || "User"}</span>
-                    <span className="role">{user?.role?.toUpperCase() || "CITIZEN"}</span>
-                  </div>
-                  <ChevronDown size={14} className="chevron" />
-                </button>
-                <AnimatePresence>
-                  {isProfileOpen && (
-                    <motion.div 
-                      className="gov-dropdown profile-dropdown"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                    >
-                      <Link to={user.role === 'Officer' ? "/officer/profile" : "/dashboard/profile"} className="dropdown-item">
-                        <UserCircle size={18} /> {t("sidebar.my_profile")}
-                      </Link>
-                      <button className="dropdown-item lang-toggle-mobile" onClick={() => setIsLangOpen(true)}>
-                        <Globe size={18} /> Change Language
-                      </button>
-                      <hr />
-                      <button onClick={handleLogout} className="dropdown-item logout-link">
-                        <LogOut size={18} /> {t("navbar.logout")}
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
-
-            {/* 4. Logout (Strict Order far right) */}
-            <button onClick={handleLogout} className="gov-logout-btn">
-              <LogOut size={20} />
-            </button>
-          </div>
-
-          {/* Hamburger Menu Icon */}
-          <button 
-            className="hamburger-menu mobile-only"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
       </div>
 
-      {/* Mobile Drawer Overlay */}
+      {/* RIGHT: Desktop Controls */}
+      <div className="hidden lg:flex items-center gap-4">
+        {/* Language Selector */}
+        <div className="relative" ref={langRef}>
+          <button
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 text-xs font-bold border border-slate-100 dark:border-slate-700 shadow-sm"
+            onClick={() => setIsLangOpen(!isLangOpen)}
+          >
+            <Globe size={18} className="text-blue-600 dark:text-blue-400" />
+            <span>{currentLangLabel}</span>
+            <ChevronDown size={14} className={`transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          <AnimatePresence>
+            {isLangOpen && (
+              <motion.div
+                className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden py-1"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              >
+                {languages.map(lang => (
+                  <button
+                    key={lang.code}
+                    className={`w-full text-left px-4 py-2.5 text-xs font-bold transition-all hover:bg-slate-50 dark:hover:bg-slate-800 ${i18n.language === lang.code ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20' : 'text-slate-600 dark:text-slate-400'}`}
+                    onClick={() => changeLanguage(lang.code)}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Theme Toggle */}
+        <button
+          className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg transition-all duration-300 border border-slate-100 dark:border-slate-700 shadow-sm"
+          onClick={toggleTheme}
+        >
+          {theme === 'dark' ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-blue-600" />}
+        </button>
+
+        {/* Notifications */}
+        {token && <NotificationDropdown />}
+
+        {/* Auth / Profile Area */}
+        {token && user ? (
+          <div className="relative pl-4 border-l border-slate-100 dark:border-slate-800" ref={profileRef}>
+            <button 
+              className="flex items-center gap-3 hover:opacity-80 transition-all"
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            >
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-bold text-slate-800 dark:text-white leading-none">{user.name}</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-wider italic">{user.role}</p>
+              </div>
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-blue-500/20 ring-2 ring-white dark:ring-slate-900">
+                {user.name?.charAt(0)}
+              </div>
+            </button>
+
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl z-50 overflow-hidden py-2"
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                >
+                  <Link 
+                    to={user.role === 'Officer' ? "/officer/dashboard" : user.role === 'Admin' ? "/admin/dashboard" : "/dashboard"} 
+                    className="flex items-center gap-3 px-5 py-3 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                    onClick={() => setIsProfileOpen(false)}
+                  >
+                    <UserCircle size={18} className="text-blue-600" />
+                    Enter Portal
+                  </Link>
+                  <div className="h-px bg-slate-100 dark:bg-slate-800 mx-3 my-1"></div>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-5 py-3 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all text-left"
+                  >
+                    <LogOut size={18} />
+                    Logout Account
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3 pl-4 border-l border-slate-100 dark:border-slate-800">
+            <Link to="/login" className="px-5 py-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-all">Login</Link>
+            <Link to="/register" className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black shadow-lg shadow-blue-500/20 transition-all active:scale-95 uppercase tracking-widest border border-blue-700">Register</Link>
+          </div>
+        )}
+      </div>
+
+      {/* MOBILE: Toggle */}
+      <button 
+        className="lg:hidden p-2 text-slate-600 dark:text-slate-400"
+        onClick={() => setIsMobileMenuOpen(true)}
+      >
+        <Menu size={28} />
+      </button>
+
+      {/* MOBILE: Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            <motion.div 
-              className="mobile-overlay"
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <motion.div 
-              className="mobile-drawer bg-white dark:bg-slate-900 border-l border-slate-100 dark:border-slate-800"
+            <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              ref={mobileMenuRef}
+              className="fixed inset-y-0 right-0 z-[70] w-full max-w-[300px] bg-white dark:bg-slate-900 shadow-2xl lg:hidden flex flex-col pt-20"
             >
-              <div className="drawer-header border-b border-slate-100 dark:border-slate-800">
-                <Logo size="sm" />
-                <button onClick={() => setIsMobileMenuOpen(false)} className="close-drawer-btn">
-                  <X size={24} />
-                </button>
-              </div>
+              <button 
+                className="absolute top-4 right-4 p-2 text-slate-400"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <X size={32} />
+              </button>
 
-              <div className="drawer-content p-6 space-y-8">
-                {/* User Info Section */}
+              <div className="flex-1 overflow-y-auto px-6 space-y-8 pb-10">
                 {token && user ? (
-                  <div className="drawer-user-info flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
-                    <div className="avatar-large w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl font-bold">
-                       {user?.name?.[0]?.toUpperCase() || "U"}
+                  <div className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-bold text-2xl shadow-xl shadow-blue-500/20">
+                        {user.name?.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-black text-slate-800 dark:text-white leading-none">{user.name}</p>
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-1">{user.role}</p>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-black text-slate-800 dark:text-white">{user.name}</div>
-                      <div className="text-xs font-bold text-blue-500 uppercase tracking-tighter">{user.role}</div>
-                    </div>
+                    <Link 
+                      to={user.role === 'Officer' ? "/officer/dashboard" : user.role === 'Admin' ? "/admin/dashboard" : "/dashboard"}
+                      className="block w-full py-4 bg-white dark:bg-slate-800 text-center rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 dark:text-white border border-slate-100 dark:border-slate-700 shadow-sm"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Enter Portal
+                    </Link>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-3">
-                    <Link to="/login" className="drawer-primary-btn flex items-center justify-center py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
-                    <Link to="/register" className="drawer-secondary-btn flex items-center justify-center py-4 border border-blue-600/20 text-blue-600 rounded-2xl font-black uppercase tracking-widest text-xs" onClick={() => setIsMobileMenuOpen(false)}>Register</Link>
+                  <div className="space-y-3">
+                    <Link to="/login" className="block w-full py-4 text-center text-sm font-bold text-slate-600 dark:text-slate-400" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
+                    <Link to="/register" className="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/25" onClick={() => setIsMobileMenuOpen(false)}>Create Account</Link>
                   </div>
                 )}
 
-                {/* Navigation Links */}
-                <div className="drawer-nav flex flex-col gap-2">
-                  <Link to="/" className="drawer-link" onClick={() => setIsMobileMenuOpen(false)}>{t("common.home") || "Home"}</Link>
-                  <Link to="/landing" className="drawer-link" onClick={() => setIsMobileMenuOpen(false)}>Access Portals</Link>
-                  {token && user && (
-                    <Link to={user.role === 'Officer' ? "/officer/profile" : "/dashboard/profile"} className="drawer-link" onClick={() => setIsMobileMenuOpen(false)}>
-                      {t("sidebar.my_profile")}
-                    </Link>
-                  )}
-                </div>
-
-                <hr className="border-slate-100 dark:border-slate-800" />
-
-                {/* Controls Section */}
-                <div className="drawer-controls space-y-4">
-                   <div className="flex items-center justify-between">
-                     <span className="text-sm font-bold text-slate-500">Theme</span>
-                     <button 
-                       className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl"
-                       onClick={toggleTheme}
-                     >
+                <div className="space-y-6 pt-6">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 font-sans">Preferences</p>
+                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                      <span className="text-sm font-bold text-slate-600 dark:text-slate-400">Appearance</span>
+                      <button className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm" onClick={toggleTheme}>
                         {theme === 'dark' ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-indigo-600" />}
-                     </button>
-                   </div>
+                      </button>
+                    </div>
+                  </div>
 
-                   <div className="language-selector-mobile">
-                     <div className="text-sm font-bold text-slate-500 mb-3">Language</div>
-                     <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 font-sans">Language Settings</p>
+                    <div className="grid grid-cols-2 gap-2">
                        {languages.map(lang => (
                          <button 
                            key={lang.code}
-                           className={`p-3 rounded-xl border text-sm font-bold transition-all ${i18n.language === lang.code ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-transparent border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400'}`}
+                           className={`p-4 rounded-2xl text-[10px] font-black uppercase tracking-tight transition-all border ${i18n.language === lang.code ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-500 border-transparent hover:border-slate-200'}`}
                            onClick={() => changeLanguage(lang.code)}
                          >
                            {lang.label}
                          </button>
                        ))}
-                     </div>
-                   </div>
+                    </div>
+                  </div>
                 </div>
 
                 {token && (
-                  <button onClick={handleLogout} className="drawer-logout-btn w-full mt-8 p-4 bg-red-50 text-red-600 dark:bg-red-900/10 dark:text-red-400 rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-xs tracking-widest">
-                    <LogOut size={18} /> {t("navbar.logout")}
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full mt-10 py-5 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 rounded-3xl font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3 shadow-sm border border-red-100 dark:border-red-900/30"
+                  >
+                    <LogOut size={20} />
+                    Sign Out Account
                   </button>
                 )}
               </div>
@@ -283,4 +291,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navbar;
