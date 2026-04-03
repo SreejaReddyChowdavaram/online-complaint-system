@@ -263,12 +263,15 @@ const CreateComplaint = () => {
                       required
                     >
                       <option value="">{t('complaints.placeholder_category')}</option>
-                      <option value="Road">{t('complaints.categories.Roads')}</option>
-                      <option value="Water">{t('complaints.categories.Water')}</option>
-                      <option value="Electricity">{t('complaints.categories.Electricity')}</option>
-                      <option value="Sanitation">{t('complaints.categories.Garbage')}</option>
-                      <option value="Health">{t('complaints.categories.Drainage')}</option>
-                      <option value="Other">{t('complaints.categories.Noise')}</option>
+                      <option value="road_maintenance">{t('complaints.categories.road_maintenance') || t('complaints.categories.Roads')}</option>
+                      <option value="water_supply">{t('complaints.categories.water_supply') || t('complaints.categories.Water')}</option>
+                      <option value="electricity_issues">{t('complaints.categories.electricity_issues') || t('complaints.categories.Electricity')}</option>
+                      <option value="drainage">{t('complaints.categories.drainage') || t('complaints.categories.Drainage')}</option>
+                      <option value="garbage_management">{t('complaints.categories.garbage_management') || t('complaints.categories.Garbage')}</option>
+                      <option value="noise_pollution">{t('complaints.categories.noise_pollution') || t('complaints.categories.Noise')}</option>
+                      <option value="health_sanitation">{t('complaints.categories.health_sanitation') || t('complaints.categories.Health')}</option>
+                      <option value="public_safety">{t('complaints.categories.public_safety')}</option>
+                      <option value="other">{t('complaints.categories.other')}</option>
                     </select>
                   </div>
                 </div>

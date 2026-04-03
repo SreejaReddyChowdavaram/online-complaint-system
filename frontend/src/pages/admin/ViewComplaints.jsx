@@ -18,6 +18,8 @@ import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
 import CommentSection from "../../components/CommentSection";
+import { getCategoryLabel } from "../../utils/complaintUtils";
+import ImageWithFallback from "../../components/ImageWithFallback";
 import "../user/ViewComplaints.css";
 
 function ViewComplaints() {
@@ -69,14 +71,6 @@ function ViewComplaints() {
     setFilteredComplaints(result);
   }, [searchQuery, statusFilter, complaints]);
 
-  const getUploadUrl = (path) => {
-    if (!path) return "";
-    const cleaned = String(path)
-      .replace(/\\/g, "/")
-      .replace(/^\/+/g, "")
-      .replace(/^uploads\//, "");
-    return `${BASE_URL}/uploads/${cleaned}`;
-  };
 
   if (loading) return (
     <div className="loader-container">
@@ -169,7 +163,7 @@ function ViewComplaints() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{t("complaints.modal_category")}</p>
-                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t(`complaints.categories.${selectedComplaint.category}`)}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{getCategoryLabel(selectedComplaint.category, t)}</p>
                   </div>
                   <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{t("complaints.date_submitted")}</p>
@@ -209,10 +203,10 @@ function ViewComplaints() {
                     <div className="grid grid-cols-2 gap-4">
                       {selectedComplaint.images.map((img, i) => (
                         <div key={i} className="aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                          <img 
-                            src={getUploadUrl(img)} 
+                          <ImageWithFallback 
+                            src={img} 
                             alt="Citizen evidence"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full"
                           />
                         </div>
                       ))}

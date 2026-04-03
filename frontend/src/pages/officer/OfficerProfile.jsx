@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import api, { BASE_URL } from "../../services/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
+import ImageWithFallback from "../../components/ImageWithFallback";
+import { getCategoryLabel } from "../../utils/complaintUtils";
 import "../ProfileTheme.css"; // Shared styles
 
 const OfficerProfile = () => {
@@ -37,7 +39,7 @@ const OfficerProfile = () => {
         department: res.data.department || "",
       });
       if (res.data.avatar) {
-        setPreviewUrl(res.data.avatar.startsWith("http") ? res.data.avatar : `${BASE_URL}/uploads/${res.data.avatar}`);
+        setPreviewUrl(res.data.avatar);
       } else {
         setPreviewUrl(null);
       }
@@ -115,13 +117,12 @@ const OfficerProfile = () => {
                 className={`relative group w-28 h-28 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-500 ${isEditing ? 'cursor-pointer hover:ring-4 ring-blue-500/10' : ''}`}
                 onClick={() => isEditing && fileInputRef.current.click()}
               >
-                {previewUrl ? (
-                  <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold text-slate-400">
-                    {profile.name?.[0]?.toUpperCase() || "O"}
-                  </div>
-                )}
+                <ImageWithFallback 
+                  src={previewUrl} 
+                  alt="Avatar" 
+                  className="w-full h-full"
+                  fallbackText={profile.name?.[0]?.toUpperCase() || "O"}
+                />
                 
                 {isEditing && (
                   <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center transition-all duration-300">
@@ -229,12 +230,15 @@ const OfficerProfile = () => {
                   disabled={!isEditing}
                 >
                   <option value="">{t("complaints.analytics.select_dept")}</option>
-                  <option value="Electricity">{t("complaints.categories.Electricity")}</option>
-                  <option value="Water">{t("complaints.categories.Water")}</option>
-                  <option value="Roads">{t("complaints.categories.Roads")}</option>
-                  <option value="Drainage">{t("complaints.categories.Drainage")}</option>
-                  <option value="Garbage">{t("complaints.categories.Garbage")}</option>
-                  <option value="Noise">{t("complaints.categories.Noise")}</option>
+                  <option value="electricity_issues">{t("complaints.categories.electricity_issues")}</option>
+                  <option value="water_supply">{t("complaints.categories.water_supply")}</option>
+                  <option value="road_maintenance">{t("complaints.categories.road_maintenance")}</option>
+                  <option value="drainage">{t("complaints.categories.drainage")}</option>
+                  <option value="garbage_management">{t("complaints.categories.garbage_management")}</option>
+                  <option value="noise_pollution">{t("complaints.categories.noise_pollution")}</option>
+                  <option value="health_sanitation">{t("complaints.categories.health_sanitation")}</option>
+                  <option value="public_safety">{t("complaints.categories.public_safety")}</option>
+                  <option value="other">{t("complaints.categories.other")}</option>
                 </select>
               </div>
 

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import WelcomeHeader from "../../components/WelcomeHeader";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const AdminProfile = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ const AdminProfile = () => {
         mobile: user.mobile || "",
       });
       if (user.avatar) {
-        setPreviewUrl(user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`);
+        setPreviewUrl(user.avatar);
       } else {
         setPreviewUrl(null);
       }
@@ -53,7 +54,7 @@ const AdminProfile = () => {
         mobile: user.mobile || "",
       });
       setAvatarFile(null);
-      setPreviewUrl(user.avatar ? (user.avatar.startsWith("http") ? user.avatar : `${BASE_URL}/uploads/${user.avatar}`) : null);
+      setPreviewUrl(user.avatar || null);
     }
     setIsEditing(!isEditing);
   };
@@ -108,13 +109,12 @@ const AdminProfile = () => {
               className={`relative group w-24 h-24 sm:w-32 sm:h-32 rounded-[24px] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-500 ${isEditing ? 'cursor-pointer hover:ring-4 ring-blue-500/10' : ''}`}
               onClick={() => isEditing && fileInputRef.current.click()}
             >
-              {previewUrl ? (
-                <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-3xl font-black text-slate-300 dark:text-slate-600">
-                  {user?.name?.[0]?.toUpperCase() || "A"}
-                </div>
-              )}
+              <ImageWithFallback 
+                src={previewUrl} 
+                alt="Avatar" 
+                className="w-full h-full"
+                fallbackText={user?.name?.[0]?.toUpperCase() || "A"}
+              />
               
               {isEditing && (
                 <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center transition-all duration-300">

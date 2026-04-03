@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import FeedbackCharts from "../../components/FeedbackCharts";
+import { getCategoryLabel } from "../../utils/complaintUtils";
 import "./OfficerFeedback.css";
 
 const OfficerFeedback = () => {
@@ -233,7 +234,7 @@ const OfficerFeedback = () => {
                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 italic">"{item?.message || "No comment provided."}"</p>
                 <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700/50">
                   <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                    {t(`complaints.categories.${item?.officerId?.department || item?.department || 'General'}`)}
+                    {getCategoryLabel(item?.officerId?.department || item?.department || 'General', t)}
                   </span>
                   {item?.complaintId && (
                     <span className="text-[9px] font-mono text-slate-400 uppercase">REF: #{item.complaintId.slice(-8)}</span>

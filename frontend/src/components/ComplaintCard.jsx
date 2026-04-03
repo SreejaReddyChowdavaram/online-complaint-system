@@ -17,6 +17,8 @@ import {
   Wind
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getCategoryLabel } from '../utils/complaintUtils';
+import ImageWithFallback from './ImageWithFallback';
 import './ComplaintCard.css';
 
 const ComplaintCard = ({
@@ -26,22 +28,10 @@ const ComplaintCard = ({
   onDownvote,
   onCommentClick,
   onRateClick,
-  userRole,
   currentUserId,
   hideStats = false,
 }) => {
   const { t } = useTranslation();
-
-  const formatStatus = (status) => {
-    if (!status) return "Unknown";
-    const normalized = status.toLowerCase();
-
-    if (normalized.includes("in progress") || normalized.includes("in_progress")) return "In Progress";
-    if (normalized.includes("resolved")) return "Resolved";
-    if (normalized.includes("pending")) return "Pending";
-
-    return status;
-  };
 
   const getCategoryIcon = (category) => {
     const normalized = category?.toLowerCase() || "";
@@ -56,35 +46,9 @@ const ComplaintCard = ({
     return <HelpCircle size={16} className="text-slate-400" />;
   };
 
-  const getTranslatedCategory = (category) => {
-    if (!category) return "N/A";
-    
-    // Normalize mapping for i18n keys
-    const categoryKeyMap = {
-      "road": "Roads",
-      "water": "Water",
-      "electricity": "Electricity",
-      "sanitation": "Garbage",
-      "garbage": "Garbage",
-      "health": "Drainage",
-      "noise": "Noise",
-      "other": "Noise"
-    };
-
-    const normalizedLower = category.toLowerCase();
-    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || category;
-    
-    const translated = t(`complaints.categories.${key}`);
-    if (!translated || translated === `complaints.categories.${key}`) {
-      return category.replace(/([A-Z])/g, ' $1').trim();
-    }
-    return translated;
-  };
-
   const getStatusConfig = (status) => {
     const normalized = status?.toLowerCase() || "";
     
-    // Modern status styles (Pill based)
     if (normalized.includes("resolved")) {
       return {
         cardBorder: "border-l-[6px] border-l-[#10b981]",
@@ -110,7 +74,7 @@ const ComplaintCard = ({
     return {
       cardBorder: "border-l-[6px] border-l-slate-300",
       badge: "bg-slate-500/10 text-slate-600 border-slate-500/20",
-      label: status
+      label: status || "Pending"
     };
   };
 
@@ -134,36 +98,42 @@ const ComplaintCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ y: -5 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={`relative group bg-white dark:bg-slate-900 rounded-[24px] sm:rounded-[28px] p-4 sm:p-7 border border-slate-100 dark:border-slate-800 saas-shadow hover:saas-shadow-hover cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 ${statusConfig.cardBorder} ${isOverdue ? 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
-      {/* Overdue Alert Strip */}
-      {isOverdue && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-red-500 animate-pulse" />
-      )}
-      {/* ──── Header ──── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6">
-        {/* Status Badge - First line on mobile, Last on desktop */}
-        <div className={`order-first sm:order-last px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border self-start whitespace-nowrap mb-2 sm:mb-0 ${statusConfig.badge}`}>
+      {/* ──── Image Header ──── */}
+      <div className="relative h-40 sm:h-48 -mx-4 sm:-mx-7 -mt-4 sm:-mt-7 mb-4 sm:mb-6 overflow-hidden">
+        <ImageWithFallback 
+          src={complaint?.imageUrl || (complaint?.images && complaint.images[0])} 
+          alt={complaint?.title}
+          className="w-full h-full"
+        />
+        {/* Status Badge Over Image */}
+        <div className={`absolute top-4 right-4 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest border backdrop-blur-md shadow-lg z-10 ${statusConfig.badge}`}>
           {statusConfig.label}
         </div>
+        
+        {/* Overdue Alert Strip */}
+        {isOverdue && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-red-500 animate-pulse z-20" />
+        )}
+      </div>
 
-        <div className="flex-1 pr-4">
-          <div className="flex items-center gap-2 mb-1 sm:mb-2">
-            <div className="p-1 sm:p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              {React.cloneElement(getCategoryIcon(complaint?.category), { size: 14 })}
-            </div>
-            <span className="text-[9px] sm:text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase truncate">
-              {getTranslatedCategory(complaint?.category)}
-            </span>
+      {/* ──── Header Content ──── */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+            {getCategoryIcon(complaint?.category)}
           </div>
-          <h2 className="text-sm sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
-            {complaint?.title || "Untitled"}
-          </h2>
+          <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase truncate">
+            {getCategoryLabel(complaint?.category, t)}
+          </span>
         </div>
+        <h2 className="text-sm sm:text-lg font-extrabold leading-tight text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+          {complaint?.title || "Untitled"}
+        </h2>
       </div>
 
       {/* ──── Body ──── */}
@@ -172,49 +142,44 @@ const ComplaintCard = ({
           {complaint?.description || "No description provided."}
         </p>
         <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-4 text-[10px] sm:text-[12px] text-slate-400 dark:text-slate-500 font-medium">
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            <Calendar size={12} className="opacity-70 sm:hidden" />
-            <Calendar size={14} className="opacity-70 hidden sm:block" />
-            <span>
-              {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
-            </span>
-          </div>
+          <Calendar size={14} className="opacity-70" />
+          <span>
+            {complaint?.createdAt ? new Date(complaint.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "Date N/A"}
+          </span>
         </div>
       </div>
 
       {/* ──── Footer ──── */}
       {!hideStats && (
-        <div className="pt-3 sm:pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-2 sm:space-y-4" onClick={(e) => e.stopPropagation()}>
+        <div className="pt-3 sm:pt-5 mt-auto border-t border-slate-50 dark:border-slate-800/50 space-y-3" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* LIKES (Outline style as per user request) */}
+              {/* LIKES */}
               <div className="flex items-center gap-1">
                 <motion.button
-                  whileTap={{ scale: 1.15 }}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  whileTap={{ scale: 1.2 }}
+                  className={`p-1.5 rounded-lg transition-colors ${userUpvoted ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
                   onClick={() => onUpvote && onUpvote(complaint?._id)}
                   title="Like"
                 >
-                  <ThumbsUp size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
-                  <ThumbsUp size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
+                  <ThumbsUp size={18} strokeWidth={2.5} />
                 </motion.button>
-                <span className={`text-[10px] sm:text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-xs font-bold ${userUpvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.upvotes || 0}
                 </span>
               </div>
 
-              {/* DISLIKES (Outline style) */}
+              {/* DISLIKES */}
               <div className="flex items-center gap-1">
                 <motion.button
-                  whileTap={{ scale: 1.15 }}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                  whileTap={{ scale: 1.2 }}
+                  className={`p-1.5 rounded-lg transition-colors ${userDownvoted ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
                   onClick={() => onDownvote && onDownvote(complaint?._id)}
                   title="Dislike"
                 >
-                  <ThumbsDown size={14} fill="none" strokeWidth={2.5} className="sm:hidden" />
-                  <ThumbsDown size={18} fill="none" strokeWidth={2.5} className="hidden sm:block" />
+                  <ThumbsDown size={18} strokeWidth={2.5} />
                 </motion.button>
-                <span className={`text-[10px] sm:text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
+                <span className={`text-xs font-bold ${userDownvoted ? "text-blue-600" : "text-slate-400"}`}>
                   {complaint?.downvotes || 0}
                 </span>
               </div>
@@ -222,36 +187,33 @@ const ComplaintCard = ({
               {/* COMMENTS */}
               <div className="flex items-center gap-1">
                 <button
-                  className="p-1 sm:p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                  className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
                   onClick={() => onCommentClick && onCommentClick(complaint)}
                   title="Comments"
                 >
-                  <MessageSquare size={14} strokeWidth={2.5} className="sm:hidden" />
-                  <MessageSquare size={18} strokeWidth={2.5} className="hidden sm:block" />
+                  <MessageSquare size={18} strokeWidth={2.5} />
                 </button>
-                <span className="text-[10px] sm:text-xs font-bold text-slate-400">
+                <span className="text-xs font-bold text-slate-400">
                   {complaint?.commentCount || 0}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* New Green Row for Rate & Feedback */}
+          {/* Rate & Feedback Button */}
           {onRateClick && complaint?.status === "Resolved" && (
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-3 sm:px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[9px] sm:text-xs shadow-lg shadow-emerald-500/20 transition-all"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all"
               onClick={() => onRateClick(complaint)}
             >
-              <Star size={10} fill="white" className="sm:hidden" />
-              <Star size={14} fill="white" className="hidden sm:block" /> 
+              <Star size={14} fill="white" /> 
               {t("complaints.rate_feedback")}
             </motion.button>
           )}
         </div>
       )}
-
     </motion.div>
   );
 };

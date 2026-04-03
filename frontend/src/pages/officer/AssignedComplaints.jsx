@@ -15,6 +15,8 @@ import { useAuth } from "../../context/AuthContext";
 import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
+import { getCategoryLabel } from "../../utils/complaintUtils";
+import ImageWithFallback from "../../components/ImageWithFallback";
 import "../user/ViewComplaints.css"; // Reuse the same styles
 
 function AssignedComplaints() {
@@ -186,7 +188,7 @@ function AssignedComplaints() {
             <div className="modal-body scrollbar-thin">
               <h2>{selected.title}</h2>
 
-              <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selected.category}`)}</p>
+              <p><strong>{t("complaints.modal_category")}:</strong> {getCategoryLabel(selected.category, t)}</p>
               
               <LocationSection 
                 address={selected.location?.address} 
@@ -209,10 +211,11 @@ function AssignedComplaints() {
                   <h4><Camera size={18} /> {t("complaints.modal_citizen_images")}</h4>
                   <div className="image-grid">
                     {selected.images.map((img, i) => (
-                      <img
+                      <ImageWithFallback
                         key={i}
-                        src={`${BASE_URL}/uploads/${img}`}
+                        src={img}
                         alt="complaint"
+                        className="rounded-xl h-32 w-full"
                       />
                     ))}
                   </div>
@@ -223,9 +226,10 @@ function AssignedComplaints() {
               {selected.resolutionImage && (
                 <div className="modal-images">
                   <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
-                  <img
-                    src={`${BASE_URL}/uploads/${selected.resolutionImage.replace(/\\/g, "/").replace(/^\/+/, "").replace(/^uploads\//, "")}`}
+                  <ImageWithFallback
+                    src={selected.resolutionImage}
                     alt="resolution"
+                    className="rounded-xl w-full h-auto max-h-80"
                   />
                 </div>
               )}

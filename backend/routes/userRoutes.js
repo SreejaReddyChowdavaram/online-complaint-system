@@ -39,7 +39,8 @@ router.put("/update/:id", upload.single("avatar"), async (req, res) => {
     if (address !== undefined) updateData.address = address;
     
     if (req.file) {
-      updateData.avatar = req.file.filename;
+      const BASE_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
+      updateData.avatar = `${BASE_URL}/uploads/${req.file.filename}`;
     }
 
     const updatedUser = await User.findByIdAndUpdate(

@@ -17,6 +17,8 @@ import {
 import { motion } from "framer-motion";
 
 import LocationSection from "../../components/LocationSection";
+import { getCategoryLabel } from "../../utils/complaintUtils";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const ComplaintDetailView = () => {
   const { id } = useParams();
@@ -131,7 +133,7 @@ const ComplaintDetailView = () => {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase font-bold">Category</p>
-                  <p className="text-sm font-semibold">{complaint.category}</p>
+                  <p className="text-sm font-semibold">{getCategoryLabel(complaint.category, t)}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -173,10 +175,10 @@ const ComplaintDetailView = () => {
               <div className="grid grid-cols-2 gap-4">
                 {complaint.images.map((img, i) => (
                   <div key={i} className="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-                    <img 
-                      src={`${BASE_URL}/uploads/${img}`} 
+                    <ImageWithFallback 
+                      src={img} 
                       alt={`Complaint media ${i+1}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full"
                     />
                   </div>
                 ))}
