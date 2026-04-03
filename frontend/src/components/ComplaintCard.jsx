@@ -84,39 +84,39 @@ const ComplaintCard = ({
   const getStatusConfig = (status) => {
     const normalized = status?.toLowerCase() || "";
     
-    // Modern status styles (Pill based + Top Border)
+    // Modern status styles (Pill based + Subtle 4-way Border)
     if (normalized.includes("resolved")) {
       return {
-        topBorder: "border-t-[#10b981]",
-        badge: "bg-[#10b981]/10 text-[#10b981] border-[#10b981]/20",
+        border: "border-emerald-200 dark:border-emerald-800/40",
+        badge: "bg-emerald-50 text-emerald-600 border-emerald-100",
         label: t("complaints.status_resolved")
       };
     }
     if (normalized.includes("progress")) {
       return {
-        topBorder: "border-t-[#3b82f6]",
-        badge: "bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20",
+        border: "border-blue-200 dark:border-blue-800/40",
+        badge: "bg-blue-50 text-blue-600 border-blue-100",
         label: t("complaints.status_progress")
       };
     }
     if (normalized.includes("pending")) {
       return {
-        topBorder: "border-t-[#f59e0b]",
-        badge: "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/20",
+        border: "border-orange-200 dark:border-orange-800/40",
+        badge: "bg-orange-50 text-orange-600 border-orange-100",
         label: t("complaints.status_pending")
       };
     }
     if (normalized.includes("assigned")) {
       return {
-        topBorder: "border-t-[#9ca3af]",
-        badge: "bg-[#9ca3af]/10 text-[#9ca3af] border-[#9ca3af]/20",
+        border: "border-slate-200 dark:border-slate-800/40",
+        badge: "bg-slate-50 text-slate-600 border-slate-100",
         label: t("complaints.status_assigned") || "Assigned"
       };
     }
 
     return {
-      topBorder: "border-t-slate-300",
-      badge: "bg-slate-500/10 text-slate-600 border-slate-500/20",
+      border: "border-slate-200 dark:border-slate-800/40",
+      badge: "bg-slate-50 text-slate-600 border-slate-100",
       label: status
     };
   };
@@ -141,10 +141,10 @@ const ComplaintCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)" }}
+      whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className={`relative group bg-white dark:bg-slate-900 rounded-[16px] p-5 border border-slate-200 dark:border-slate-800 border-t-2 ${statusConfig.topBorder} cursor-pointer overflow-hidden flex flex-col h-full transition-all duration-300 shadow-sm ${isOverdue ? 'ring-2 ring-red-500/20' : ''}`}
+      className={`relative group bg-white dark:bg-slate-900 rounded-[12px] sm:rounded-[16px] p-5 border ${statusConfig.border} cursor-pointer overflow-hidden flex flex-col h-full shadow-[0_2px_4px_rgba(0,0,0,0.02)] ${isOverdue ? 'ring-2 ring-red-500/10' : ''}`}
       onClick={() => onCardClick && onCardClick(complaint)}
     >
       {/* Overdue Alert Strip */}
