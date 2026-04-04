@@ -62,40 +62,38 @@ router.post(
         userId: req.user.id,
       });
 
-      // 3. Smart Auto-Assignment (Requires assignment logic, but optimized)
-      let assignedOfficer = null;
-      try {
-        assignedOfficer = await autoAssignOfficer(complaint);
-      } catch (assignErr) {
-        console.error("❌ Auto-Assignment Failed (Non-fatal):", assignErr.message);
-        // We continue even if assignment fails, complaint is still saved
-      }
-
-      // 4. Send Immediate Success Response
+      // 3. Send Immediate Success Response (FAST)
       res.status(201).json({
         success: true,
-        message: assignedOfficer 
-          ? `Complaint assigned to ${assignedOfficer.name}` 
-          : "Complaint submitted successfully (Pending Review)",
+        message: "Complaint submitted successfully! We are assigning an officer right now.",
         data: complaint,
       });
+      console.log(`[${new Date().toISOString()}] ✅ Response sent for: ${complaint._id}`);
 
-      // 5. Post-Response Tasks (Async notifications)
-      // These run in the background and don't block the user
+      // 4. Background Post-Submission Tasks (NON-BLOCKING)
       (async () => {
         try {
+          // A. Smart Auto-Assignment
+          console.log(`[${new Date().toISOString()}] 🤖 Background: Assigning officer for ${complaint._id}`);
+          const assignedOfficer = await autoAssignOfficer(complaint);
+          
+          // B. Administrative Notifications
           const admins = await User.find({ role: "Admin" }).select('_id').lean();
           await Promise.all(admins.map(admin => 
             sendNotification({
               userId: admin._id,
               role: "Admin",
-              message: "📩 New complaint submitted",
+              message: `📩 New complaint: ${complaint.title}`,
               type: "info",
               targetId: complaint._id
             }).catch(e => console.error("Admin Notify Error:", e.message))
           ));
-        } catch (err) {
-          console.error("Post-Response Notification Error:", err.message);
+
+          if (assignedOfficer) {
+            console.log(`[${new Date().toISOString()}] ✅ Background: Assigned to ${assignedOfficer.name}`);
+          }
+        } catch (bgErr) {
+          console.error("❌ Background Task Error:", bgErr.message);
         }
       })();
 

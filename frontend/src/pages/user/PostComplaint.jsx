@@ -176,7 +176,7 @@ const PostComplaint = () => {
       }
 
       const res = await api.post("/complaints/post", formData);
-      alert(res.data.message || t("complaints.submit_success") || "Complaint submitted successfully ✅");
+      alert(res.data.message || "Complaint submitted successfully! We are assigning an officer right now. ✅");
 
       // Reset
       setTitle("");
