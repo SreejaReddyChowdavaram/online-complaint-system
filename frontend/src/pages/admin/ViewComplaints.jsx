@@ -72,6 +72,7 @@ function ViewComplaints() {
 
   const getUploadUrl = (path) => {
     if (!path) return "";
+    if (String(path).startsWith("http")) return path; // Cloudinary URL
     const cleaned = String(path)
       .replace(/\\/g, "/")
       .replace(/^\/+/g, "")

@@ -1,7 +1,7 @@
 import express from "express";
-import multer from "multer";
 import protect from "../middleware/authMiddleware.js";
 import isAdmin from "../middleware/adminMiddleware.js";
+import upload from "../middleware/upload.js";
 import User from "../models/User.js";
 
 import {
@@ -16,16 +16,6 @@ import {
 
 const router = express.Router();
 
-// 📦 MULTER CONFIG
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
 
 router.get("/stats", getDashboardData); 
 router.get("/dashboard-data", getDashboardData);
@@ -43,7 +33,7 @@ router.put("/profile", protect, upload.single("avatar"), async (req, res) => {
     if (mobile !== undefined) updateData.mobile = mobile;
     
     if (req.file) {
-      updateData.avatar = req.file.filename;
+      updateData.avatar = req.file.path; // Store Cloudinary URL (path)
     }
 
     const updatedUser = await User.findByIdAndUpdate(

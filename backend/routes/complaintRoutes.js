@@ -48,7 +48,7 @@ router.post(
       }
 
       // 2. Database Record Creation (Fast)
-      const images = files.map(file => file.filename);
+      const images = files.map(file => file.path); // Store Cloudinary URL (path)
       const complaint = await Complaint.create({
         title,
         category,

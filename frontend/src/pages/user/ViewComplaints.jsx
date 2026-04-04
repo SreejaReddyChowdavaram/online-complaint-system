@@ -303,15 +303,13 @@ const addComment = async (complaintId) => {
                 <div className="image-grid">
 
                   {selectedComplaint.images.map((img, index) => {
-                    const cleaned = String(img)
-                      .replace(/\\/g, "/")
-                      .replace(/^\/+/g, "")
-                      .replace(/^uploads\//, "");
+                    const isCloudinary = String(img).startsWith("http");
+                    const src = isCloudinary ? img : `${BASE_URL}/uploads/${img.replace(/\\/g, "/").replace(/^\/+/g, "").replace(/^uploads\//, "")}`;
 
                     return (
                       <img
                         key={index}
-                        src={`${BASE_URL}/uploads/${cleaned}`}
+                        src={src}
                         alt="complaint"
                       />
                     );
@@ -334,7 +332,7 @@ const addComment = async (complaintId) => {
                 <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
 
                 <img
-                  src={`${BASE_URL}/uploads/${selectedComplaint.resolutionImage}`}
+                  src={selectedComplaint.resolutionImage.startsWith("http") ? selectedComplaint.resolutionImage : `${BASE_URL}/uploads/${selectedComplaint.resolutionImage}`}
                   alt="resolution"
                 />
 

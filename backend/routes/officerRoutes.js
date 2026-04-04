@@ -3,24 +3,12 @@ import multer from "multer";
 import Complaint from "../models/Complaint.js";
 import User from "../models/User.js";
 import protect from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 import { sendNotification } from "../utils/notificationHelper.js";
 
 const router = express.Router();
 
 
-// ===============================
-// 📦 MULTER CONFIG (FIXED)
-// ===============================
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage });
 
 
 // ===============================
@@ -59,7 +47,7 @@ router.put(
       if (!oldComplaint) return res.status(404).json({ message: "Complaint not found" });
 
       if (req.file) {
-        updateData.resolutionImage = req.file.filename; // ✅ correct
+        updateData.resolutionImage = req.file.path; // Store Cloudinary URL (path)
       }
 
       const updated = await Complaint.findByIdAndUpdate(
@@ -136,7 +124,7 @@ router.put("/profile", protect, upload.single("avatar"), async (req, res) => {
     if (mobile !== undefined) updateData.mobile = mobile;
     
     if (req.file) {
-      updateData.avatar = req.file.filename;
+      updateData.avatar = req.file.path; // Store Cloudinary URL (path)
     }
 
     const updatedUser = await User.findByIdAndUpdate(

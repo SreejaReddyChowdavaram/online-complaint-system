@@ -209,13 +209,18 @@ function AssignedComplaints() {
                 <div className="modal-images">
                   <h4><Camera size={18} /> {t("complaints.modal_citizen_images")}</h4>
                   <div className="image-grid">
-                    {selected.images.map((img, i) => (
-                      <img
-                        key={i}
-                        src={`${BASE_URL}/uploads/${img}`}
-                        alt="complaint"
-                      />
-                    ))}
+                    {selected.images.map((img, i) => {
+                      const isCloudinary = String(img).startsWith("http");
+                      const src = isCloudinary ? img : `${BASE_URL}/uploads/${img.replace(/\\/g, "/").replace(/^\/+/g, "").replace(/^uploads\//, "")}`;
+
+                      return (
+                        <img
+                          key={i}
+                          src={src}
+                          alt="complaint"
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -225,7 +230,7 @@ function AssignedComplaints() {
                 <div className="modal-images">
                   <h4><CheckCircle size={18} /> {t("complaints.modal_officer_proof")}</h4>
                   <img
-                    src={`${BASE_URL}/uploads/${selected.resolutionImage.replace(/\\/g, "/").replace(/^\/+/, "").replace(/^uploads\//, "")}`}
+                    src={selected.resolutionImage.startsWith("http") ? selected.resolutionImage : `${BASE_URL}/uploads/${selected.resolutionImage.replace(/\\/g, "/").replace(/^\/+/, "").replace(/^uploads\//, "")}`}
                     alt="resolution"
                   />
                 </div>

@@ -170,16 +170,20 @@ const ComplaintDetailView = () => {
               <h3 className="text-md font-bold mb-4 flex items-center gap-2">
                 Attached Media <span className="text-xs font-normal text-gray-400">({complaint.images.length} items)</span>
               </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {complaint.images.map((img, i) => (
-                  <div key={i} className="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-                    <img 
-                      src={`${BASE_URL}/uploads/${img}`} 
-                      alt={`Complaint media ${i+1}`}
-                      className="w-full h-full object-cover"
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {complaint.images.map((img, i) => {
+                  const isCloudinary = String(img).startsWith("http");
+                  const src = isCloudinary ? img : `${BASE_URL}/uploads/${img.replace(/\\/g, "/").replace(/^\/+/g, "").replace(/^uploads\//, "")}`;
+
+                  return (
+                    <img
+                      key={i}
+                      src={src}
+                      alt="Evidence"
+                      className="w-full h-24 object-cover rounded-xl"
                     />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

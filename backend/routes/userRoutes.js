@@ -2,19 +2,10 @@ import express from "express";
 import multer from "multer";
 import User from "../models/User.js";
 import protect from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-// 📦 MULTER CONFIG
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
 
 // Get current user profile
 router.get("/me", protect, async (req, res) => {
@@ -39,7 +30,7 @@ router.put("/update/:id", upload.single("avatar"), async (req, res) => {
     if (address !== undefined) updateData.address = address;
     
     if (req.file) {
-      updateData.avatar = req.file.filename;
+      updateData.avatar = req.file.path; // Store Cloudinary URL (path)
     }
 
     const updatedUser = await User.findByIdAndUpdate(
