@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom'
 import { getComplaintByComplaintId } from '../../services/complaintService'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
+import { getDisplayCategory } from '../../utils/complaintUtils'
 import './ComplaintTracking.css'
 
 const ComplaintTracking = () => {
@@ -78,7 +79,7 @@ const ComplaintTracking = () => {
 
           <div className="tracking-info">
             <div className="info-row">
-              <strong>Category:</strong> {complaint.category}
+              <strong>Category:</strong> {getDisplayCategory(complaint.category)}
             </div>
             <div className="info-row">
               <strong>Priority:</strong>{' '}

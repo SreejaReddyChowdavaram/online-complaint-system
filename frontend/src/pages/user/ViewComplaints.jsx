@@ -18,6 +18,7 @@ import ComplaintCard from "../../components/ComplaintCard";
 import FeedbackForm from "../../components/FeedbackForm";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
+import { getDisplayCategory } from "../../utils/complaintUtils";
 
 const ViewComplaints = () => {
   const { t } = useTranslation();
@@ -277,8 +278,7 @@ const addComment = async (complaintId) => {
 
             <div className="modal-body scrollbar-thin">
               <h2>{selectedComplaint.title}</h2>
-
-            <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selectedComplaint.category}`)}</p>
+              <p><strong>{t("complaints.modal_category")}:</strong> {getDisplayCategory(selectedComplaint.category)}</p>
 
             <LocationSection 
               address={selectedComplaint.location?.address} 

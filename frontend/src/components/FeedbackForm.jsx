@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import { useTranslation } from "react-i18next";
 import { Star, CheckCircle, FileText, X } from "lucide-react";
+import { getDisplayCategory } from "../utils/complaintUtils";
 import "./FeedbackForm.css";
 
 const FeedbackForm = ({ complaint, onClose, onSuccess }) => {
@@ -16,12 +17,7 @@ const FeedbackForm = ({ complaint, onClose, onSuccess }) => {
   const [checking, setChecking] = useState(true);
 
   const getTranslatedCategory = (category) => {
-    if (!category) return "N/A";
-    const translated = t(`complaints.categories.${category}`);
-    if (!translated || translated === `complaints.categories.${category}`) {
-      return category.replace(/([A-Z])/g, ' $1').trim();
-    }
-    return translated;
+    return getDisplayCategory(category);
   };
 
   useEffect(() => {

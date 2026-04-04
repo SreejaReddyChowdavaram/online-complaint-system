@@ -15,7 +15,7 @@ import {
   Calendar
 } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { getDisplayCategory } from "../../utils/complaintUtils";
 import LocationSection from "../../components/LocationSection";
 
 const ComplaintDetailView = () => {
@@ -131,7 +131,7 @@ const ComplaintDetailView = () => {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase font-bold">Category</p>
-                  <p className="text-sm font-semibold">{complaint.category}</p>
+                  <p className="text-sm font-semibold">{getDisplayCategory(complaint.category)}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

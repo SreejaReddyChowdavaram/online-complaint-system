@@ -263,12 +263,12 @@ const CreateComplaint = () => {
                       required
                     >
                       <option value="">{t('complaints.placeholder_category')}</option>
-                      <option value="Road">{t('complaints.categories.Roads')}</option>
-                      <option value="Water">{t('complaints.categories.Water')}</option>
-                      <option value="Electricity">{t('complaints.categories.Electricity')}</option>
-                      <option value="Sanitation">{t('complaints.categories.Garbage')}</option>
-                      <option value="Health">{t('complaints.categories.Drainage')}</option>
-                      <option value="Other">{t('complaints.categories.Noise')}</option>
+                      <option value="road">{t('complaints.categories.road')}</option>
+                      <option value="supply">{t('complaints.categories.supply')}</option>
+                      <option value="electricity">{t('complaints.categories.electricity')}</option>
+                      <option value="garbage">{t('complaints.categories.garbage')}</option>
+                      <option value="drainage">{t('complaints.categories.drainage')}</option>
+                      <option value="pollution">{t('complaints.categories.pollution')}</option>
                     </select>
                   </div>
                 </div>

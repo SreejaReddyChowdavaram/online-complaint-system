@@ -14,9 +14,13 @@ import {
   Calendar,
   Trash2,
   Volume2,
-  Wind
+  Wind,
+  CloudRain,
+  FileText,
+  Truck
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getDisplayCategory } from '../utils/complaintUtils';
 import './ComplaintCard.css';
 
 const ComplaintCard = ({
@@ -43,42 +47,27 @@ const ComplaintCard = ({
     return status;
   };
 
-  const getCategoryIcon = (category) => {
-    const normalized = category?.toLowerCase() || "";
-    if (normalized.includes("electricity") || normalized.includes("power") || normalized.includes("light")) return <Zap size={16} className="text-amber-500" />;
-    if (normalized.includes("water") || normalized.includes("drainage") || normalized.includes("sewage")) return <Droplets size={16} className="text-blue-500" />;
-    if (normalized.includes("road") || normalized.includes("traffic") || normalized.includes("street")) return <TrafficCone size={16} className="text-orange-500" />;
-    if (normalized.includes("sanitation") || normalized.includes("garbage") || normalized.includes("waste") || normalized.includes("trash")) return <Trash2 size={16} className="text-teal-500" />;
-    if (normalized.includes("noise") || normalized.includes("sound") || normalized.includes("other")) return <Volume2 size={16} className="text-indigo-500" />;
-    if (normalized.includes("pollution") || normalized.includes("air") || normalized.includes("wind") || normalized.includes("smoke")) return <Wind size={16} className="text-sky-400" />;
-    if (normalized.includes("safety") || normalized.includes("crime") || normalized.includes("security")) return <ShieldAlert size={16} className="text-red-500" />;
-    if (normalized.includes("health") || normalized.includes("medical") || normalized.includes("hospital")) return <AlertCircle size={16} className="text-emerald-500" />;
-    return <HelpCircle size={16} className="text-slate-400" />;
+  const getTranslatedCategory = (category) => {
+    return getDisplayCategory(category);
   };
 
-  const getTranslatedCategory = (category) => {
-    if (!category) return "N/A";
+  const getCategoryIcon = (category) => {
+    const key = category?.split(".").pop().toLowerCase() || "";
     
-    // Normalize mapping for i18n keys
-    const categoryKeyMap = {
-      "road": "Roads",
-      "water": "Water",
-      "electricity": "Electricity",
-      "sanitation": "Garbage",
-      "garbage": "Garbage",
-      "health": "Drainage",
-      "noise": "Noise",
-      "other": "Noise"
-    };
-
-    const normalizedLower = category.toLowerCase();
-    const key = categoryKeyMap[normalizedLower] || Object.keys(categoryKeyMap).find(k => normalizedLower.includes(k)) || category;
+    if (key.includes("electricity") || key.includes("power") || key.includes("light")) 
+      return <Zap size={16} className="text-amber-500" />;
+    if (key.includes("water") || key.includes("supply")) 
+      return <Droplets size={16} className="text-blue-500" />;
+    if (key.includes("road") || key.includes("traffic") || key.includes("street")) 
+      return <TrafficCone size={16} className="text-orange-500" />;
+    if (key.includes("sanitation") || key.includes("garbage") || key.includes("waste") || key.includes("trash")) 
+      return <Trash2 size={16} className="text-teal-500" />;
+    if (key.includes("noise") || key.includes("sound") || key.includes("pollution")) 
+      return <Volume2 size={16} className="text-indigo-500" />;
+    if (key.includes("drainage") || key.includes("sewage") || key.includes("overflow")) 
+      return <CloudRain size={16} className="text-sky-400" />;
     
-    const translated = t(`complaints.categories.${key}`);
-    if (!translated || translated === `complaints.categories.${key}`) {
-      return category.replace(/([A-Z])/g, ' $1').trim();
-    }
-    return translated;
+    return <FileText size={16} className="text-slate-400" />;
   };
 
   const getStatusConfig = (status) => {

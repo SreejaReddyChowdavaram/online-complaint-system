@@ -229,12 +229,12 @@ const OfficerProfile = () => {
                   disabled={!isEditing}
                 >
                   <option value="">{t("complaints.analytics.select_dept")}</option>
-                  <option value="Electricity">{t("complaints.categories.Electricity")}</option>
-                  <option value="Water">{t("complaints.categories.Water")}</option>
-                  <option value="Roads">{t("complaints.categories.Roads")}</option>
-                  <option value="Drainage">{t("complaints.categories.Drainage")}</option>
-                  <option value="Garbage">{t("complaints.categories.Garbage")}</option>
-                  <option value="Noise">{t("complaints.categories.Noise")}</option>
+                  <option value="electricity">{t("complaints.categories.electricity")}</option>
+                  <option value="supply">{t("complaints.categories.supply")}</option>
+                  <option value="road">{t("complaints.categories.road")}</option>
+                  <option value="drainage">{t("complaints.categories.drainage")}</option>
+                  <option value="garbage">{t("complaints.categories.garbage")}</option>
+                  <option value="pollution">{t("complaints.categories.pollution")}</option>
                 </select>
               </div>
 

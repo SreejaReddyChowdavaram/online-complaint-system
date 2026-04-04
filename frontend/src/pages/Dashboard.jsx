@@ -16,6 +16,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useComplaint } from '../context/ComplaintContext'
 import Loading from '../components/Loading'
+import { getDisplayCategory } from '../utils/complaintUtils'
 import './Dashboard.css'
 
 const Dashboard = () => {
@@ -187,7 +188,7 @@ const Dashboard = () => {
                         {complaint?.description ? (complaint.description.substring(0, 100) + "...") : "No description provided."}
                       </p>
                       <div className="complaint-item-footer">
-                        <span className="complaint-category">{complaint?.category || "General"}</span>
+                        <span className="complaint-category">{getDisplayCategory(complaint?.category)}</span>
                         {/* Show submitted by for Officers/Admins with safety */}
                         {!isCitizen && complaint?.submittedBy && (
                           <span className="complaint-submitter">

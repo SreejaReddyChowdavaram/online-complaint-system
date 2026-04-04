@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useComplaint } from '../../context/ComplaintContext'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
+import { getDisplayCategory } from '../../utils/complaintUtils'
 import './ComplaintList.css'
 
 const ComplaintList = () => {
@@ -93,11 +94,13 @@ const ComplaintList = () => {
                 onChange={handleFilterChange}
               >
                 <option value="">All Categories</option>
-                <option value="Road">Road</option>
-                <option value="Water">Water</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Sanitation">Sanitation</option>
-                <option value="Other">Other</option>
+                <option value="road">Road Maintenance</option>
+                <option value="water">Water Supply</option>
+                <option value="electricity">Electricity Issues</option>
+                <option value="sanitation">Garbage Management</option>
+                <option value="drainage">Drainage Management</option>
+                <option value="pollution">Noise Pollution</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -180,7 +183,7 @@ const ComplaintList = () => {
 
                         <div className="complaint-card-meta">
                           <div className="meta-item">
-                            <strong>Category:</strong> {complaint.category}
+                            <strong>Category:</strong> {getDisplayCategory(complaint.category)}
                           </div>
                           <div className="meta-item">
                             <strong>Priority:</strong>{' '}

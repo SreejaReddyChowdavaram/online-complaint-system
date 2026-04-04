@@ -81,12 +81,12 @@ const resources = {
         "select_officer": "Select an officer",
         "resolved_by": "Resolved by",
         "categories": {
-          "Roads": "Road Maintenance",
-          "Water": "Water Supply",
-          "Electricity": "Electricity Issues",
-          "Drainage": "Drainage",
-          "Garbage": "Garbage Management",
-          "Noise": "Noise Pollution"
+          "road": "Road Maintenance",
+          "supply": "Water Supply",
+          "electricity": "Electricity Issues",
+          "drainage": "Drainage Management",
+          "garbage": "Garbage Management",
+          "pollution": "Noise Pollution"
         },
         "assigned_complaints": "Assigned Complaints",
         "no_assigned": "No assigned complaints.",
@@ -387,12 +387,12 @@ const resources = {
         "select_officer": "एक अधिकारी चुनें",
         "resolved_by": "इनके द्वारा हल किया गया",
         "categories": {
-          "Roads": "सड़क रखरखाव",
-          "Water": "पानी की आपूर्ति",
-          "Electricity": "बिजली की समस्या",
-          "Drainage": "जल निकासी",
-          "Garbage": "कचरा प्रबंधन",
-          "Noise": "ध्वनि प्रदूषण"
+          "road": "सड़क रखरखाव",
+          "supply": "पानी की आपूर्ति",
+          "electricity": "बिजली की समस्या",
+          "drainage": "जल निकासी प्रबंधन",
+          "garbage": "कचरा प्रबंधन",
+          "pollution": "ध्वनि प्रदूषण"
         },
         "assigned_complaints": "सौंपी गई शिकायतें",
         "no_assigned": "कोई सौंपी गई शिकायत नहीं है।",
@@ -693,12 +693,12 @@ const resources = {
         "select_officer": "ఒక అధికారిని ఎంచుకోండి",
         "resolved_by": "వీరి ద్వారా పరిష్కరించబడింది",
         "categories": {
-          "Roads": "రోడ్ల నిర్వహణ",
-          "Water": "నీటి సరఫరా",
-          "Electricity": "విద్యుత్ సమస్యలు",
-          "Drainage": "డ్రైనేజీ",
-          "Garbage": "చెత్త నిర్వహణ",
-          "Noise": "శబ్ద కాలుష్యం"
+          "road": "రోడ్ల నిర్వహణ",
+          "supply": "నీటి సరఫరా",
+          "electricity": "విద్యుత్ సమస్యలు",
+          "drainage": "డ్రైనేజీ నిర్వహణ",
+          "garbage": "చెత్త నిర్వహణ",
+          "pollution": "శబ్ద కాలుష్యం"
         },
         "assigned_complaints": "కేటాయించిన ఫిర్యాదులు",
         "no_assigned": "కేటాయించిన ఫిర్యాదులు లేవు.",

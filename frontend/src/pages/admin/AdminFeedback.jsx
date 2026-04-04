@@ -49,12 +49,12 @@ const AdminFeedback = () => {
         <div className="filters">
           <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
             <option value="">{t("complaints.analytics.all_depts")}</option>
-            <option value="Electricity">{t("complaints.categories.Electricity")}</option>
-            <option value="Water">{t("complaints.categories.Water")}</option>
-            <option value="Roads">{t("complaints.categories.Roads")}</option>
-            <option value="Drainage">{t("complaints.categories.Drainage")}</option>
-            <option value="Garbage">{t("complaints.categories.Garbage")}</option>
-            <option value="Noise">{t("complaints.categories.Noise")}</option>
+            <option value="electricity">{t("complaints.categories.electricity")}</option>
+            <option value="supply">{t("complaints.categories.supply")}</option>
+            <option value="road">{t("complaints.categories.road")}</option>
+            <option value="drainage">{t("complaints.categories.drainage")}</option>
+            <option value="garbage">{t("complaints.categories.garbage")}</option>
+            <option value="pollution">{t("complaints.categories.pollution")}</option>
           </select>
         </div>
       </header>
@@ -130,7 +130,7 @@ const AdminFeedback = () => {
                 </div>
                 <p className="trend-msg">{f.message}</p>
                 <div className="trend-footer">
-                  <span>{t(`complaints.categories.${f.officerId?.department || f.department}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
+                  <span>{t(`complaints.categories.${(f.officerId?.department || f.department || "").split(".").pop().toLowerCase()}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
                 </div>
               </div>
             ))}
@@ -170,7 +170,7 @@ const AdminFeedback = () => {
                       </div>
                       <p className="trend-msg">{f.message}</p>
                       <div className="trend-footer">
-                        <span>{t(`complaints.categories.${f.officerId?.department || f.department}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
+                        <span>{t(`complaints.categories.${(f.officerId?.department || f.department || "").split(".").pop().toLowerCase()}`)} • {new Date(f.submittedAt).toLocaleDateString()}</span>
                       </div>
                     </div>
                   ))}

@@ -228,12 +228,12 @@ const PostComplaint = () => {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">{t("complaints.placeholder_category")}</option>
-              <option value="Electricity">Electricity</option>
-              <option value="Water Supply">Water Supply</option>
-              <option value="Roads & Transport">Roads & Transport</option>
-              <option value="Drainage & Sewage">Drainage & Sewage</option>
-              <option value="Garbage & Sanitation">Garbage & Sanitation</option>
-              <option value="Noise & Pollution">Noise & Pollution</option>
+              <option value="electricity">Electricity Issues</option>
+              <option value="supply">Water Supply</option>
+              <option value="road">Road Maintenance</option>
+              <option value="drainage">Drainage Management</option>
+              <option value="garbage">Garbage Management</option>
+              <option value="pollution">Noise Pollution</option>
             </select>
             {errors.category && <span className="inline-error">{errors.category}</span>}
           </div>

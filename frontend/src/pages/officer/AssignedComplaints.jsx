@@ -12,6 +12,7 @@ import {
   X 
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { getDisplayCategory } from "../../utils/complaintUtils";
 import ComplaintCard from "../../components/ComplaintCard";
 import WelcomeHeader from "../../components/WelcomeHeader";
 import LocationSection from "../../components/LocationSection";
@@ -186,7 +187,7 @@ function AssignedComplaints() {
             <div className="modal-body scrollbar-thin">
               <h2>{selected.title}</h2>
 
-              <p><strong>{t("complaints.modal_category")}:</strong> {t(`complaints.categories.${selected.category}`)}</p>
+              <p><strong>{t("complaints.modal_category")}:</strong> {getDisplayCategory(selected.category)}</p>
               
               <LocationSection 
                 address={selected.location?.address} 
