@@ -15,7 +15,7 @@ const router = express.Router();
 router.post(
   "/post",
   protect,
-  upload.array("files", 5),
+  upload.single("image"),
   async (req, res) => {
     try {
       console.log(`[${new Date().toISOString()}] 📥 Submission: ${req.body.title} (User: ${req.user.id})`);
@@ -38,9 +38,8 @@ router.post(
         });
       }
 
-      const files = req.files || [];
-      if (files.length === 0) {
-        console.warn("⚠️ Validation: No files");
+      if (!req.file) {
+        console.warn("⚠️ Validation: No file");
         return res.status(400).json({
           success: false,
           message: "At least one evidence image is required.",
@@ -48,7 +47,7 @@ router.post(
       }
 
       // 2. Database Record Creation (Fast)
-      const images = files.map(file => file.path); // Store Cloudinary URL (path)
+      const images = [req.file.path]; // Store Cloudinary URL (path) in array
       const complaint = await Complaint.create({
         title,
         category,

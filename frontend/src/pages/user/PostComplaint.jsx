@@ -171,8 +171,8 @@ const PostComplaint = () => {
       formData.append("latitude", position[0].toString());
       formData.append("longitude", position[1].toString());
 
-      for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
+      if (files && files.length > 0) {
+        formData.append("image", files[0]);
       }
 
       const res = await api.post("/complaints/post", formData);
@@ -253,7 +253,6 @@ const PostComplaint = () => {
           <label className="label-row">{t("complaints.upload_photos")} <span className="req">*</span></label>
           <input 
             type="file" 
-            multiple 
             className={errors.images ? "error" : ""}
             onChange={(e) => setFiles(e.target.files)} 
           />

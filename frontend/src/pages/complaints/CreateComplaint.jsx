@@ -59,34 +59,22 @@ const CreateComplaint = () => {
 
   // Handle multi-file selection
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files)
-    
-    // Validation: Max 5 images
-    if (images.length + selectedFiles.length > 5) {
-      setFormError(t('complaints.upload_hint'))
+    if (selectedFiles.length === 0) return;
+    const file = selectedFiles[0];
+
+    // Validation
+    if (!file.type.startsWith('image/')) {
+      setFormError(`File ${file.name} is not an image`)
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setFormError(`File ${file.name} is too large (max 5MB)`)
       return
     }
 
-    // Validation: File types and size (5MB per file)
-    const validFiles = []
-    const newPreviews = []
-
-    selectedFiles.forEach(file => {
-      if (!file.type.startsWith('image/')) {
-        setFormError(`File ${file.name} is not an image`)
-        return
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        setFormError(`File ${file.name} is too large (max 5MB)`)
-        return
-      }
-      validFiles.push(file)
-      newPreviews.push(URL.createObjectURL(file))
-    })
-
-    console.log("📁 Files selected:", validFiles.map(f => f.name))
-    setImages(prev => [...prev, ...validFiles])
-    setPreviews(prev => [...prev, ...newPreviews])
+    console.log("📁 File selected:", file.name)
+    setImages([file])
+    setPreviews([URL.createObjectURL(file)])
   }
 
   const removeImage = (index) => {
@@ -170,11 +158,11 @@ const CreateComplaint = () => {
       submissionData.append('latitude', formData.latitude)
       submissionData.append('longitude', formData.longitude)
 
-      // Append compressed files
-      compressedImages.forEach((file, index) => {
-        submissionData.append('files', file, images[index].name) // Keep original filename
-        console.log(`📎 Appending file [${index}]:`, images[index].name)
-      })
+      // Append single file with key "image"
+      if (compressedImages.length > 0) {
+        submissionData.append('image', compressedImages[0], images[0].name)
+        console.log(`📎 Appending file:`, images[0].name)
+      }
 
       // 3. API Call
       const result = await createComplaint(submissionData)
@@ -359,7 +347,6 @@ const CreateComplaint = () => {
                   onChange={handleFileChange}
                   className="hidden"
                   accept="image/*"
-                  multiple
                 />
                 <div className="flex flex-col items-center">
                   <Upload className="upload-icon" size={32} />
