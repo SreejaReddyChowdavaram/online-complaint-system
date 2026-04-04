@@ -95,11 +95,12 @@ const ComplaintList = () => {
               >
                 <option value="">All Categories</option>
                 <option value="road">Road Maintenance</option>
-                <option value="water">Water Supply</option>
+                <option value="supply">Water Supply</option>
                 <option value="electricity">Electricity Issues</option>
-                <option value="sanitation">Garbage Management</option>
-                <option value="drainage">Drainage Management</option>
+                <option value="garbage">Garbage Management</option>
+                <option value="drainage">Drainage</option>
                 <option value="pollution">Noise Pollution</option>
+                <option value="transport">Transportation Issues</option>
                 <option value="other">Other</option>
               </select>
             </div>

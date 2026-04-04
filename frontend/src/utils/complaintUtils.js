@@ -7,8 +7,9 @@ export const categoryMap = {
   pollution: "Noise Pollution",
   electricity: "Electricity Issues",
   road: "Road Maintenance",
-  drainage: "Drainage Management",
+  drainage: "Drainage",
   garbage: "Garbage Management",
+  transport: "Transportation Issues"
 };
 
 /**

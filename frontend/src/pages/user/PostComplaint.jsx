@@ -231,9 +231,10 @@ const PostComplaint = () => {
               <option value="electricity">Electricity Issues</option>
               <option value="supply">Water Supply</option>
               <option value="road">Road Maintenance</option>
-              <option value="drainage">Drainage Management</option>
+              <option value="drainage">Drainage</option>
               <option value="garbage">Garbage Management</option>
               <option value="pollution">Noise Pollution</option>
+              <option value="transport">Transportation Issues</option>
             </select>
             {errors.category && <span className="inline-error">{errors.category}</span>}
           </div>

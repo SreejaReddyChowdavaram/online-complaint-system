@@ -66,6 +66,8 @@ const ComplaintCard = ({
       return <Volume2 size={16} className="text-indigo-500" />;
     if (key.includes("drainage") || key.includes("sewage") || key.includes("overflow")) 
       return <CloudRain size={16} className="text-sky-400" />;
+    if (key.includes("transport") || key.includes("travel") || key.includes("traffic")) 
+      return <Truck size={16} className="text-pink-500" />;
     
     return <FileText size={16} className="text-slate-400" />;
   };

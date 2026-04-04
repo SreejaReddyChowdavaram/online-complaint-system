@@ -84,9 +84,10 @@ const resources = {
           "road": "Road Maintenance",
           "supply": "Water Supply",
           "electricity": "Electricity Issues",
-          "drainage": "Drainage Management",
+          "drainage": "Drainage",
           "garbage": "Garbage Management",
-          "pollution": "Noise Pollution"
+          "pollution": "Noise Pollution",
+          "transport": "Transportation Issues"
         },
         "assigned_complaints": "Assigned Complaints",
         "no_assigned": "No assigned complaints.",
@@ -390,9 +391,10 @@ const resources = {
           "road": "सड़क रखरखाव",
           "supply": "पानी की आपूर्ति",
           "electricity": "बिजली की समस्या",
-          "drainage": "जल निकासी प्रबंधन",
+          "drainage": "जल निकासी",
           "garbage": "कचरा प्रबंधन",
-          "pollution": "ध्वनि प्रदूषण"
+          "pollution": "ध्वनि प्रदूषण",
+          "transport": "परिवहन के मुद्दे"
         },
         "assigned_complaints": "सौंपी गई शिकायतें",
         "no_assigned": "कोई सौंपी गई शिकायत नहीं है।",
@@ -696,9 +698,10 @@ const resources = {
           "road": "రోడ్ల నిర్వహణ",
           "supply": "నీటి సరఫరా",
           "electricity": "విద్యుత్ సమస్యలు",
-          "drainage": "డ్రైనేజీ నిర్వహణ",
+          "drainage": "డ్రైనేజీ",
           "garbage": "చెత్త నిర్వహణ",
-          "pollution": "శబ్ద కాలుష్యం"
+          "pollution": "శబ్ద కాలుష్యం",
+          "transport": "రవాణా సమస్యలు"
         },
         "assigned_complaints": "కేటాయించిన ఫిర్యాదులు",
         "no_assigned": "కేటాయించిన ఫిర్యాదులు లేవు.",
