@@ -1,8 +1,3 @@
-import { NavLink } from "react-router-dom";
-import { LayoutDashboard, PlusCircle, User, LogOut, Menu } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/AuthContext";
-
 const UserSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   const { t } = useTranslation();
   const { logout } = useAuth();
@@ -16,22 +11,25 @@ const UserSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   return (
     <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative ${!isSidebarOpen ? 'items-center' : ''}`}>
       
-      {/* 🔄 FIXED TOGGLE BUTTON (Persistent) */}
-      <div className="fixed top-4 left-4 z-[1200]">
-        <button
-          onClick={onToggle}
-          className="w-10 h-10 rounded-xl bg-orange-600 hover:bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 active:scale-95 transition-all"
-          aria-label="Toggle Sidebar"
-        >
-          <Menu size={22} className={`transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} />
-        </button>
-      </div>
+      {/* 🔄 EDGE-ATTACHED TOGGLE BUTTON */}
+      <button
+        onClick={onToggle}
+        className={`fixed top-6 z-[1200] flex items-center justify-center w-8 h-10 bg-[#0f172a] dark:bg-dark-card border-y border-r border-slate-700 dark:border-dark-border rounded-r-xl shadow-xl transition-all duration-300 hover:brightness-110 active:scale-95 ${
+          isSidebarOpen ? 'left-[256px]' : 'lg:left-16 left-0'
+        }`}
+        aria-label="Toggle Sidebar"
+      >
+        <Menu 
+          size={18} 
+          className={`text-slate-400 transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} 
+        />
+      </button>
 
-      {/* MOBILE CLOSE BUTTON */}
+      {/* MOBILE CLOSE BUTTON (Now redundant but keeping structure for layout) */}
       <div className="lg:hidden absolute top-4 right-4 z-[1100]">
         <button 
           onClick={onClose}
-          className="w-9 h-9 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all flex items-center justify-center font-bold text-lg"
+          className="w-9 h-9 opacity-0 pointer-events-none"
         >
           ✕
         </button>

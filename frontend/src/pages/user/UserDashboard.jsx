@@ -32,7 +32,7 @@ const UserDashboard = () => {
         <aside className={`fixed lg:relative top-0 left-0 h-full bg-[#0f172a] dark:bg-dark-card border-r border-light-border dark:border-dark-border z-[1000] lg:z-30 transition-all duration-300 ease-in-out overflow-y-auto ${
           isSidebarOpen 
             ? "translate-x-0 w-64 shadow-2xl lg:shadow-none" 
-            : "lg:w-[80px] -translate-x-full lg:translate-x-0"
+            : "lg:w-16 -translate-x-full lg:translate-x-0"
         }`}>
           <UserSidebar isSidebarOpen={isSidebarOpen} onToggle={toggleSidebar} onClose={() => setIsSidebarOpen(false)} />
         </aside>
