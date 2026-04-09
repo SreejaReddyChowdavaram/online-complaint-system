@@ -161,7 +161,7 @@ export const loginUser = async (req, res) => {
     }
 
     if (!user.password) {
-      return res.status(400).json({ message: "This account uses Google login. Please use Google Sign-In or set a password." });
+      return res.status(400).json({ message: "Use Google Sign-In" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -258,8 +258,9 @@ export const googleLogin = async (req, res) => {
         email,
         googleId,
         provider: "google",
+        password: null, // Explicitly set password to null
         profilePic: picture,
-        avatar: picture, // 🔹 Synchronize Google photo with system avatar
+        avatar: picture,
         role: role || "Citizen"
       });
     }
