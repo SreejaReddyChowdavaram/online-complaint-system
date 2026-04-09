@@ -38,15 +38,6 @@ const AdminNavbar = ({ onToggle, isSidebarOpen }) => {
   return (
     <header className="flex justify-between items-center px-4 sm:px-6 h-14 sm:h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
       <div className="flex items-center gap-4">
-        {/* SIDEBAR TOGGLE BUTTON (Desktop) */}
-        <button
-          onClick={onToggle}
-          className="hidden lg:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all active:scale-95"
-          aria-label="Toggle Sidebar"
-        >
-          <Menu size={22} className={`transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} />
-        </button>
-
         {/* BRANDING */}
         <div className="flex items-center gap-2 sm:gap-3">
           <img src="/logo.png" alt="Logo" className="h-7 w-7 sm:h-8 sm:w-8 object-contain" />

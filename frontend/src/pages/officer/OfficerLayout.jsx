@@ -17,16 +17,6 @@ const OfficerLayout = () => {
         <OfficerNavbar onToggle={toggleSidebar} isSidebarOpen={isSidebarOpen} />
       </div>
 
-      {/* 📱 MOBILE SIDEBAR TOGGLE (Fixed) */}
-      <div className="lg:hidden fixed top-4 left-4 z-[1200]">
-        <button
-          onClick={toggleSidebar}
-          className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30 active:scale-95 transition-all scroll-mt-0"
-        >
-          <Menu size={20} />
-        </button>
-      </div>
-
       {/* 📦 BOTTOM CONTAINER (Sidebar + Content) */}
       <div className="flex flex-1 overflow-hidden relative pt-14 sm:pt-16">
         
@@ -44,7 +34,7 @@ const OfficerLayout = () => {
             ? "translate-x-0 w-64 shadow-2xl lg:shadow-none" 
             : "lg:w-[80px] -translate-x-full lg:translate-x-0"
         }`}>
-          <OfficerSidebar isSidebarOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+          <OfficerSidebar isSidebarOpen={isSidebarOpen} onToggle={toggleSidebar} onClose={() => setIsSidebarOpen(false)} />
         </aside>
 
         {/* MAIN CONTENT Area */}

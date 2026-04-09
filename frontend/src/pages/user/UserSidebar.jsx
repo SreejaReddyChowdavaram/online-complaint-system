@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, PlusCircle, User, LogOut } from "lucide-react";
+import { LayoutDashboard, PlusCircle, User, LogOut, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 
-const UserSidebar = ({ onClose, isSidebarOpen }) => {
+const UserSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   const { t } = useTranslation();
   const { logout } = useAuth();
 
@@ -15,6 +15,18 @@ const UserSidebar = ({ onClose, isSidebarOpen }) => {
 
   return (
     <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative ${!isSidebarOpen ? 'items-center' : ''}`}>
+      
+      {/* 🔄 FIXED TOGGLE BUTTON (Persistent) */}
+      <div className="fixed top-4 left-4 z-[1200]">
+        <button
+          onClick={onToggle}
+          className="w-10 h-10 rounded-xl bg-orange-600 hover:bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 active:scale-95 transition-all"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu size={22} className={`transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} />
+        </button>
+      </div>
+
       {/* MOBILE CLOSE BUTTON */}
       <div className="lg:hidden absolute top-4 right-4 z-[1100]">
         <button 
