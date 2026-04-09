@@ -36,7 +36,7 @@ const OfficerNavbar = ({ onToggle, isSidebarOpen }) => {
   };
 
   return (
-    <header className="flex justify-between items-center px-4 sm:px-6 h-14 sm:h-16 bg-transparent dark:bg-transparent backdrop-blur-md transition-all duration-300">
+    <header className="fixed top-0 left-0 w-full z-[1200] bg-white dark:bg-[#0B1120] backdrop-blur-md transition-all duration-300 flex justify-between items-center px-4 sm:px-6 h-14 sm:h-16">
       <div className="flex items-center gap-4">
         {/* BRANDING */}
         <div className="flex items-center gap-2 sm:gap-3">

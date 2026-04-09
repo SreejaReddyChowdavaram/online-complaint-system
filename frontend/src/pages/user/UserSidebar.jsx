@@ -17,8 +17,8 @@ const UserSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   return (
     <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative overflow-hidden`}>
       
-      {/* 🔄 INTEGRATED TOGGLE HEADER */}
-      <div className={`sticky top-0 z-[1100] bg-[#0f172a] dark:bg-dark-card border-b border-light-border dark:border-dark-border transition-all duration-300 ${isSidebarOpen ? 'p-4' : 'p-0 h-16 flex items-center justify-center'}`}>
+      {/* 🔄 INTEGRATED TOGGLE HEADER (Top Right) */}
+      <div className={`sticky top-0 z-[1100] transition-all duration-300 flex items-center ${isSidebarOpen ? 'p-4 justify-end' : 'p-0 h-16 justify-center'}`}>
         <button
           onClick={onToggle}
           className={`group flex items-center justify-center w-10 h-10 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all active:scale-95`}
