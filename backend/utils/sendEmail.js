@@ -1,10 +1,10 @@
 import nodemailer from "nodemailer";
 
 const sendEmail = async (to, subject, html) => {
-  // 1. Pre-flight Check
+  // Check env variables
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.error("❌ SMTP Configuration Missing: SMTP_USER or SMTP_PASS is not set in environment variables.");
-    return { success: false, error: "Email configuration missing on server." };
+    console.error("❌ SMTP config missing");
+    return { success: false, error: "Email config missing" };
   }
 
   try {
@@ -16,13 +16,12 @@ const sendEmail = async (to, subject, html) => {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
-      // 2. Add timeouts to avoid hanging requests
-      connectionTimeout: 10000, // 10s
-      greetingTimeout: 10000,   // 10s
-      socketTimeout: 10000,     // 10s
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
-    console.log(`📡 Attempting to send email to: ${to}...`);
+    console.log("📡 Sending email to:", to);
 
     await transporter.sendMail({
       from: `"Online Civic Complaint System" <${process.env.SMTP_USER}>`,
@@ -31,12 +30,17 @@ const sendEmail = async (to, subject, html) => {
       html,
     });
 
-    console.log(`✅ Email sent successfully to: ${to}`);
+    console.log("✅ Email sent");
+
     return { success: true };
 
   } catch (error) {
-    console.error(`❌ Email error for ${to}:`, error.message);
-    return { success: false, error: error.message || "Failed to deliver email" };
+    console.error("❌ Email error:", error.message);
+
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 };
 

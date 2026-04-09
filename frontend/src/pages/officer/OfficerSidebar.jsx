@@ -1,61 +1,63 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { ClipboardList, BarChart3, User, X, LogOut } from "lucide-react";
+import { ClipboardList, BarChart3, User, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 
-const OfficerSidebar = ({ onClose }) => {
+const OfficerSidebar = ({ onClose, isSidebarOpen }) => {
   const { t } = useTranslation();
   const { logout } = useAuth();
 
   const menuItems = [
-    { to: "/officer/complaints", icon: <ClipboardList size={20} />, label: t("sidebar.assigned_complaints"), end: true },
-    { to: "/officer/feedback", icon: <BarChart3 size={20} />, label: t("sidebar.performance_feedback"), end: false },
-    { to: "/officer/profile", icon: <User size={20} />, label: t("sidebar.my_profile"), end: false },
+    { to: "/officer/dashboard", icon: <LayoutDashboard size={20} />, label: t("officer.dashboard") || "Dashboard", end: true },
+    { to: "/officer/complaints", icon: <ClipboardList size={20} />, label: t("officer.assigned_complaints") || "Complaints", end: false },
+    { to: "/officer/feedback", icon: <BarChart3 size={20} />, label: t("officer.performance_stats") || "Feedback", end: false },
+    { to: "/officer/profile", icon: <User size={20} />, label: t("officer.my_profile") || "Profile", end: false },
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative">
-      {/* MOBILE CLOSE BUTTON (❌ FIX) */}
+    <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative ${!isSidebarOpen ? 'items-center' : ''}`}>
+      {/* MOBILE CLOSE BUTTON */}
       <div className="lg:hidden absolute top-4 right-4 z-[1100]">
         <button 
           onClick={onClose}
           className="w-9 h-9 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all flex items-center justify-center font-bold text-lg"
-          aria-label="Close Sidebar"
         >
           ✕
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 pt-20 lg:pt-6 pb-6 px-4 space-y-2 overflow-y-auto">
+      <nav className="flex-1 pt-20 lg:pt-6 pb-6 px-4 space-y-2 overflow-y-auto w-full">
         {menuItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
+            title={!isSidebarOpen ? String(item.label) : ""}
             onClick={() => { if (window.innerWidth < 1024) onClose(); }}
-            className={({ isActive }) => 
-              `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ease-in-out text-sm font-medium ${isActive 
-                ? "bg-green-600 text-white shadow-lg shadow-green-500/20" 
+            className={({ isActive }) =>
+              `flex items-center ${isSidebarOpen ? 'gap-3 px-4' : 'justify-center px-0'} py-2.5 rounded-xl transition-all duration-200 ease-in-out text-sm font-medium ${isActive
+                ? "bg-orange-600 text-white shadow-lg shadow-orange-500/20"
                 : "text-gray-400 hover:bg-white/10 hover:text-white transition-all"
               }`
             }
           >
             {item.icon}
-            <span>{String(item.label)}</span>
+            {isSidebarOpen && <span className="whitespace-nowrap transition-all duration-300">{String(item.label)}</span>}
           </NavLink>
         ))}
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-light-border dark:border-dark-border">
+      <div className="p-4 border-t border-light-border dark:border-dark-border w-full">
         <button
           onClick={logout}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 dark:text-slate-400 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+          title={!isSidebarOpen ? String(t("navbar.logout") || "Logout") : ""}
+          className={`flex items-center ${isSidebarOpen ? 'gap-3 px-4' : 'justify-center px-0'} w-full py-3 rounded-xl text-sm font-semibold text-slate-400 dark:text-slate-400 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors`}
         >
           <LogOut size={20} />
-          <span>{String(t("navbar.logout"))}</span>
+          {isSidebarOpen && <span className="whitespace-nowrap transition-all duration-300">{String(t("navbar.logout") || "Logout")}</span>}
         </button>
       </div>
     </div>
