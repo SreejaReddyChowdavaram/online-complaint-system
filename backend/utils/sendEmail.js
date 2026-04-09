@@ -1,48 +1,41 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const sendEmail = async (to, subject, text, retryCount = 1) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.APP_PASSWORD
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-    dnsTimeout: 10000,
-    family: 4
-  });
+/**
+ * Sends an email using Resend API.
+ * This replaces Gmail SMTP to avoid production timeouts and connection blocks.
+ * @param {string} to - Recipient email
+ * @param {string} subject - Email subject
+ * @param {string} text - Email body (text)
+ */
+const sendEmail = async (to, subject, text) => {
+  const apiKey = process.env.RESEND_API_KEY;
 
-  // Verify SMTP Connection
-  try {
-    await transporter.verify();
-    console.log("✅ SMTP Ready");
-  } catch (error) {
-    console.error("❌ SMTP Error:", error.message);
+  if (!apiKey) {
+    console.error("❌ RESEND_API_KEY is missing in environment variables.");
+    return { success: false, error: "Email configuration missing" };
   }
 
-  const mailOptions = {
-    from: `"Jan Suvidha" <${process.env.EMAIL}>`,
-    to: to,
-    subject: subject,
-    text: text
-  };
+  const resend = new Resend(apiKey);
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`📧 Email sent to ${to}`);
-    return { success: true };
-  } catch (error) {
-    console.error(`❌ Email Failed: ${error.message}`);
-    if (retryCount > 0) {
-      console.log(`🔄 Retrying... (${retryCount} left)`);
-      return await sendEmail(to, subject, text, retryCount - 1);
+    const { data, error } = await resend.emails.send({
+      from: "Jan Suvidha <onboarding@resend.dev>", // Use verified domain if available
+      to: [to],
+      subject: subject,
+      text: text,
+    });
+
+    if (error) {
+      console.error("❌ Resend API Error:", error.message);
+      return { success: false, error: error.message };
     }
+
+    console.log(`📧 Email sent successfully to ${to}`);
+    return { success: true, id: data.id };
+  } catch (error) {
+    console.error("❌ Unexpected Email Error:", error.message);
     return { success: false, error: error.message };
   }
 };
 
-export default sendEmail;
+export default sendEmail;

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 const AuthContext = createContext();
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // 🔹 Load user on app start
   useEffect(() => {
@@ -95,7 +97,8 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.clear();
-  }, []);
+    navigate("/", { replace: true });
+  }, [navigate]);
 
   return (
     <AuthContext.Provider

@@ -40,7 +40,6 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/", { replace: true });
     setIsMobileMenuOpen(false);
   };
 

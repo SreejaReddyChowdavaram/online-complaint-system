@@ -74,14 +74,20 @@ export const forgotPassword = async (req, res) => {
 
     const result = await sendEmail(
       email,
-      "Jan Suvidha Password Reset OTP",
-      `Your OTP is: ${otp}`
+      "Jan Suvidha - Password Reset OTP",
+      `Your OTP for password reset is: ${otp}. This OTP is valid for 5 minutes.`
     );
 
     if (result.success) {
-      res.status(200).json({ success: true, message: "OTP sent successfully" });
+      console.log(`✅ OTP sent to ${email}`);
+      return res.status(200).json({ success: true, message: "OTP sent successfully" });
     } else {
-      res.status(500).json({ success: false, message: "Failed to send OTP", error: result.error });
+      console.error(`❌ OTP Failed for ${email}:`, result.error);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Failed to send OTP email. Please try again later.",
+        error: result.error 
+      });
     }
 
   } catch (error) {
@@ -165,7 +171,7 @@ export const loginUser = async (req, res) => {
     }
 
     if (!user.password) {
-      return res.status(400).json({ message: "Use Google Sign-In" });
+      return res.status(400).json({ message: "This account uses Google Sign-In. Please use Google login." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -206,7 +212,7 @@ export const adminLogin = async (req, res) => {
     }
 
     if (!user.password) {
-      return res.status(400).json({ message: "Please use the appropriate login method for this account." });
+      return res.status(400).json({ message: "This admin account uses a different login method. Please check your credentials." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
