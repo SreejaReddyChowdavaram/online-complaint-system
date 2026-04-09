@@ -9,9 +9,9 @@ const OfficerSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   const { logout } = useAuth();
 
   const menuItems = [
-    { to: "/officer/dashboard", icon: <LayoutDashboard size={20} />, label: t("officer.dashboard") || "Dashboard", end: true },
-    { to: "/officer/feedback", icon: <BarChart3 size={20} />, label: t("officer.performance_stats") || "Feedback", end: false },
-    { to: "/officer/profile", icon: <User size={20} />, label: t("officer.my_profile") || "Profile", end: false },
+    { to: "/officer/dashboard", icon: <LayoutDashboard size={20} />, label: t("sidebar.dashboard") || "Dashboard", end: true },
+    { to: "/officer/feedback", icon: <BarChart3 size={20} />, label: t("sidebar.performance_analytics") || "Performance Analytics", end: false },
+    { to: "/officer/profile", icon: <User size={20} />, label: t("sidebar.my_profile") || "My Profile", end: false },
   ];
 
   return (

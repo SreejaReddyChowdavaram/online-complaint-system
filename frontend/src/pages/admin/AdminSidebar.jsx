@@ -12,9 +12,9 @@ const AdminSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   const menuItems = [
     { to: "/admin/dashboard", icon: <LayoutDashboard size={20} />, label: t("sidebar.dashboard") || "Dashboard", end: true },
     { to: "/admin/complaints", icon: <ClipboardList size={20} />, label: t("sidebar.view_complaints") || "Complaints", end: false },
-    { to: "/admin/feedback", icon: <BarChart3 size={20} />, label: t("sidebar.officer_performance") || "Feedback", end: false },
-    { to: "/admin/manage-users", icon: <UserCog size={20} />, label: "Manage Users", end: false },
-    { to: "/admin/profile", icon: <User size={20} />, label: t("sidebar.my_profile") || "Profile", end: false },
+    { to: "/admin/feedback", icon: <BarChart3 size={20} />, label: t("sidebar.performance_analytics") || "Performance Analytics", end: false },
+    { to: "/admin/manage-users", icon: <UserCog size={20} />, label: t("sidebar.manage_users") || "Manage Users", end: false },
+    { to: "/admin/profile", icon: <User size={20} />, label: t("sidebar.my_profile") || "My Profile", end: false },
   ];
 
   return (
