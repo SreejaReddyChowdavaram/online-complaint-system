@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 /**
  * Reusable email utility using Gmail SMTP
- * This replaces Resend to allow sending OTPs to all users for free.
+ * This utility uses Gmail SMTP via Nodemailer to allow sending OTPs to any email for free.
  * @param {string} to - Recipient email
  * @param {string} subject - Email subject
  * @param {string} html - HTML content of the email
