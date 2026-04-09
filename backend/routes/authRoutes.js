@@ -6,7 +6,8 @@ import {
   adminLogin,
   forgotPassword,
   verifyOtp,
-  resetPassword
+  resetPassword,
+  setPassword
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/google", googleLogin);
 router.post("/admin-login", adminLogin);
+router.post("/set-password", setPassword);
 
 /* -------- FORGOT PASSWORD FLOW -------- */
 router.post("/send-otp", forgotPassword);

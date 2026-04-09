@@ -30,10 +30,16 @@ const userSchema = new mongoose.Schema({
     unique: true
   },
 
+  provider: {
+    type: String,
+    enum: ["local", "google"],
+    default: "local"
+  },
+
   password: {
     type: String,
     required: function() {
-      return !this.googleId;
+      return this.provider === "local";
     }
   },
 

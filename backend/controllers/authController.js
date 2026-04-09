@@ -28,6 +28,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      provider: "local",
       role: role || "Citizen",
     });
 
@@ -159,6 +160,10 @@ export const loginUser = async (req, res) => {
       return res.status(403).json({ message: "Incorrect role login" });
     }
 
+    if (!user.password) {
+      return res.status(400).json({ message: "This account uses Google login. Please use Google Sign-In or set a password." });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -194,6 +199,10 @@ export const adminLogin = async (req, res) => {
 
     if (user.role !== "Admin") {
       return res.status(403).json({ message: "Access denied. Not an admin." });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ message: "Please use the appropriate login method for this account." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -248,6 +257,7 @@ export const googleLogin = async (req, res) => {
         name,
         email,
         googleId,
+        provider: "google",
         profilePic: picture,
         avatar: picture, // 🔹 Synchronize Google photo with system avatar
         role: role || "Citizen"
@@ -264,6 +274,35 @@ export const googleLogin = async (req, res) => {
 
   } catch (error) {
     console.error("Google Login Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/* ===============================
+   SET PASSWORD (for Google Users)
+================================ */
+export const setPassword = async (req, res) => {
+  try {
+    await connectDB();
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    
+    // Once password is set, we still keep provider as "google" or update it?
+    // The requirement says "Allow Google users to set password later".
+    // We'll keep the provider as is or just ensure it can log in with either.
+    
+    await user.save();
+
+    res.status(200).json({ message: "Password set successfully. You can now log in with email and password." });
+  } catch (error) {
+    console.error("SET PASSWORD ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
