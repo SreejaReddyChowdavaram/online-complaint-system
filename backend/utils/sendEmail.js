@@ -10,12 +10,14 @@ const sendEmail = async (to, subject, text) => {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 20000,
+    connectionTimeout: 15000, // Increased to 15s
+    greetingTimeout: 15000,
+    socketTimeout: 30000,
     dnsTimeout: 10000,
+    family: 4, // 🚀 FORCE IPv4 to fix ENETUNREACH
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      minVersion: 'TLSv1.2'
     }
   });
 
