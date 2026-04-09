@@ -3,22 +3,20 @@ import nodemailer from "nodemailer";
 const sendEmail = async (to, subject, text) => {
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
     host: "smtp.gmail.com",
     port: 587,
-    secure: false, // STARTTLS
+    secure: false, // Must be false for Port 587 (STARTTLS)
+    requireTLS: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 30000,
-    family: 4, // Still force IPv4
-    tls: {
-      rejectUnauthorized: false, // Helps with some hosting providers
-      minVersion: 'TLSv1.2'
-    }
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+    logger: true, // Enable logging to see progress in Vercel console
+    debug: true,  // Enable debug output
+    family: 4     // Force IPv4 to avoid ENETUNREACH
   });
 
   const mailOptions = {
