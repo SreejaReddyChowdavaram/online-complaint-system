@@ -16,12 +16,12 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const getErrorMessage = (err, fallback = "An unexpected error occurred") => {
   try {
     console.error("🔍 [Login Debug] Raw Error:", err);
-    
+
     if (typeof err === "string") return err;
     if (!err) return String(fallback);
-    
+
     let result = fallback;
-    
+
     // Axios response structure
     if (err.response?.data) {
       const data = err.response.data;
@@ -112,7 +112,7 @@ function Login({ title, role = "Citizen" }) {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[#020617] auth-wrapper overflow-hidden">
-      
+
       {/* Background Glows (Aurora Effect) */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
@@ -150,9 +150,9 @@ function Login({ title, role = "Citizen" }) {
             </span>
           </div>
 
-          <p className="forgot">
+          {/* <p className="forgot">
             <a href="/forgot-password">{t("auth.forgot_password")}</a>
-          </p>
+          </p> */}
 
           <button className="auth-btn" type="submit" disabled={loading}>
             {loading ? t("auth.logging_in") : t("auth.login")}

@@ -18,34 +18,24 @@ const AdminSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   ];
 
   return (
-    <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative ${!isSidebarOpen ? 'items-center' : ''}`}>
+    <div className={`flex flex-col h-full bg-[#0f172a] dark:bg-dark-card transition-all duration-300 relative overflow-hidden`}>
       
-      {/* 🔄 EDGE-ATTACHED TOGGLE BUTTON */}
-      <button
-        onClick={onToggle}
-        className={`fixed top-6 z-[1200] flex items-center justify-center w-8 h-10 bg-[#0f172a] dark:bg-dark-card border-y border-r border-slate-700 dark:border-dark-border rounded-r-xl shadow-xl transition-all duration-300 hover:brightness-110 active:scale-95 ${
-          isSidebarOpen ? 'left-[256px]' : 'lg:left-16 left-0'
-        }`}
-        aria-label="Toggle Sidebar"
-      >
-        <Menu 
-          size={18} 
-          className={`text-slate-400 transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} 
-        />
-      </button>
-
-      {/* MOBILE CLOSE BUTTON (Now redundant but keeping structure for layout) */}
-      <div className="lg:hidden absolute top-4 right-4 z-[1100]">
-        <button 
-          onClick={onClose}
-          className="w-9 h-9 opacity-0 pointer-events-none"
+      {/* 🔄 INTEGRATED TOGGLE HEADER */}
+      <div className={`sticky top-0 z-[1100] bg-[#0f172a] dark:bg-dark-card border-b border-light-border dark:border-dark-border transition-all duration-300 ${isSidebarOpen ? 'p-4' : 'p-0 h-16 flex items-center justify-center'}`}>
+        <button
+          onClick={onToggle}
+          className={`group flex items-center justify-center w-10 h-10 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all active:scale-95 ${!isSidebarOpen ? '' : ''}`}
+          aria-label="Toggle Sidebar"
         >
-          ✕
+          <Menu 
+            size={22} 
+            className={`transition-transform duration-300 ${!isSidebarOpen ? 'rotate-180' : ''}`} 
+          />
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className={`flex-1 pt-20 lg:pt-6 pb-6 px-4 space-y-2 overflow-y-auto w-full`}>
+      <nav className={`flex-1 pt-4 pb-6 px-4 space-y-2 overflow-y-auto w-full scrollbar-thin scrollbar-thumb-white/10`}>
         {menuItems.map((item) => (
           <NavLink
             key={item.to}
