@@ -3,20 +3,20 @@ import nodemailer from "nodemailer";
 const sendEmail = async (to, subject, text) => {
 
   const transporter = nodemailer.createTransport({
+    service: "gmail",
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // STARTTLS
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 15000, // Increased to 15s
-    greetingTimeout: 15000,
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
     socketTimeout: 30000,
-    dnsTimeout: 10000,
-    family: 4, // 🚀 FORCE IPv4 to fix ENETUNREACH
+    family: 4, // Still force IPv4
     tls: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: false, // Helps with some hosting providers
       minVersion: 'TLSv1.2'
     }
   });
