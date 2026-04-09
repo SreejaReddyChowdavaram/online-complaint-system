@@ -55,7 +55,7 @@ export const registerUser = async (req, res) => {
 ========================= */
 export const forgotPassword = async (req, res) => {
   try {
-    await connectDB(); // 🔥 IMPORTANT
+    await connectDB();
 
     const { email } = req.body;
 
@@ -65,6 +65,7 @@ export const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "Email not registered" });
     }
 
+    // ✅ Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     user.otp = otp;
@@ -72,21 +73,62 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
+    // ✅ PROFESSIONAL EMAIL
     const result = await sendEmail(
       email,
-      "Jan Suvidha - Password Reset OTP",
-      `Your OTP for password reset is: ${otp}. This OTP is valid for 5 minutes.`
+      "🔐 Reset Your Password - Online Civic Complaint System",
+      `
+        <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;">
+          <div style="max-width:500px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; text-align:center;">
+            
+            <h2 style="color:#2c3e50;">Online Civic Complaint System</h2>
+            <p style="color:#555;">Password Reset Request</p>
+
+            <p style="color:#666;">
+              We received a request to reset your password.
+            </p>
+
+            <p style="color:#666;">Use the OTP below:</p>
+
+            <div style="
+              font-size:32px;
+              font-weight:bold;
+              letter-spacing:5px;
+              color:#4CAF50;
+              margin:20px 0;
+            ">
+              ${otp}
+            </div>
+
+            <p style="color:#888;">
+              This OTP is valid for <b>5 minutes</b>.
+            </p>
+
+            <p style="color:#aaa; font-size:12px;">
+              If you didn’t request this, please ignore this email.
+            </p>
+
+            <hr style="margin:20px 0;" />
+
+            <p style="font-size:12px; color:#bbb;">
+              © ${new Date().getFullYear()} Online Civic Complaint System
+            </p>
+
+          </div>
+        </div>
+      `
     );
 
     if (result.success) {
-      console.log(`✅ OTP sent to ${email}`);
-      return res.status(200).json({ success: true, message: "OTP sent successfully" });
+      return res.status(200).json({
+        success: true,
+        message: "OTP sent successfully",
+      });
     } else {
-      console.error(`❌ OTP Failed for ${email}:`, result.error);
-      return res.status(500).json({ 
-        success: false, 
-        message: "Failed to send OTP email. Please try again later.",
-        error: result.error 
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP email",
+        error: result.error,
       });
     }
 
@@ -95,7 +137,6 @@ export const forgotPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 /* =========================
    2️⃣ VERIFY OTP
 ========================= */
@@ -304,11 +345,11 @@ export const setPassword = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
-    
+
     // Once password is set, we still keep provider as "google" or update it?
     // The requirement says "Allow Google users to set password later".
     // We'll keep the provider as is or just ensure it can log in with either.
-    
+
     await user.save();
 
     res.status(200).json({ message: "Password set successfully. You can now log in with email and password." });
