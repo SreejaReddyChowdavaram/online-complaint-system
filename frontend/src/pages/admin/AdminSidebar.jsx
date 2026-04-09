@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, ClipboardList, BarChart3, User, UserCog, LogOut, X } from "lucide-react";
+import { LayoutDashboard, ClipboardList, BarChart3, User, UserCog, LogOut, X, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 

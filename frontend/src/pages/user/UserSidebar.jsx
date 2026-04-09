@@ -1,3 +1,9 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { LayoutDashboard, PlusCircle, User, LogOut, Menu } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/AuthContext";
+
 const UserSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
   const { t } = useTranslation();
   const { logout } = useAuth();
