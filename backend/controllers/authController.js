@@ -72,13 +72,17 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    await sendEmail(
+    const result = await sendEmail(
       email,
       "Jan Suvidha Password Reset OTP",
       `Your OTP is: ${otp}`
     );
 
-    res.status(200).json({ message: "OTP sent" });
+    if (result.success) {
+      res.status(200).json({ success: true, message: "OTP sent successfully" });
+    } else {
+      res.status(500).json({ success: false, message: "Failed to send OTP", error: result.error });
+    }
 
   } catch (error) {
     console.error("Forgot Password Error:", error);

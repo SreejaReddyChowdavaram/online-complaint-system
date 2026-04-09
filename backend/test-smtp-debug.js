@@ -7,18 +7,17 @@ const testConnection = async () => {
   console.log(`📧 User: ${process.env.EMAIL_USER}`);
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // STARTTLS
+    port: 465,
+    secure: true,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: process.env.EMAIL,
+      pass: process.env.APP_PASSWORD
     },
     connectionTimeout: 10000,
     greetingTimeout: 10000,
-    socketTimeout: 20000,
-    family: 4, // Force IPv4
+    socketTimeout: 10000,
+    family: 4,
     logger: true,
     debug: true
   });
