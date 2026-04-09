@@ -1,37 +1,31 @@
 import nodemailer from "nodemailer";
 
-/**
- * Reusable email utility using Gmail SMTP
- * This utility uses Gmail SMTP via Nodemailer to allow sending OTPs to any email for free.
- * @param {string} to - Recipient email
- * @param {string} subject - Email subject
- * @param {string} html - HTML content of the email
- */
 const sendEmail = async (to, subject, html) => {
-  // 1. Create a transporter with Gmail configuration
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, // ✅ Use App Password
-    },
-  });
-
-  // 2. Configure mail options
-  const mailOptions = {
-    from: `"Online Civic Complaint System" <${process.env.EMAIL_USER}>`,
-    to: to,
-    subject: subject,
-    html: html,
-  };
-
   try {
-    // 3. Send email and wait for result
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ OTP Email sent successfully: ${info.messageId}`);
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Online Civic Complaint System" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
+
+    console.log("✅ Email sent");
+
     return { success: true };
+
   } catch (error) {
-    console.error(`❌ SMTP Email Error (${to}):`, error.message);
+    console.error("❌ Email error:", error);
+
     return {
       success: false,
       error: error.message,
