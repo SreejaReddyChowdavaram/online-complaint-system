@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { ClipboardList, BarChart3, User, X, LogOut, LayoutDashboard, Menu } from "lucide-react";
+import { BarChart3, User, LogOut, LayoutDashboard, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,7 +10,6 @@ const OfficerSidebar = ({ onClose, isSidebarOpen, onToggle }) => {
 
   const menuItems = [
     { to: "/officer/dashboard", icon: <LayoutDashboard size={20} />, label: t("officer.dashboard") || "Dashboard", end: true },
-    { to: "/officer/complaints", icon: <ClipboardList size={20} />, label: t("officer.assigned_complaints") || "Complaints", end: false },
     { to: "/officer/feedback", icon: <BarChart3 size={20} />, label: t("officer.performance_stats") || "Feedback", end: false },
     { to: "/officer/profile", icon: <User size={20} />, label: t("officer.my_profile") || "Profile", end: false },
   ];
